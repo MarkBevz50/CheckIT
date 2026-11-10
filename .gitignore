@@ -90,3 +90,7 @@ back-end/app/prozorro_functionality/temp_pdf/*.pdf
 
 # Docker data volumes
 postgres_data/
+
+# Logs and local Claude Code settings
+*.log
+.claude/settings.local.json
