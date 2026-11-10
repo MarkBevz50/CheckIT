@@ -73,3 +73,4 @@ httpx>=0.25.0
 python-docx
 alembic>=1.12.0
 redis>=5.0.0
+pydantic-settings==2.4.0

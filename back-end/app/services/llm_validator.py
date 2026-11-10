@@ -8,7 +8,7 @@ keep working.
 """
 
 import logging
-import os
+from app.core.config import settings
 from typing import Any, Dict, List, Optional
 
 from app.services import claude_validator, gemini_validator
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def _claude_enabled() -> bool:
-    return bool(os.getenv("ANTHROPIC_API_KEY", "").strip())
+    return bool(settings.anthropic_api_key)
 
 
 async def extract_items_from_text(text: str) -> Optional[List[Dict[str, Any]]]:

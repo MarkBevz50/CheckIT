@@ -1,14 +1,9 @@
-import asyncio
-import asyncpg
 import logging
-import os
 from io import BytesIO
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Depends, File, UploadFile, Query
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import create_async_engine
 from openpyxl import load_workbook
 from pydantic import BaseModel
 
@@ -26,7 +21,8 @@ import app.models.tender  # noqa: F401
 # Local imports
 from .routers import crud
 from .routers.authorization import router as auth_router, get_current_user
-from .database import Base
+from .core.config import settings
+from .database import Base, engine
 from .db_test import verify_database_connection
 # ... решта коду без змін
 
@@ -37,7 +33,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-load_dotenv()
 app = FastAPI(
     title="CheckIT API",
     description="API for tender checking and analysis",
@@ -55,7 +50,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "http://frontend",
         "http://frontend:80",
-        os.getenv("FRONTEND_URL", "http://localhost:5173"),
+        settings.frontend_url,
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -68,14 +63,6 @@ async def init_db():
         if not await verify_database_connection():
             raise Exception("Database connection verification failed")
 
-        engine = create_async_engine(
-            os.getenv("DATABASE_URL"),
-            echo=True,
-            pool_pre_ping=True,
-            pool_size=5,
-            max_overflow=10
-        )
-        
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
             logger.info("Database tables created successfully")
@@ -131,34 +118,6 @@ async def home() -> dict:
         "message": "Welcome to CheckIT API",
         "documentation": "/docs"
     }
-
-async def test_db_connection():
-    try:
-        conn = await asyncpg.connect(
-            user=os.getenv("POSTGRES_USER"),
-            password=os.getenv("POSTGRES_PASSWORD"),
-            database=os.getenv("POSTGRES_DB"),
-            host=os.getenv("POSTGRES_HOST"),
-            port=os.getenv("POSTGRES_PORT")
-        )
-        await conn.execute('SELECT 1')
-        await conn.close()
-        logger.info("Test database connection successful")
-        return {
-            "status": "success",
-            "message": "Database connection successful",
-            "details": {
-                "host": os.getenv("POSTGRES_HOST"),
-                "database": os.getenv("POSTGRES_DB"),
-                "port": os.getenv("POSTGRES_PORT")
-            }
-        }
-    except Exception as e:
-        logger.error(f"Test database connection failed: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Database connection failed: {str(e)}"
-        )
 
 def parse_excel_file(file_content: bytes):
     try:

@@ -34,7 +34,8 @@
 back-end/
   app/
     main.py                  FastAPI-застосунок, CORS, startup (init_db), POST /excel-page
-    database.py              async engine, SessionLocal, Base, get_db
+    core/config.py           Settings (єдине місце читання змінних середовища)
+    database.py              єдиний async engine, SessionLocal, Base, get_db
     db_test.py               перевірка підключення до БД на старті
     models/                  model.py (User), tender.py (Tender, TenderItem, PriceHistory)
     schemas/                 Pydantic-схеми
@@ -90,7 +91,7 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 
 ## Тести
 
-- Бекенд-тестів на pytest **поки немає** (крок E0.2). `back-end/app/db_test.py` — не тест, а перевірка підключення.
+- Бекенд: `cd back-end && pip install -r requirements-dev.txt && python -m pytest` (зараз лише тести `Settings`; решта — крок E0.2). Без мережі й без БД. `app/db_test.py` — не тест, а перевірка підключення.
 - `scraper/tests/` — unittest, **потребують живої мережі** і можуть падати при зміні розмітки магазинів:
   `python -m unittest discover -s scraper/tests -t .` (з кореня репо).
 - Фронтенд: `cd front-project && npm run test:unit` (vitest налаштований, тестових файлів немає). Лінт: `npm run lint`.
@@ -98,21 +99,23 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 
 ## Змінні середовища
 
-Зараз читаються через `os.getenv` у різних файлах (єдиний `Settings` — крок E0.4). `.env` у корені, шаблон — `.env.example`
-(також є `back-end/.env.example`, `scraper/.env.example`).
+Усі змінні читає лише `back-end/app/core/config.py` (`Settings`, pydantic-settings); `os.getenv` в іншому місці
+забороняє тест. Порядок: змінні процесу → `.env` у корені → `back-end/.env`. Шаблон — `.env.example`.
+Обов'язкові (без дефолтів, застосунок не стартує і називає відсутню змінну): `DATABASE_URL`, `SECRET_KEY`.
+У Docker `DATABASE_URL` збирає `docker-compose.yml`; локально без Docker її треба додати в `.env`.
 
-| Змінна | Де використовується |
+| Змінна | Призначення |
 | --- | --- |
-| `DATABASE_URL` (`postgresql+asyncpg://…`) | database.py, main.py, alembic/env.py |
-| `POSTGRES_USER/PASSWORD/DB/HOST/PORT` | db_test.py, main.py; також для контейнера db |
-| `SECRET_KEY`, `ALGORITHM` (HS256) | authorization.py (є небезпечний fallback `fallback-secret-key-change-me`) |
-| `FRONTEND_URL` | CORS у main.py |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_MODEL_SMART` | claude_validator.py, llm_validator.py, risk_analyzer.py, tender_classifier.py |
-| `GEMINI_API_KEY`, `GEMINI_MODELS` | gemini_validator.py |
-| `HUGGINGFACE_API_KEY` | ai_assistant.py (буде видалено в E6.6) |
-| `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | cache.py |
-| `DB_HOST/PORT/NAME/USER/PASSWORD` | лише в .env.example і docker-compose; у коді не знайдено використання |
-| `VITE_API_URL` | front-project/src/api/config.js (у `.env.production` — `/api`) |
+| `DATABASE_URL` (`postgresql+asyncpg://…`) | **обов'язкова**, єдиний async engine в `database.py`, alembic |
+| `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback |
+| `DB_ECHO` | логувати SQL (за замовчуванням `false`) |
+| `ALGORITHM` (HS256), `FRONTEND_URL` | JWT, CORS |
+| `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_MODEL_SMART` | Claude (дефолти моделей застарілі, оновить E0.7) |
+| `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв) |
+| `HUGGINGFACE_API_KEY` | чат-помічник (буде видалено в E6.6) |
+| `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | кеш; без `REDIS_URL` вимкнений |
+| `POSTGRES_USER/PASSWORD/DB` | лише для контейнера `db` у compose, не для коду |
+| `VITE_API_URL` | фронтенд (`front-project/src/api/config.js`, у `.env.production` — `/api`) |
 
 ## Конвенції
 

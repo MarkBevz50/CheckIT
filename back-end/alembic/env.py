@@ -1,19 +1,17 @@
 import asyncio
-import os
 from logging.config import fileConfig
 
 from alembic import context
-from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-load_dotenv()
+from app.core.config import settings
 
 # Alembic Config object
 config = context.config
 
 # Override sqlalchemy.url from environment
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", ""))
+config.set_main_option("sqlalchemy.url", settings.database_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

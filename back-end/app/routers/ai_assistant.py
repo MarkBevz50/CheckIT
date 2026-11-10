@@ -3,9 +3,9 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from pydantic import BaseModel
-import os
 import requests
 from datetime import datetime
+from app.core.config import settings
 from app.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/assistant", tags=["Assistant"])
 
 # Hugging Face API ключ
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+HUGGINGFACE_API_KEY = settings.huggingface_api_key or None
 HUGGINGFACE_MODEL_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
 
 class AssistantRequest(BaseModel):

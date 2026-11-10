@@ -45,20 +45,9 @@ services:
     environment:
       # Database (async driver for SQLAlchemy)
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-check_it}
-      # Postgres vars for db_test.py connection check
-      POSTGRES_HOST: db
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: ${POSTGRES_DB:-check_it}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      # Scraper DB (sync psycopg2 — same unified DB)
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${POSTGRES_DB:-check_it}
-      DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      # JWT
-      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      DB_ECHO: ${DB_ECHO:-false}
+      # JWT (required, no default: set SECRET_KEY in .env)
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is not set, add it to .env}
       # Gemini API for LLM product validation (legacy fallback)
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       # Anthropic Claude (primary LLM)

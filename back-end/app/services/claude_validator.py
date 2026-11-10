@@ -16,7 +16,7 @@ Configured via env:
 
 import json
 import logging
-import os
+from app.core.config import settings
 import re
 from typing import Any, Dict, List, Optional
 
@@ -31,7 +31,7 @@ def _get_client():
     if _client is not None:
         return _client
 
-    api_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
+    api_key = settings.anthropic_api_key
     if not api_key:
         logger.info("ANTHROPIC_API_KEY not set — Claude validator disabled")
         return None
@@ -40,13 +40,13 @@ def _get_client():
         import anthropic
 
         kwargs: Dict[str, Any] = {"api_key": api_key}
-        base_url = os.getenv("ANTHROPIC_BASE_URL", "").strip()
+        base_url = settings.anthropic_base_url
         if base_url:
             kwargs["base_url"] = base_url
 
         _client = anthropic.AsyncAnthropic(**kwargs)
-        model = os.getenv("ANTHROPIC_MODEL", "claude-haiku-4.5")
-        smart = os.getenv("ANTHROPIC_MODEL_SMART", "claude-sonnet-4.6")
+        model = settings.anthropic_model
+        smart = settings.anthropic_model_smart
         logger.info(
             f"Anthropic client initialised (base_url={base_url or 'default'}, "
             f"model={model}, smart_model={smart})"
@@ -58,11 +58,11 @@ def _get_client():
 
 
 def _model() -> str:
-    return os.getenv("ANTHROPIC_MODEL", "claude-haiku-4.5")
+    return settings.anthropic_model
 
 
 def _smart_model() -> str:
-    return os.getenv("ANTHROPIC_MODEL_SMART", "claude-sonnet-4.6")
+    return settings.anthropic_model_smart
 
 
 def _is_quota_error(exc: BaseException) -> bool:
