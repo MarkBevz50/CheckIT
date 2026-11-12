@@ -1,0 +1,30 @@
+{
+ "query": "iphone 15",
+ "n": 2,
+ "products_found": 0,
+ "requests": [
+  {
+   "url": "https://search.rozetka.com.ua/ua/search/api/v6/",
+   "params": {
+    "text": "iphone 15",
+    "lang": "ua"
+   },
+   "status": 200,
+   "kind": "json",
+   "body": {
+    "data": {
+     "meta": {
+      "navigateTo": {
+       "query": [],
+       "url": "https://rozetka.com.ua/ua/mobile-phones/c80003/producer=apple;series=iphone-15-series/#search_text=iphone+15",
+       "isInternal": false,
+       "url_api": "",
+       "path": "/ua/mobile-phones/c80003/producer=apple;series=iphone-15-series/"
+      },
+      "robots": "noindex,nofollow"
+     }
+    }
+   }
+  }
+ ]
+}

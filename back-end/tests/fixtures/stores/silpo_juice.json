@@ -1,0 +1,122 @@
+{
+ "query": "сік садочок",
+ "n": 2,
+ "products_found": 2,
+ "requests": [
+  {
+   "url": "https://sf-ecom-api.silpo.ua/v1/uk/branches/00000000-0000-0000-0000-000000000000/products",
+   "params": {
+    "search": "сік садочок",
+    "limit": 2,
+    "offset": 0
+   },
+   "status": 200,
+   "kind": "json",
+   "body": {
+    "limit": 2,
+    "offset": 0,
+    "total": 364,
+    "items": [
+     {
+      "id": "1ed0762e-b12f-6612-99d2-dd63763181f9",
+      "title": "Сік «Наш Сік» томатний з м'якоттю",
+      "icon": "17536fb6-0cbd-47c4-aeb8-58116a1fc53b.png",
+      "price": 44.99,
+      "oldPrice": 69.99,
+      "offerId": "1edf4765-2f6b-61dc-93af-6b5d918af813",
+      "ratio": "шт",
+      "sectionSlug": "soky-5102",
+      "companyId": "1ec88c5d-a050-669c-8467-570a157f3e31",
+      "branchId": "00000000-0000-0000-0000-000000000000",
+      "deliveryType": "DeliveryHome",
+      "externalProductId": 576298,
+      "promotions": [
+       {
+        "id": "cinotyzhyky",
+        "iconPath": "https://content.silpo.ua/hermes/MediaBubbles/MP/1_site.svg",
+        "type": "promo",
+        "classActivity": 1
+       },
+       {
+        "id": "national-cashback",
+        "iconPath": "https://content.silpo.ua/ecom/productblock/26077.svg",
+        "type": "set",
+        "classActivity": null
+       }
+      ],
+      "specialPrices": [],
+      "createdAt": "2023-05-17T05:47:35+00:00",
+      "slug": "sik-nash-sik-tomatnyi-z-m-iakottiu-576298",
+      "addToBasketStep": 1,
+      "stock": 273,
+      "displayPrice": 44.99,
+      "displayOldPrice": 69.99,
+      "displayRatio": "0,95л",
+      "guestProductRating": 4.2,
+      "guestProductRatingCount": 78,
+      "classifierSapId": "1edc3f7a-496e-60ac-8b56-377f4c169cfc",
+      "originType": null,
+      "brandId": "1edc49c7-af89-62cc-8721-d5e18d22efad",
+      "brandTitle": "Наш Сік",
+      "weighted": false,
+      "blurForUnderAged": false,
+      "modifier": null,
+      "promos": [],
+      "untappdRating": null,
+      "vivinoRating": null,
+      "isTobacco": false
+     },
+     {
+      "id": "1ed07622-24f3-6a1a-afed-dd63763181f9",
+      "title": "Сік Galicia яблучний прямого віджиму",
+      "icon": "7b4b8c04-d5a3-4053-918c-0e34431ee45c.png",
+      "price": 79.99,
+      "oldPrice": 99,
+      "offerId": "1edfe251-e2e7-65e4-b87f-25c6bd50c345",
+      "ratio": "шт",
+      "sectionSlug": "soky-5102",
+      "companyId": "1ec88c5d-a050-669c-8467-570a157f3e31",
+      "branchId": "00000000-0000-0000-0000-000000000000",
+      "deliveryType": "DeliveryHome",
+      "externalProductId": 549556,
+      "promotions": [
+       {
+        "id": "additional",
+        "iconPath": "https://content.silpo.ua/hermes/MediaBubbles/Activities/00_site.svg",
+        "type": "promo",
+        "classActivity": 1
+       },
+       {
+        "id": "national-cashback",
+        "iconPath": "https://content.silpo.ua/ecom/productblock/26077.svg",
+        "type": "set",
+        "classActivity": null
+       }
+      ],
+      "specialPrices": [],
+      "createdAt": "2023-05-29T13:31:29+00:00",
+      "slug": "sik-galicia-iabluchnyi-priamogo-vidzhymu-549556",
+      "addToBasketStep": 1,
+      "stock": 51,
+      "displayPrice": 79.99,
+      "displayOldPrice": 99,
+      "displayRatio": "1л",
+      "guestProductRating": 4.6,
+      "guestProductRatingCount": 168,
+      "classifierSapId": "1edc3f7a-496e-60ac-8b56-377f4c169cfc",
+      "originType": null,
+      "brandId": "1edcd55b-db99-640a-ae3a-674ea43a64ae",
+      "brandTitle": "Galicia",
+      "weighted": false,
+      "blurForUnderAged": false,
+      "modifier": null,
+      "promos": [],
+      "untappdRating": null,
+      "vivinoRating": null,
+      "isTobacco": false
+     }
+    ]
+   }
+  }
+ ]
+}
