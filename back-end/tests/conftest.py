@@ -1,5 +1,6 @@
 import os
 import socket
+from urllib.parse import urlparse
 
 import pytest
 
@@ -18,6 +19,19 @@ for _var in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "HUGGINGFACE_API_KEY", "REDI
 _LOOPBACK = {"127.0.0.1", "::1", "localhost"}
 
 
+def _test_database_hosts() -> set:
+    """Addresses of the opt-in test database (TEST_DATABASE_URL), the only network
+    destination tests may use, and only when the developer or CI sets that variable."""
+    url = os.environ.get("TEST_DATABASE_URL")
+    host = urlparse(url).hostname if url else None
+    if not host:
+        return set()
+    try:
+        return {host, *(info[4][0] for info in socket.getaddrinfo(host, None))}
+    except OSError:
+        return {host}
+
+
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
     """Tests run offline: a socket connection to any non-loopback host is an error
@@ -25,10 +39,11 @@ def no_network(monkeypatch):
     TestClient do not open sockets at all)."""
     real_connect = socket.socket.connect
     real_connect_ex = socket.socket.connect_ex
+    allowed = _LOOPBACK | _test_database_hosts()
 
     def check(address):
         host = address[0] if isinstance(address, tuple) else None
-        if host is not None and host not in _LOOPBACK:
+        if host is not None and host not in allowed:
             raise RuntimeError(
                 f"Network access is disabled in tests (tried {host}); mock the call or use a fixture"
             )
