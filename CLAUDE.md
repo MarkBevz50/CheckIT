@@ -62,7 +62,7 @@ back-end/
       tender_classifier.py   тип тендера: product/service/work/mixed (regex + LLM)
       cache.py               Redis-кеш (без REDIS_URL вимкнений)
     prozorro_functionality/  prozorro.py: Prozorro API, завантаження документів, OCR (ocrmypdf/tesseract), .doc→PDF (LibreOffice)
-  alembic/                   міграції (зараз лише 001_add_price_history)
+  alembic/                   міграції Alembic (versions/0001_baseline.py: users, tenders, tender_items, price_history)
   Dockerfile                 збирається з КОРЕНЯ репо (context: .), бо копіює і scraper/
 scraper/parsers/             RozetkaParser, SilpoParser, EpicentrParser (sync, requests), ProductInfo
 scraper/tests/               unittest-тести парсерів (ходять у живу мережу)
@@ -93,9 +93,14 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 
 Фронтенд: `cd front-project && npm install && npm run dev` (Vite, :5173; `VITE_API_URL`, за замовчуванням `http://localhost:8000`).
 
-Міграції: `cd back-end && alembic upgrade head` (`DATABASE_URL` береться з `.env`).
-**Увага:** схема зараз створюється через `Base.metadata.create_all` + `ALTER TABLE` у `startup`,
-а єдина міграція створює лише `price_history` — повноцінні міграції це крок E0.3.
+Міграції (схема змінюється лише через Alembic, застосунок її не створює):
+- У Docker бекенд сам виконує `alembic upgrade head` перед стартом (`CMD` у `back-end/Dockerfile`).
+- Нова міграція: змінити модель, далі `alembic revision --autogenerate -m "опис"` у `back-end` (потрібен доступний Postgres, `DATABASE_URL` з `.env`), перевірити згенерований файл, `alembic check` не має знаходити розбіжностей.
+  На Windows `asyncpg` з хоста не з'єднується з Postgres у Docker Desktop (обрив з'єднання), тому команди Alembic зручніше запускати в контейнері на мережі compose з підключеним кодом, наприклад:
+  `docker run --rm --network pyman_default -v "<шлях>\back-end:/app/back-end" -e DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/check_it -e SECRET_KEY=x -w /app/back-end pyman-backend alembic revision --autogenerate -m "опис"`.
+- Назви обмежень і індексів задає `NAMING_CONVENTION` у `app/database.py` (ix, uq, ck, fk, pk).
+- База, створена до E0.3 через `create_all` (без `alembic_version`), позначається один раз: `alembic stamp head` (у Docker: `docker compose run --rm backend alembic stamp head`). Порожню базу достатньо запустити.
+- Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`.
 
 ## Тести
 
