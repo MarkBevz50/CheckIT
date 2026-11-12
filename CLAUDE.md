@@ -67,40 +67,38 @@ back-end/
 scraper/parsers/             RozetkaParser, SilpoParser, EpicentrParser (sync, requests), ProductInfo
 scraper/tests/               unittest-тести парсерів (ходять у живу мережу)
 front-project/               Vue 3 + Vite + Pinia (src/views, components, stores, api/config.js), nginx.conf, Dockerfile
-host_prozorro.py             окремий застарілий скрипт у корені (не частина API)
 docker-compose.yml           db, redis, backend, frontend
 PLAN/                        план робіт
 ```
 
-Кореневі `package.json`, `babel.config.js`, `vue.config.js`, `jsconfig.json`, `requirements.txt`, `*.log` —
-залишки старого scaffold; реальний фронтенд у `front-project/`, реальні залежності бекенду в `back-end/requirements.txt`.
+Залежності бекенду: `back-end/requirements.in` (прямі, без версій) і згенерований з нього `back-end/requirements.txt` (усе з точними версіями, Python 3.12; Dockerfile ставить лише його). Оновлення: інструкція в шапці `requirements.in`.
 
 ## Запуск
 
 Усе разом (Docker, рекомендовано):
 ```bash
 cp .env.example .env        # заповнити ключі
-docker compose up --build   # фронт :80, API :8000 (/docs), postgres :5432, redis :6379
+docker compose up --build   # фронт :80, API :8000 (/docs), postgres :5433 (хост) → 5432 (контейнер), redis :6379
 ```
 
 Бекенд локально (потрібні Postgres і, за бажання, Redis; `PYTHONPATH` має містити корінь репо і `back-end`):
 ```bash
 cd back-end
-pip install -r requirements.txt     # у Dockerfile частина пакетів ставиться окремо (anthropic, google-generativeai, redis, pandas, openpyxl, PyMuPDF, ocrmypdf, asyncpg)
+pip install -r requirements.txt     # усі залежності, зафіксовані
 PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 ```
-Для OCR та .doc потрібні системні tesseract (ukr, eng) і libreoffice-writer.
+Для OCR та .doc потрібні системні tesseract (ukr, eng), ghostscript і libreoffice-writer (у Docker-образі вони є).
+Локально Postgres із compose слухає порт **5433** на хості (`DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5433/check_it`); порт 5432 на Windows може займати локальна служба PostgreSQL, тому compose його не публікує.
 
 Фронтенд: `cd front-project && npm install && npm run dev` (Vite, :5173; `VITE_API_URL`, за замовчуванням `http://localhost:8000`).
 
 Міграції (схема змінюється лише через Alembic, застосунок її не створює):
 - У Docker бекенд сам виконує `alembic upgrade head` перед стартом (`CMD` у `back-end/Dockerfile`).
 - Нова міграція: змінити модель, далі `alembic revision --autogenerate -m "опис"` у `back-end` (потрібен доступний Postgres, `DATABASE_URL` з `.env`), перевірити згенерований файл, `alembic check` не має знаходити розбіжностей.
-  На Windows `asyncpg` з хоста не з'єднується з Postgres у Docker Desktop (обрив з'єднання), тому команди Alembic зручніше запускати в контейнері на мережі compose з підключеним кодом, наприклад:
-  `docker run --rm --network pyman_default -v "<шлях>\back-end:/app/back-end" -e DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/check_it -e SECRET_KEY=x -w /app/back-end pyman-backend alembic revision --autogenerate -m "опис"`.
+  З хоста Postgres із compose доступний на `localhost:5433` (див. «Запуск»).
 - Назви обмежень і індексів задає `NAMING_CONVENTION` у `app/database.py` (ix, uq, ck, fk, pk).
 - База, створена до E0.3 через `create_all` (без `alembic_version`), позначається один раз: `alembic stamp head` (у Docker: `docker compose run --rm backend alembic stamp head`). Порожню базу достатньо запустити.
-- Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`.
+- Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`. Приклад: `docker compose up -d db`, створити базу `check_it_test`, `TEST_DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5433/check_it_test`.
 
 ## Тести
 
@@ -109,16 +107,16 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
   cd back-end
   python -m venv .venv                      # один раз
   .\.venv\Scripts\Activate.ps1             # активація (якщо заборонено скрипти: Set-ExecutionPolicy -Scope Process Bypass)
-  pip install -r requirements-dev.txt       # залежності + pytest
-  # Для імпорту app.main потрібні ще пакети, які Dockerfile ставить окремо:
-  pip install "sqlalchemy[asyncio]" asyncpg python-dotenv openpyxl pandas email-validator google-generativeai anthropic "redis>=5.0.0" PyMuPDF ocrmypdf
+  pip install -r requirements-dev.txt       # усі залежності + pytest, більше нічого ставити не треба
   python -m pytest                          # або без активації: .\.venv\Scripts\python.exe -m pytest
   ```
   Без мережі й без БД: `conftest.py` ставить фіктивні `DATABASE_URL` і `SECRET_KEY`, вимикає ключі LLM і Redis та забороняє з'єднання з будь-яким хостом, окрім loopback. Записані відповіді Prozorro і магазинів лежать у `tests/fixtures/` (оновлення: `python back-end/tests/fixtures/record_fixtures.py` з кореня, потрібна мережа).
   Покриття: `python -m pytest --cov=app --cov-report=term`; для модулів, що не переписуються в E1–E2 (див. E0.2 у плані):
   `python -m pytest --cov=app.core --cov=app.database --cov=app.models --cov=app.schemas --cov=app.routers.authorization --cov=app.services.cache --cov=app.services.llm_validator --cov=app.services.risk_analyzer --cov=app.services.tender_classifier`. `app/db_test.py` — не тест, а перевірка підключення. Тести: налаштування, авторизація, імпорт тендера, ризик-аналіз, класифікатор, кеш, розбір відповідей LLM, скрапери на записаних відповідях.
-- `scraper/tests/` — unittest, **потребують живої мережі** і можуть падати при зміні розмітки магазинів:
-  `python -m unittest discover -s scraper/tests -t .` (з кореня репо).
+- `scraper/tests/` — unittest-класи, **потребують живої мережі**; `scraper/tests/conftest.py` ставить їм маркер `live`.
+  Запуск через pytest з `back-end`: `python -m pytest ../scraper/tests -m live` (живі), `-m "not live"` (їх виключає; так буде в CI).
+  9 застарілих тестів (`info_about_product`) пропущені до E2.2, `test_category_search` для Rozetka позначений `xfail(strict=True)` до E2.2.
+  `python -m unittest discover -s scraper/tests -t .` (з кореня репо) запускає все без маркерів і, як і раніше, дає 1 failure + 9 errors.
 - Фронтенд: `cd front-project && npm run test:unit -- --run` (vitest; тести в `src/**/__tests__/`). Лінт: `npm run lint`.
 - CI відсутній (крок E0.5).
 
