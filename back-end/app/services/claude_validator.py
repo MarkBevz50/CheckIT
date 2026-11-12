@@ -39,17 +39,10 @@ def _get_client():
     try:
         import anthropic
 
-        kwargs: Dict[str, Any] = {"api_key": api_key}
-        base_url = settings.anthropic_base_url
-        if base_url:
-            kwargs["base_url"] = base_url
-
-        _client = anthropic.AsyncAnthropic(**kwargs)
-        model = settings.anthropic_model
-        smart = settings.anthropic_model_smart
+        _client = anthropic.AsyncAnthropic(api_key=api_key)
         logger.info(
-            f"Anthropic client initialised (base_url={base_url or 'default'}, "
-            f"model={model}, smart_model={smart})"
+            f"Anthropic client initialised (fast={settings.llm_fast_model}, "
+            f"smart={settings.llm_smart_model}, document_tier={settings.llm_document_tier})"
         )
         return _client
     except Exception as e:
@@ -58,11 +51,48 @@ def _get_client():
 
 
 def _model() -> str:
-    return settings.anthropic_model
+    """Fast model (per-product validation, classification)."""
+    return settings.llm_fast_model
 
 
 def _smart_model() -> str:
-    return settings.anthropic_model_smart
+    return settings.llm_smart_model
+
+
+def _document_model() -> str:
+    """Model for document analysis: fast unless LLM_DOCUMENT_TIER=smart."""
+    return _smart_model() if settings.llm_document_tier == "smart" else _model()
+
+
+# max_tokens limits. Haiku 5.5's tokenizer yields ~30% more tokens than Haiku 4.5,
+# so the previous 8000 / 2000 / 4000 were raised by that margin.
+MAX_TOKENS_EXTRACT = 10500
+MAX_TOKENS_VALIDATE = 2600
+MAX_TOKENS_DISCRIM = 5200
+
+# Prompts above this size use a pricier tier, so warn well before it (Haiku 5.5: >100k).
+INPUT_TOKENS_WARN = 80_000
+
+
+def _log_usage(label: str, message, max_tokens: int) -> None:
+    """Log token usage and warn about truncated output or very large prompts."""
+    usage = message.usage
+    cache_read = usage.cache_read_input_tokens or 0
+    cache_create = usage.cache_creation_input_tokens or 0
+    total_input = usage.input_tokens + cache_read + cache_create
+    logger.info(
+        f"Claude {label}: cache_read={cache_read} cache_create={cache_create} "
+        f"input={usage.input_tokens} output={usage.output_tokens}"
+    )
+    if message.stop_reason == "max_tokens":
+        logger.warning(
+            f"Claude {label}: output truncated at max_tokens={max_tokens} (response may be invalid JSON)"
+        )
+    if total_input > INPUT_TOKENS_WARN:
+        logger.warning(
+            f"Claude {label}: prompt is {total_input} tokens (> {INPUT_TOKENS_WARN}); "
+            "above 100000 a higher price tier applies"
+        )
 
 
 def _is_quota_error(exc: BaseException) -> bool:
@@ -210,8 +240,8 @@ async def extract_items_from_text(text: str) -> Optional[List[Dict[str, Any]]]:
 
     try:
         message = await client.messages.create(
-            model=_smart_model(),
-            max_tokens=8000,
+            model=_document_model(),
+            max_tokens=MAX_TOKENS_EXTRACT,
             system=[
                 {
                     "type": "text",
@@ -234,11 +264,7 @@ async def extract_items_from_text(text: str) -> Optional[List[Dict[str, Any]]]:
         return None
 
     raw = _extract_text(message)
-    logger.info(
-        f"Claude extract_items: cache_read={message.usage.cache_read_input_tokens} "
-        f"cache_create={message.usage.cache_creation_input_tokens} "
-        f"input={message.usage.input_tokens} output={message.usage.output_tokens}"
-    )
+    _log_usage("extract_items", message, MAX_TOKENS_EXTRACT)
     data = _parse_json_response(raw, expect_list=True)
     if data is None:
         return None
@@ -331,7 +357,7 @@ async def validate_matches(
     try:
         message = await client.messages.create(
             model=_model(),
-            max_tokens=2000,
+            max_tokens=MAX_TOKENS_VALIDATE,
             system=[
                 {
                     "type": "text",
@@ -350,12 +376,7 @@ async def validate_matches(
             logger.warning(f"Claude failed validating '{tender_name[:60]}': {e}")
         return _set_default_fields(store_items)
 
-    logger.info(
-        f"Claude validate '{tender_name[:60]}': "
-        f"cache_read={message.usage.cache_read_input_tokens} "
-        f"cache_create={message.usage.cache_creation_input_tokens} "
-        f"input={message.usage.input_tokens} output={message.usage.output_tokens}"
-    )
+    _log_usage(f"validate '{tender_name[:60]}'", message, MAX_TOKENS_VALIDATE)
 
     raw = _extract_text(message)
     llm_results = _parse_json_response(raw, expect_list=True)
@@ -419,8 +440,8 @@ async def analyze_discriminatory_requirements(
 
     try:
         message = await client.messages.create(
-            model=_smart_model(),
-            max_tokens=4000,
+            model=_document_model(),
+            max_tokens=MAX_TOKENS_DISCRIM,
             system=[
                 {
                     "type": "text",
@@ -442,11 +463,7 @@ async def analyze_discriminatory_requirements(
             logger.error(f"Claude failed on discriminatory analysis: {e}")
         return None
 
-    logger.info(
-        f"Claude discrim: cache_read={message.usage.cache_read_input_tokens} "
-        f"cache_create={message.usage.cache_creation_input_tokens} "
-        f"input={message.usage.input_tokens} output={message.usage.output_tokens}"
-    )
+    _log_usage("discrim", message, MAX_TOKENS_DISCRIM)
 
     raw = _extract_text(message)
     return _parse_json_response(raw, expect_list=False)

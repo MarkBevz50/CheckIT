@@ -112,7 +112,7 @@ async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
             if client is not None:
                 msg = await client.messages.create(
                     model=claude_validator._model(),
-                    max_tokens=10,
+                    max_tokens=16,  # one word; margin for the Haiku 5.5 tokenizer
                     system=[
                         {
                             "type": "text",

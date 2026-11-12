@@ -75,6 +75,10 @@ def test_defaults_and_derived_values(monkeypatch):
     assert s.algorithm == "HS256"
     assert s.cache_ttl_seconds == 7200
     assert s.anthropic_api_key == ""
+    assert s.llm_fast_model == "claude-haiku-5-5"
+    assert s.llm_smart_model == "claude-sonnet-5-5"
+    assert s.llm_document_tier == "fast"
+    assert "gemini-2.0-flash-lite" not in s.gemini_model_list
     assert s.gemini_model_list == ["a", "b", "c"]
 
 
@@ -87,3 +91,18 @@ def test_no_direct_environment_access_outside_config():
         if p.name != "config.py" and pattern.search(p.read_text(encoding="utf-8"))
     ]
     assert offenders == []
+
+
+def test_document_tier_accepts_only_fast_or_smart(monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://u:p@h:5432/d")
+    monkeypatch.setenv("SECRET_KEY", "k")
+    monkeypatch.setenv("LLM_DOCUMENT_TIER", "smart")
+    assert load_settings().llm_document_tier == "smart"
+    monkeypatch.setenv("LLM_DOCUMENT_TIER", "huge")
+    with pytest.raises(RuntimeError) as exc:
+        load_settings()
+    assert "LLM_DOCUMENT_TIER" in str(exc.value)
+
+
+def test_no_custom_anthropic_base_url_setting():
+    assert "anthropic_base_url" not in Settings.model_fields

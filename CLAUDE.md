@@ -118,8 +118,10 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 | `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback |
 | `DB_ECHO` | логувати SQL (за замовчуванням `false`) |
 | `ALGORITHM` (HS256), `FRONTEND_URL` | JWT, CORS |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_MODEL_SMART` | Claude (дефолти моделей застарілі, оновить E0.7) |
-| `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв) |
+| `ANTHROPIC_API_KEY` | Claude, ключ з platform.claude.com (завжди `api.anthropic.com`, роутера немає) |
+| `LLM_FAST_MODEL` (claude-haiku-5-5), `LLM_SMART_MODEL` (claude-sonnet-5-5) | моделі Claude |
+| `LLM_DOCUMENT_TIER` (`fast`/`smart`) | модель для аналізу документації; за замовчуванням fast |
+| `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв), ланцюжок моделей через кому |
 | `HUGGINGFACE_API_KEY` | чат-помічник (буде видалено в E6.6) |
 | `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | кеш; без `REDIS_URL` вимкнений |
 | `POSTGRES_USER/PASSWORD/DB` | лише для контейнера `db` у compose, не для коду |

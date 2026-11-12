@@ -6,7 +6,7 @@ Required variables have no defaults: the app refuses to start without them.
 """
 
 from pathlib import Path
-from typing import List
+from typing import List, Literal
 
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -37,11 +37,13 @@ class Settings(BaseSettings):
 
     # --- LLM providers ------------------------------------------------
     anthropic_api_key: str = ""
-    anthropic_base_url: str = ""
-    anthropic_model: str = "claude-haiku-4.5"
-    anthropic_model_smart: str = "claude-sonnet-4.6"
+    llm_fast_model: str = "claude-haiku-5-5"
+    llm_smart_model: str = "claude-sonnet-5-5"
+    # Which model analyses documents (item extraction, discriminatory requirements):
+    # "fast" (Haiku) or "smart" (Sonnet). Final choice is made on the E5.2 benchmark.
+    llm_document_tier: Literal["fast", "smart"] = "fast"
     gemini_api_key: str = ""
-    gemini_models: str = "gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite"
+    gemini_models: str = "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-flash-lite"
     huggingface_api_key: str = ""
 
     # --- Cache --------------------------------------------------------

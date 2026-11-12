@@ -52,9 +52,9 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       # Anthropic Claude (primary LLM)
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL:-https://api.anthropic.com}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4.5}
-      ANTHROPIC_MODEL_SMART: ${ANTHROPIC_MODEL_SMART:-claude-sonnet-4.6}
+      LLM_FAST_MODEL: ${LLM_FAST_MODEL:-claude-haiku-5-5}
+      LLM_SMART_MODEL: ${LLM_SMART_MODEL:-claude-sonnet-5-5}
+      LLM_DOCUMENT_TIER: ${LLM_DOCUMENT_TIER:-fast}
       # Redis cache
       REDIS_URL: redis://redis:6379/0
       CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-7200}
