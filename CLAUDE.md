@@ -34,6 +34,7 @@
 - Pull request у `dev` зливаються **squash-ом**, гілку після злиття видаляємо.
 - `dev` → `main` лише після закриття етапу, з тегом версії.
 - Термінові виправлення: `hotfix/назва` від `main`, зливаються в `main` і в `dev`.
+- **Видалення гілок:** перед видаленням гілки перевірити стан PR через `gh pr view <номер>` (потрібен `state: MERGED`). Гілку відкритого PR не видаляти ніколи: GitHub закриває PR.
 - Прямих комітів у `main` і `dev` немає (виняток: службові правки плану/документації, якщо власник дозволив).
 
 ## Структура
@@ -52,7 +53,6 @@ back-end/
       tender_router.py       /tenders: CRUD, /import/{prozorro_id}, /{id}/analyze, /{id}/price-history
       prozorro_router.py     /stores/available, /search-tender/{id}, /analyze-documents/{ua_id}, UA→hex через Clarity Project
       ai_assistant.py        чат-помічник на Hugging Face (/perform-task) і /analyze-risks
-      crud.py                /api/users (службове)
     services/
       llm_validator.py       фасад: Claude → резерв Gemini
       claude_validator.py    Anthropic SDK: валідація збігів, витяг позицій, аналіз документації

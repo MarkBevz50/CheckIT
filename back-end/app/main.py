@@ -19,7 +19,6 @@ import app.models.tender  # noqa: F401
 
 
 # Local imports
-from .routers import crud
 from .routers.authorization import router as auth_router, get_current_user
 from .core.config import settings
 from .database import Base, engine
@@ -103,12 +102,6 @@ app.include_router(assistant_router)
 # Include routers with authentication
 # The /auth prefix is declared once, on the router itself (authorization.py)
 app.include_router(auth_router, tags=["Authentication"])
-app.include_router(
-    crud.router,
-    prefix="/api",
-    tags=["CRUD Operations"],
-    dependencies=[Depends(get_current_user)]
-)
 app.include_router(prozorro_router)
 app.include_router(tender_router)
 

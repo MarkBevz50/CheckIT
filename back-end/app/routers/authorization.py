@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.schemas.schema import UserCreate, UserLogin, Token, UserResponse
+from app.schemas.schema import UserCreate, UserLogin, Token
 from app.models.model import User
 from app.database import get_db
 from passlib.context import CryptContext
