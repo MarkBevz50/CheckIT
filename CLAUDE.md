@@ -135,6 +135,16 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 | `POSTGRES_USER/PASSWORD/DB` | лише для контейнера `db` у compose, не для коду |
 | `VITE_API_URL` | фронтенд (`front-project/src/api/config.js`, у `.env.production` — `/api`) |
 
+## Пастки середовища
+
+- **PowerShell 5.1 і BOM.** `Set-Content -Encoding utf8` (і `Out-File -Encoding utf8`) пишуть файл з BOM, що ламає TOML, JSON та інші
+  формати (так зламався `pyproject.toml`). Файли створювати й редагувати інструментами для файлів (Write/Edit). Якщо без PowerShell
+  не обійтись: `[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))` (UTF-8 без BOM).
+- **Heredoc у PowerShell.** `python - <<'EOF'` у PowerShell не працює (парсер падає, і не виконується нічого). Скрипти на Python запускати
+  через Bash-інструмент або зберігати у файл.
+- **Docker Desktop** не стартує автоматично після перезавантаження; `docker` може бути поза PATH у поточному терміналі
+  (`C:\Program Files\Docker\Docker\resources\bin`).
+
 ## Конвенції
 
 - Бекенд повністю async; блокувальні виклики (парсери на `requests`, OCR) зараз обгорнуті в `asyncio.to_thread`.
