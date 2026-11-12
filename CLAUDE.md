@@ -109,7 +109,9 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
   pip install "sqlalchemy[asyncio]" asyncpg python-dotenv openpyxl pandas email-validator google-generativeai anthropic "redis>=5.0.0" PyMuPDF ocrmypdf
   python -m pytest                          # або без активації: .\.venv\Scripts\python.exe -m pytest
   ```
-  Без мережі й без БД (`conftest.py` ставить фіктивні `DATABASE_URL` і `SECRET_KEY`). `app/db_test.py` — не тест, а перевірка підключення. Тести: `Settings` і маршрути авторизації; решта — крок E0.2.
+  Без мережі й без БД: `conftest.py` ставить фіктивні `DATABASE_URL` і `SECRET_KEY`, вимикає ключі LLM і Redis та забороняє з'єднання з будь-яким хостом, окрім loopback. Записані відповіді Prozorro і магазинів лежать у `tests/fixtures/` (оновлення: `python back-end/tests/fixtures/record_fixtures.py` з кореня, потрібна мережа).
+  Покриття: `python -m pytest --cov=app --cov-report=term`; для модулів, що не переписуються в E1–E2 (див. E0.2 у плані):
+  `python -m pytest --cov=app.core --cov=app.database --cov=app.models --cov=app.schemas --cov=app.routers.authorization --cov=app.services.cache --cov=app.services.llm_validator --cov=app.services.risk_analyzer --cov=app.services.tender_classifier`. `app/db_test.py` — не тест, а перевірка підключення. Тести: налаштування, авторизація, імпорт тендера, ризик-аналіз, класифікатор, кеш, розбір відповідей LLM, скрапери на записаних відповідях.
 - `scraper/tests/` — unittest, **потребують живої мережі** і можуть падати при зміні розмітки магазинів:
   `python -m unittest discover -s scraper/tests -t .` (з кореня репо).
 - Фронтенд: `cd front-project && npm run test:unit -- --run` (vitest; тести в `src/**/__tests__/`). Лінт: `npm run lint`.
