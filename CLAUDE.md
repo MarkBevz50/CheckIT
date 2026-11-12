@@ -48,7 +48,7 @@ back-end/
     models/                  model.py (User), tender.py (Tender, TenderItem, PriceHistory)
     schemas/                 Pydantic-схеми
     routers/
-      authorization.py       /auth/register, /auth/login, JWT, get_current_user
+      authorization.py       /auth/register, /auth/login (префікс /auth задано лише в роутері), JWT, get_current_user
       tender_router.py       /tenders: CRUD, /import/{prozorro_id}, /{id}/analyze, /{id}/price-history
       prozorro_router.py     /stores/available, /search-tender/{id}, /analyze-documents/{ua_id}, UA→hex через Clarity Project
       ai_assistant.py        чат-помічник на Hugging Face (/perform-task) і /analyze-risks
@@ -99,10 +99,20 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 
 ## Тести
 
-- Бекенд: `cd back-end && pip install -r requirements-dev.txt && python -m pytest` (зараз лише тести `Settings`; решта — крок E0.2). Без мережі й без БД. `app/db_test.py` — не тест, а перевірка підключення.
+- Бекенд (у віртуальному середовищі `back-end/.venv`, воно в `.gitignore`; системний Python не чіпати). Windows PowerShell:
+  ```powershell
+  cd back-end
+  python -m venv .venv                      # один раз
+  .\.venv\Scripts\Activate.ps1             # активація (якщо заборонено скрипти: Set-ExecutionPolicy -Scope Process Bypass)
+  pip install -r requirements-dev.txt       # залежності + pytest
+  # Для імпорту app.main потрібні ще пакети, які Dockerfile ставить окремо:
+  pip install "sqlalchemy[asyncio]" asyncpg python-dotenv openpyxl pandas email-validator google-generativeai anthropic "redis>=5.0.0" PyMuPDF ocrmypdf
+  python -m pytest                          # або без активації: .\.venv\Scripts\python.exe -m pytest
+  ```
+  Без мережі й без БД (`conftest.py` ставить фіктивні `DATABASE_URL` і `SECRET_KEY`). `app/db_test.py` — не тест, а перевірка підключення. Тести: `Settings` і маршрути авторизації; решта — крок E0.2.
 - `scraper/tests/` — unittest, **потребують живої мережі** і можуть падати при зміні розмітки магазинів:
   `python -m unittest discover -s scraper/tests -t .` (з кореня репо).
-- Фронтенд: `cd front-project && npm run test:unit` (vitest налаштований, тестових файлів немає). Лінт: `npm run lint`.
+- Фронтенд: `cd front-project && npm run test:unit -- --run` (vitest; тести в `src/**/__tests__/`). Лінт: `npm run lint`.
 - CI відсутній (крок E0.5).
 
 ## Змінні середовища

@@ -101,7 +101,8 @@ async def startup():
 
 app.include_router(assistant_router)
 # Include routers with authentication
-app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+# The /auth prefix is declared once, on the router itself (authorization.py)
+app.include_router(auth_router, tags=["Authentication"])
 app.include_router(
     crud.router,
     prefix="/api",
