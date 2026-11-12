@@ -100,8 +100,7 @@ python -m venv .venv
 .venv\Scripts\activate          # Windows
 # source .venv/bin/activate     # macOS / Linux
 
-pip install -r requirements.txt
-pip install "sqlalchemy[asyncio]" asyncpg python-dotenv openpyxl pandas anthropic PyMuPDF ocrmypdf
+pip install -r requirements.txt   # усі залежності з точними версіями (Python 3.12)
 
 # Скопіювати та заповнити .env
 cp .env.example .env
@@ -148,7 +147,8 @@ pyman/
 │   │   └── schemas/                 # Pydantic-схеми
 │   ├── alembic/                     # Міграції БД
 │   ├── Dockerfile
-│   └── requirements.txt
+│   ├── requirements.in              # прямі залежності
+│   └── requirements.txt             # усі залежності з версіями (генерується з .in)
 ├── scraper/
 │   └── parsers/
 │       ├── rozetka_parser.py
