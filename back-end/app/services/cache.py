@@ -10,7 +10,7 @@ Falls back gracefully if Redis is unavailable.
 
 import json
 import logging
-import os
+from app.core.config import settings
 from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 _redis_client = None
 _redis_unavailable = False
 
-DEFAULT_TTL = int(os.getenv("CACHE_TTL_SECONDS", "7200"))  # 2 hours
+DEFAULT_TTL = settings.cache_ttl_seconds  # 2 hours
 
 
 async def _get_redis():
@@ -31,7 +31,7 @@ async def _get_redis():
     if _redis_client is not None:
         return _redis_client
 
-    redis_url = os.getenv("REDIS_URL", "").strip()
+    redis_url = settings.redis_url
     if not redis_url:
         logger.info("REDIS_URL not set — caching disabled")
         _redis_unavailable = True

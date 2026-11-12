@@ -6,7 +6,7 @@ and extracts weight/volume info for price-per-unit normalization.
 
 import json
 import logging
-import os
+from app.core.config import settings
 import re
 from typing import Any, Dict, List, Optional
 
@@ -18,11 +18,7 @@ _gemini_models: Optional[List[Any]] = None
 # the back of the list so subsequent calls start with the one most likely to
 # still have budget. Each model has a separate free-tier quota bucket, so
 # rotating between them extends the daily envelope several-fold.
-_MODEL_NAMES = (
-    os.getenv("GEMINI_MODELS", "gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite")
-    .strip()
-    .split(",")
-)
+_MODEL_NAMES = settings.gemini_model_list
 
 # Tender items matching these patterns are services, not physical products
 _SERVICE_PATTERNS = re.compile(
@@ -52,7 +48,7 @@ def _get_models():
     if _gemini_models is not None:
         return _gemini_models
 
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
+    api_key = settings.gemini_api_key
     if not api_key:
         logger.info("GEMINI_API_KEY not set — LLM validation disabled")
         _gemini_models = []

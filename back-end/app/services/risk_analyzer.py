@@ -9,7 +9,7 @@ Provides:
 
 import json
 import logging
-import os
+from app.core.config import settings
 import re
 import statistics
 from typing import Any, Dict, List, Optional
@@ -172,7 +172,7 @@ async def analyze_discriminatory_requirements(specification_text: str) -> Option
         }
 
     # Primary: Claude (cached system prompt)
-    if os.getenv("ANTHROPIC_API_KEY", "").strip():
+    if settings.anthropic_api_key:
         from app.services import claude_validator
         result = await claude_validator.analyze_discriminatory_requirements(
             specification_text

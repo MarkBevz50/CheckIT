@@ -5,6 +5,7 @@ Uses Gemini LLM for semantic classification with regex fallback
 when the model is unavailable.
 """
 
+from app.core.config import settings
 import asyncio
 import json
 import logging
@@ -103,7 +104,7 @@ async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
     }
 
     # ── Primary: Claude ────────────────────────────────────────────────
-    if os.getenv("ANTHROPIC_API_KEY", "").strip():
+    if settings.anthropic_api_key:
         try:
             from app.services import claude_validator
 

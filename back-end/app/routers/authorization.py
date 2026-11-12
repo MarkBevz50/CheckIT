@@ -9,18 +9,15 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from typing import Optional
-from dotenv import load_dotenv
 import logging
-import os
+from app.core.config import settings
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
-load_dotenv()
-
-# JWT Configuration from .env
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-change-me")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")
+# JWT configuration (see app/core/config.py)
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
