@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.schemas.schema import UserCreate, UserLogin, Token, UserResponse
@@ -19,6 +20,9 @@ logger = logging.getLogger(__name__)
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# Shown to the user in the login/register forms
+INVALID_CREDENTIALS_MESSAGE = "Неправильний email або пароль"
+EMAIL_TAKEN_MESSAGE = "Цей email уже зареєстровано"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -60,7 +64,7 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
         if db_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
+                detail=EMAIL_TAKEN_MESSAGE
             )
         
         hashed_password = get_password_hash(user.password)
@@ -78,6 +82,16 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
         logger.info(f"User registered successfully: {new_user.email}")
         return {"access_token": access_token, "token_type": "bearer"}
     
+    except HTTPException:
+        await db.rollback()
+        raise
+    except IntegrityError:
+        # Two concurrent registrations of the same email: the unique index fires.
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=EMAIL_TAKEN_MESSAGE
+        )
     except Exception as e:
         await db.rollback()
         logger.error(f"Registration failed: {str(e)}")
@@ -95,13 +109,16 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
         if not db_user or not verify_password(user.password, db_user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid credentials"
+                detail=INVALID_CREDENTIALS_MESSAGE
             )
-        
+
         access_token = create_access_token(data={"sub": db_user.email})
         logger.info(f"User logged in successfully: {db_user.email}")
         return {"access_token": access_token, "token_type": "bearer"}
-    
+
+    except HTTPException:
+        # Our own 401 must reach the client as is, not be turned into a 500 below
+        raise
     except Exception as e:
         logger.error(f"Login failed: {str(e)}")
         raise HTTPException(
