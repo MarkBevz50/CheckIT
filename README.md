@@ -133,7 +133,6 @@ pyman/
 │   │   ├── main.py                  # FastAPI застосунок, CORS, ініціалізація БД
 │   │   ├── routers/
 │   │   │   ├── authorization.py     # Реєстрація / логін (JWT)
-│   │   │   ├── crud.py              # Базові CRUD-операції
 │   │   │   ├── prozorro_router.py   # Аналіз закупівлі по ID Prozorro
 │   │   │   ├── tender_router.py     # Управління збереженими тендерами
 │   │   │   └── ai_assistant.py      # ШІ-асистент

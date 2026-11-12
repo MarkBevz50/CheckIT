@@ -53,7 +53,6 @@ back-end/
       tender_router.py       /tenders: CRUD, /import/{prozorro_id}, /{id}/analyze, /{id}/price-history
       prozorro_router.py     /stores/available, /search-tender/{id}, /analyze-documents/{ua_id}, UA→hex через Clarity Project
       ai_assistant.py        чат-помічник на Hugging Face (/perform-task) і /analyze-risks
-      crud.py                /api/users (службове)
     services/
       llm_validator.py       фасад: Claude → резерв Gemini
       claude_validator.py    Anthropic SDK: валідація збігів, витяг позицій, аналіз документації
