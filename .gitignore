@@ -94,3 +94,6 @@ postgres_data/
 # Logs and local Claude Code settings
 *.log
 .claude/settings.local.json
+
+# Control-tender snapshots (raw API JSON and downloaded documents)
+eval/snapshots/
