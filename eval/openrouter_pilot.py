@@ -253,7 +253,10 @@ def result_path(model, task):
 
 def done_keys(model, task):
     path = result_path(model, task)
-    return {json.loads(x)["key"] for x in path.read_text(encoding="utf-8").splitlines() if x} if path.exists() else set()
+    if not path.exists():
+        return set()
+    records = (json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x)
+    return {r["key"] for r in records if "response" in r}  # failed calls are retried on the next run
 
 
 async def call_model(client, key, model, meta, task, req, budget, lock, sem):
@@ -383,7 +386,7 @@ def check_secrets():
         hits["key"] += bool(key and key in text)
         hits["authorization"] += "authorization" in low
         hits["bearer"] += "bearer" in low
-        hits["sk-or-"] += "sk-or-" in low
+        hits["sk-or-"] += bool(re.search(r"sk-or-[A-Za-z0-9_-]{20,}", text))  # a key-like string, not the error text
     print(f"scanned {scanned} files in eval/results/pilot/; files with: {hits}")
     return not any(hits.values())
 
