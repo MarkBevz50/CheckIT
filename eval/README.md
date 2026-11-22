@@ -18,6 +18,9 @@
 | `data/labels_v1.json`, `data/labels_changelog.md` | перший прохід розмітки і журнал 14 виправлень |
 | `find_classification_items.py` | добирає з Prozorro 10 робіт (CPV 45*) і 10 послуг (CPV 50*–98*) для задачі класифікації |
 | `data/classification_items.json` | ці 20 позицій з мітками (у git) |
+| `build_router_questions.py`, `data/router_questions.json` | 18 питань «чи продається позиція в мережі X» з еталоном і підставою |
+| `openrouter_pilot.py` | сам пілот: 10 моделей × 4 набори запитів (валідація, класифікація, роутер з описом мереж і без) |
+| `results/pilot_summary.md` | зведення пілоту (у git); сирі відповіді в `results/pilot/` не в git |
 
 Тип тендера `mixed` не розмічається: його обчислює код з типів позицій.
 
@@ -48,3 +51,18 @@ back-end\.venv\Scripts\python.exe eval\label_pairs.py --items  # лише тип
 back-end\.venv\Scripts\python.exe eval\label_pairs.py --stats  # прогрес
 ```
 Клавіші: `s` пропустити (повернеться наприкінці й у наступному запуску), `b` назад, `q` вихід.
+
+## Пілот OpenRouter
+
+Ключ `OPENROUTER_API_KEY` лежить лише в `.env` (або в змінній середовища), він чужий і тільки для експериментів: скрипт читає його сам,
+нікуди не друкує й не пише в результати, у `Settings` і код застосунку він не потрапляє.
+
+```powershell
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --dry-run      # оцінка викликів і вартості, чат-запитів немає
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --models anthropic/claude-haiku-5.5 --limit 3 --budget 0.1   # димовий тест
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --budget 2     # повний прогін (стоп-кран: зупиняється перед викликом, що перевищить бюджет)
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --summarize    # перебудувати eval/results/pilot_summary.md
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --export-haiku-fixtures   # відповіді Haiku 5.5 як фікстури тестів розбору JSON
+```
+Прогін відновлюваний: завершені виклики пропускаються. Дорогі моделі стоять у списку останніми, щоб стоп-кран відсікав саме їх.
+Промпти валідації й класифікації імпортуються із застосунку (`claude_validator`, `tender_classifier`), не копіюються.
