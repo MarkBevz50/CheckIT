@@ -147,8 +147,15 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
   не обійтись: `[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))` (UTF-8 без BOM).
 - **Heredoc у PowerShell.** `python - <<'EOF'` у PowerShell не працює (парсер падає, і не виконується нічого). Скрипти на Python запускати
   через Bash-інструмент або зберігати у файл.
-- **Docker Desktop** не стартує автоматично після перезавантаження; `docker` може бути поза PATH у поточному терміналі
-  (`C:\Program Files\Docker\Docker\resources\bin`).
+- **Docker Desktop і його диск — на D:** (програма `D:\Docker\app`, віртуальний диск WSL `D:\Docker\wsl`). На C: його повертати не можна:
+  за день він з'їв ~25 ГБ. Обсяг пам'яті WSL обмежує `C:\Users\<користувач>\.wslconfig` (`[wsl2]`, `memory=`).
+- **Docker Desktop** не стартує автоматично після перезавантаження. `docker` має бути в PATH користувача; якщо термінал старий
+  і команди `docker` не знаходить, його треба перезапустити.
+- **`docker compose up --build` — лише для фінальної перевірки кроку.** Проміжні перевірки — `pytest` у `.venv`.
+- **Прибирання після кожної Docker-перевірки:** `docker builder prune -f` і `docker image prune -f`. Після цього перевірити розмір
+  `D:\Docker\wsl\disk\docker_data.vhdx` і вказати його у звіті; якщо він більший за 40 ГБ — повідомити власника.
+- **Ніколи** не виконувати `docker volume prune`, `docker system prune --volumes` чи `docker compose down -v` без прямого дозволу власника
+  (знищують дані БД).
 
 ## Конвенції
 
