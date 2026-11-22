@@ -1,0 +1,1358 @@
+{
+ "model": "anthropic/claude-haiku-5.5",
+ "note": "recorded by eval/openrouter_pilot.py; system prompts are in claude_validator / tender_classifier / eval/openrouter_pilot.py",
+ "responses": [
+  {
+   "task": "validate",
+   "key": "validate:C06-11",
+   "user_message": "Тендерний товар: \"Біндер 41мм чорний Buromax 12шт\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 пачка\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Біндер Buromax 41 мм 12 шт в коробці чорний (BM.5302)\" — 86 грн\n2. [Rozetka] \"Біндер Buromax 32 мм чорний 12 штук (BM.5303)\" — 38 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 79
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-13",
+   "user_message": "Тендерний товар: \"Голка банківська\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Шило банківське, дерев'яна ручка, довжина голки 12,5 см (BM.5551)\" — 170 грн\n2. [Rozetka] \"Голка Buromax банківська 15 см (BM.5553)\" — 108 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 79
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-08",
+   "user_message": "Тендерний товар: \"Стрічка клейка пакувальна 48мм 100, 40мКм прозора\"\nЦіна за одиницю: 0 грн\nКількість: 10.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Клейка стрічка Buromax JOBMAX пакувальна 48мм x 100м x 40мкм зоряна BM.7030-00\" — 52 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C05-02",
+   "user_message": "Тендерний товар: \"Картридж відпрацьованих чорнил Canon G3420\"\nЦіна за одиницю: 0 грн\nКількість: 10.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Чип контейнера відпрацьованого чорнила MC-G02 для Canon PIXMA G540 / G550 / G570 / G1420 / G2420 / G2460 / G3420 / G3460\" — 140 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C10-01",
+   "user_message": "Тендерний товар: \"Посвідчення \"Щоденник ліцензованого спеціаліста\"\"\nЦіна за одиницю: 0 грн\nКількість: 100.0 штука\n\nЗнайдені товари в магазинах:\n1. [Сільпо] \"Щоденні прокладки Discreet Waterlily\" — 159 грн\n2. [Сільпо] \"Щоденні прокладки Discreet Waterlily Scent\" — 79 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 79
+  },
+  {
+   "task": "validate",
+   "key": "validate:C10-02",
+   "user_message": "Тендерний товар: \"Бланк \"Накопичувальна картка розрахунково-платіжних відомостей працівника по заробітній платі\"\"\nЦіна за одиницю: 0 грн\nКількість: 8000.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Накопичувальна відомість з використання продуктів харчування (Офсет А3)\" — 35 грн\n2. [Сільпо] \"Послуга видачі Картки Банк Власний Рахунок\" — 49.99 грн\n3. [Rozetka] \"Накопичувальна відомість з надходження продуктів харчування (Офсет А3)\" — 35 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 3, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 117
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-06",
+   "user_message": "Тендерний товар: \"Холодний віск \"Cherry wax\" 4,8 кг\"\nЦіна за одиницю: 0 грн\nКількість: 10.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Холодний Віск ВРГ 091 Cherry Wax Лаверат, 1 л\" — 110 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 1000, \"tender_weight_g\": 4800}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-08",
+   "user_message": "Тендерний товар: \"Чорніння гуми \"Klaus\" (водостійке) 1 л\"\nЦіна за одиницю: 0 грн\nКількість: 15.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Чорніння гуми Italtek Klaus 1 л\" — 575 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 1000, \"tender_weight_g\": 1000}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-02",
+   "user_message": "Тендерний товар: \"Пластівці вівсяні Геркулес\"\nЦіна за одиницю: 0 грн\nКількість: 200.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Вівсяні пластівці Elovena Фінський Геркулес 900 г (6411200106098)\" — 169 грн\n2. [Rozetka] \"Пластівці вівсяні Геркулес швидкого приготування Козуб продукт 500 г (4820094536218)\" — 70 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 900, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": true, \"store_weight_g\": 500, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 81
+  },
+  {
+   "task": "validate",
+   "key": "validate:C01-01",
+   "user_message": "Тендерний товар: \"Сир кисломолочний ваговий\"\nЦіна за одиницю: 0 грн\nКількість: 1260.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Сир кисломолочний на заквасці 9% 1 кг\" — 96 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 1000, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 48
+  },
+  {
+   "task": "validate",
+   "key": "validate:C04-01",
+   "user_message": "Тендерний товар: \"Кетчуп\"\nЦіна за одиницю: 0 грн\nКількість: 2000.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Кетчуп Heinz Томатний Нідерланди 875 мл (1 кг) (8715700124810)\" — 289 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 875, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-10",
+   "user_message": "Тендерний товар: \"Біндер 32мм чорний Buromax 12шт\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 пачка\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Біндер Buromax 32 мм чорний 12 штук (BM.5303)\" — 38 грн\n2. [Rozetka] \"Біндер Buromax 61 мм 6 шт в коробці чорний (BM.5300)\" — 143 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 79
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-02",
+   "user_message": "Тендерний товар: \"Конверт С5 СКЛ 162х229мм (0+0) білий 80 г/м2\"\nЦіна за одиницю: 0 грн\nКількість: 100.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Конверт С5 (162х229мм) білий 100 шт СКЛ\" — 190 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-07",
+   "user_message": "Тендерний товар: \"Стрічка клейка Buromax канцелярська 24мм 30м 24х30 прозора\"\nЦіна за одиницю: 0 грн\nКількість: 10.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Скотч канцелярський (30м \\ 6 шт) Комет (24х30) 6 штук для пакування та фіксації Comet\" — 94 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C10-03",
+   "user_message": "Тендерний товар: \"Посвідчення \"Про перевірку знань\"\"\nЦіна за одиницю: 0 грн\nКількість: 2000.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Посвідчення про перевірку знань з охорони праці (2363)\" — 40 грн\n2. [Rozetka] \"Бланк \"Посвідчення про перевірку знань з питань охорони праці\" синій\" — 90 грн\n3. [Rozetka] \"Посвідчення про перевірку знань з охорони праці (Сине)\" — 39 грн\n4. [Rozetka] \"Посвідчення про перевірку знань та присвоєння групи з електробезпеки (Червона обкл.)\" — 39 грн\n5. [Rozetka] \"Посвідчення про перевірку знань з питань охорон праці\" — 40 грн\n",
+   "response_text": "[\n{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null},\n{\"index\": 2, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null},\n{\"index\": 3, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null},\n{\"index\": 4, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null},\n{\"index\": 5, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}\n]",
+   "finish_reason": "stop",
+   "output_tokens": 195
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-01",
+   "user_message": "Тендерний товар: \"Борошно пшеничне, сорт вищий, ГСТУ 46.004\"\nЦіна за одиницю: 0 грн\nКількість: 1000.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Борошно пшеничне EuroMill в/с 5 кг (4820213980144)\" — 149 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 5000, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 43
+  },
+  {
+   "task": "validate",
+   "key": "validate:C05-01",
+   "user_message": "Тендерний товар: \"Чорнило BARVA Canon GL41\"\nЦіна за одиницю: 0 грн\nКількість: 36.0 комплект\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Чорнило Barva CANON GI-490 1л BLACK pigmented (G490-615)\" — 1573 грн\n2. [Rozetka] \"Чорнило Barva Canon GI-41 135 мл, OneKey, special pigment black (CGI41-809e)\" — 574 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 1000, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": true, \"store_weight_g\": 135, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 82
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-04",
+   "user_message": "Тендерний товар: \"Крупа пшенична кус-кус, ДСТУ 7699\"\nЦіна за одиницю: 0 грн\nКількість: 160.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Крупа пшенична Кус-кус Хуторок Панський у варочному пакеті 400 г\" — 115 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 400, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-11",
+   "user_message": "Тендерний товар: \"Автошампунь \"X Foam\" 2 рама, 20кг\"\nЦіна за одиницю: 0 грн\nКількість: 3.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Активна двокомпонентна піна Polychrom 2020 Active Foam Double Power 1.1 кг\" — 279 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 1100, \"tender_weight_g\": 20000}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C09-08",
+   "user_message": "Тендерний товар: \"Перфоратор\"\nЦіна за одиницю: 0 грн\nКількість: 23.0 штука\n\nЗнайдені товари в магазинах:\n1. [Епіцентр] \"Перфоратор Bosch Professional GBH 240 0611272100\" — 5117.0 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-10",
+   "user_message": "Тендерний товар: \"Очисник салону \"Textile Boss\" 5,3кг\"\nЦіна за одиницю: 0 грн\nКількість: 1.0 штука\n\nЗнайдені товари в магазинах:\n1. [Сільпо] \"Очисник салону Sapfire 750325\" — 199 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": 5300}]",
+   "finish_reason": "stop",
+   "output_tokens": 43
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-04",
+   "user_message": "Тендерний товар: \"Папка А4 4 кільця пластикова 35мм 1202, 1208 Axent синя\"\nЦіна за одиницю: 0 грн\nКількість: 25.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Папка Axent А4 з 4 кільцями 35 мм Синя (1208-22-A)\" — 155 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-04",
+   "user_message": "Тендерний товар: \"Очисник двигуна і комах \"Motor 100 Mosquito\" 5,7 кг\"\nЦіна за одиницю: 0 грн\nКількість: 8.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Будівельна машина з фігуркою Rubble & Crew Motor Mega Hammer Щенячий патруль Кремез і команда (6074961)\" — 1399 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": 5700}]",
+   "finish_reason": "stop",
+   "output_tokens": 43
+  },
+  {
+   "task": "validate",
+   "key": "validate:C08-04",
+   "user_message": "Тендерний товар: \"Кутники та рейки маячні для штукатурки\"\nЦіна за одиницю: 0 грн\nКількість: 150.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Кутник для кріплення на DIN-рейку DRL-02 - 285358\" — 122 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-09",
+   "user_message": "Тендерний товар: \"Кислотний засіб для очистки дисків \"Disko100\" 5,6 кг\"\nЦіна за одиницю: 0 грн\nКількість: 3.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Кислотний засіб для очистки дисків Italtek \"Disko100\" 5л\" — 1173 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 5000, \"tender_weight_g\": 5600}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C04-04",
+   "user_message": "Тендерний товар: \"Оцет столовий (розчин оцтової кислоти), 9%\"\nЦіна за одиницю: 0 грн\nКількість: 500.0 літр\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Упаковка розчину оцтової кислоти Руна столовий 6% 750 мл х 9 шт (4820015942432)\" — 199 грн\n2. [Rozetka] \"Розчин оцтової кислоти Руна Столовий 9% 750 мл\" — 24 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 6750, \"tender_weight_g\": null}, {\"index\": 2, \"is_relevant\": true, \"store_weight_g\": 750, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 82
+  },
+  {
+   "task": "validate",
+   "key": "validate:C09-05",
+   "user_message": "Тендерний товар: \"Дриль-шурупокрут (тип 1)\"\nЦіна за одиницю: 0 грн\nКількість: 18.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Акумуляторний дриль-шурупокрут Bosch Professional GSR 120-LI 12V + АКБ Li-Ion 2А·год х 2 шт + Зарядний пристрій + Кейс (06019G8000)\" — 4890 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-03",
+   "user_message": "Тендерний товар: \"Крупа пшенична булгур, з твердих сортів пшениці, помел №2 (середній)\"\nЦіна за одиницю: 0 грн\nКількість: 400.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Сільпо] \"Вироби макаронні Pasta Zara спіралі\" — 86.49 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 46
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-01",
+   "user_message": "Тендерний товар: \"Активна піна \"Turbo X10\" 10,5 кг\"\nЦіна за одиницю: 0 грн\nКількість: 20.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Активна піна Italtek Turbo X10 10.5 кг (1T-21-TX1011)\" — 2470 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 10500, \"tender_weight_g\": 10500}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C05-03",
+   "user_message": "Тендерний товар: \"Контейнер з чорнилом Epson 664\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Контейнер з чорнилом Epson 664 black (70мл) L100/L200 (C13T6\" — 450 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 70, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C08-02",
+   "user_message": "Тендерний товар: \"Клей для плитки\"\nЦіна за одиницю: 0 грн\nКількість: 625.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Термостійкий клей для скла та ущільнювачів в духовку високотемпературний термоклей герметик\" — 288 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C02-02",
+   "user_message": "Тендерний товар: \"Свинина\"\nЦіна за одиницю: 0 грн\nКількість: 130.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Каша гречана зі свининою Алан 525 г (4823036502074)\" — 119 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 525, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 47
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-12",
+   "user_message": "Тендерний товар: \"Нитки для підшивки\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 штука\n\nЗнайдені товари в магазинах:\n1. [Сільпо] \"Нитка зубна Oral-B Essential м'ята 50 м\" — 199 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 46
+  },
+  {
+   "task": "validate",
+   "key": "validate:C07-07",
+   "user_message": "Тендерний товар: \"Видалення бітуму \"Bitum Remover\" 1 л\"\nЦіна за одиницю: 0 грн\nКількість: 4.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Видалення бітуму Italtek\"Bitum Remover\" 1л\" — 449 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 1000, \"tender_weight_g\": 1000}]",
+   "finish_reason": "stop",
+   "output_tokens": 45
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-03",
+   "user_message": "Тендерний товар: \"Швидкозшивач картонний 0.40мм\"\nЦіна за одиницю: 0 грн\nКількість: 50.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Папка картонна швидкозшивач 0,35 BUROMAX 3334 (50) /BM.3334/\" — 11 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C04-02",
+   "user_message": "Тендерний товар: \"Перець чорний, мелений\"\nЦіна за одиницю: 0 грн\nКількість: 250000.0 грам\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Перець Банка спецій чорний мелений 140 г (4820267270208)\" — 139 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 140, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 47
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-05",
+   "user_message": "Тендерний товар: \"Крупа гречана ядриця, ґатунок перший, ДСТУ 7697\"\nЦіна за одиницю: 0 грн\nКількість: 600.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Крупа Сквирянка гречана ядриця (перший гатунок) фас. 0,8кг\" — 130 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 800, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C08-05",
+   "user_message": "Тендерний товар: \"Склосітка армувальна (штукатурна, фасадна)\"\nЦіна за одиницю: 0 грн\nКількість: 1000.0 метр квадратний\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Армувальна фасадна сітка CRYSTAL DECOR щільність 160 г/м2, 50 м2\" — 2420 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-08",
+   "user_message": "Тендерний товар: \"Крупа пшоняна шліфована, сорт перший\"\nЦіна за одиницю: 0 грн\nКількість: 400.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Пластівців пшоняні Сквирянка 400 г х 12 шт\" — 499 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 400, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-09",
+   "user_message": "Тендерний товар: \"Рис середньозернистий шліфований, сорт перший\"\nЦіна за одиницю: 0 грн\nКількість: 400.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Крупа Riso Scotti Рис середньозернистий 1 кг (5941832003485)\" — 488 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 1000, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 43
+  },
+  {
+   "task": "validate",
+   "key": "validate:C01-03",
+   "user_message": "Тендерний товар: \"Сири м'які та розсільні фасовані\"\nЦіна за одиницю: 0 грн\nКількість: 200.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Тофу Vegetus ковбасний з грибами Фасована 400 г\" — 60 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": 400, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-10",
+   "user_message": "Тендерний товар: \"Рис довгозернистий шліфований, пропарений, сорт перший\"\nЦіна за одиницю: 0 грн\nКількість: 200.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Рис басматі Golden SELLA (пропарений) 5 кг\" — 600 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 5000, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 43
+  },
+  {
+   "task": "validate",
+   "key": "validate:C03-06",
+   "user_message": "Тендерний товар: \"Крупа ячмінна перлова №2, ДСТУ 7700\"\nЦіна за одиницю: 0 грн\nКількість: 200.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Крупа ячмінна перлова Сквирянка 800 г\" — 54 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 800, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-09",
+   "user_message": "Тендерний товар: \"Гумка ВМ. 1111\"\nЦіна за одиницю: 0 грн\nКількість: 5.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Папка на гумці А3 пластикова 550мк чорна ВМ 3918-01\" — 126 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": false, \"store_weight_g\": null, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 46
+  },
+  {
+   "task": "validate",
+   "key": "validate:C04-03",
+   "user_message": "Тендерний товар: \"Порошок гірчичний, сорт перший, ДСТУ 4842\"\nЦіна за одиницю: 0 грн\nКількість: 180.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Гірчичний порошок вищий сорт 300 г\" — 57 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": 300, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 42
+  },
+  {
+   "task": "validate",
+   "key": "validate:C06-06",
+   "user_message": "Тендерний товар: \"Стержень масляний Piano Maxriter синій 140мм\"\nЦіна за одиницю: 0 грн\nКількість: 22.0 штука\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Стрижень маслний Piano, до ручки Maxriter, синій 140мм 0,5мм 1 шт. (PR-673-338)\" — 3 грн\n",
+   "response_text": "[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]",
+   "finish_reason": "stop",
+   "output_tokens": 41
+  },
+  {
+   "task": "validate",
+   "key": "validate:C01-02",
+   "user_message": "Тендерний товар: \"Сир твердий ваговий\"\nЦіна за одиницю: 0 грн\nКількість: 276.0 кілограм\n\nЗнайдені товари в магазинах:\n1. [Rozetka] \"Сир твердий з коровячого молока Spomlek Stary Oleder Старий Оледер Брусок ваговии 1800г\" — 1015 грн\n",
+   "response_text": "```json\n[{\"index\": 1, \"is_relevant\": true, \"store_weight_g\": null, \"tender_weight_g\": null}]\n```",
+   "finish_reason": "stop",
+   "output_tokens": 46
+  },
+  {
+   "task": "classify",
+   "key": "classify:C01-01",
+   "user_message": "Перелік позицій тендера:\n1. Сир кисломолочний ваговий (CPV: 15540000-5) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C01-02",
+   "user_message": "Перелік позицій тендера:\n1. Сир твердий ваговий (CPV: 15540000-5) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C01-03",
+   "user_message": "Перелік позицій тендера:\n1. Сири м'які та розсільні фасовані (CPV: 15540000-5) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C01-04",
+   "user_message": "Перелік позицій тендера:\n1. Сири м'які та розсільні фасовані (CPV: 15540000-5) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C02-01",
+   "user_message": "Перелік позицій тендера:\n1. Курятина (CPV: 15110000-2) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C02-02",
+   "user_message": "Перелік позицій тендера:\n1. Свинина (CPV: 15110000-2) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C02-03",
+   "user_message": "Перелік позицій тендера:\n1. Курятина (CPV: 15110000-2) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-01",
+   "user_message": "Перелік позицій тендера:\n1. Борошно пшеничне, сорт вищий, ГСТУ 46.004 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-02",
+   "user_message": "Перелік позицій тендера:\n1. Пластівці вівсяні Геркулес (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-03",
+   "user_message": "Перелік позицій тендера:\n1. Крупа пшенична булгур, з твердих сортів пшениці, помел №2 (середній) (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-04",
+   "user_message": "Перелік позицій тендера:\n1. Крупа пшенична кус-кус, ДСТУ 7699 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-05",
+   "user_message": "Перелік позицій тендера:\n1. Крупа гречана ядриця, ґатунок перший, ДСТУ 7697 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-06",
+   "user_message": "Перелік позицій тендера:\n1. Крупа ячмінна перлова №2, ДСТУ 7700 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-07",
+   "user_message": "Перелік позицій тендера:\n1. Крупа ячна №1 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-08",
+   "user_message": "Перелік позицій тендера:\n1. Крупа пшоняна шліфована, сорт перший (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-09",
+   "user_message": "Перелік позицій тендера:\n1. Рис середньозернистий шліфований, сорт перший (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-10",
+   "user_message": "Перелік позицій тендера:\n1. Рис довгозернистий шліфований, пропарений, сорт перший (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C03-11",
+   "user_message": "Перелік позицій тендера:\n1. Крупа пшенична Полтавська з твердих сортів пшениці, помел №1 (крупний), ДСТУ 7699 (CPV: 15610000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C04-01",
+   "user_message": "Перелік позицій тендера:\n1. Кетчуп (CPV: 15870000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C04-02",
+   "user_message": "Перелік позицій тендера:\n1. Перець чорний, мелений (CPV: 15870000-7) [грам]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C04-03",
+   "user_message": "Перелік позицій тендера:\n1. Порошок гірчичний, сорт перший, ДСТУ 4842 (CPV: 15870000-7) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C04-04",
+   "user_message": "Перелік позицій тендера:\n1. Оцет столовий (розчин оцтової кислоти), 9% (CPV: 15870000-7) [літр]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C05-01",
+   "user_message": "Перелік позицій тендера:\n1. Чорнило BARVA Canon GL41 (CPV: 30125000-1) [комплект]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C05-02",
+   "user_message": "Перелік позицій тендера:\n1. Картридж відпрацьованих чорнил Canon G3420 (CPV: 30125000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C05-03",
+   "user_message": "Перелік позицій тендера:\n1. Контейнер з чорнилом Epson 664 (CPV: 30125000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-01",
+   "user_message": "Перелік позицій тендера:\n1. Пакет В4 СКЛ 250х353 (0+0) з розширенням 3стор. Крафт 120 г/м2 (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-02",
+   "user_message": "Перелік позицій тендера:\n1. Конверт С5 СКЛ 162х229мм (0+0) білий 80 г/м2 (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-03",
+   "user_message": "Перелік позицій тендера:\n1. Швидкозшивач картонний 0.40мм (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-04",
+   "user_message": "Перелік позицій тендера:\n1. Папка А4 4 кільця пластикова 35мм 1202, 1208 Axent синя (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-05",
+   "user_message": "Перелік позицій тендера:\n1. Ручка кулькова Cello Writo-meter 8048-ВК 10км чорна (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-06",
+   "user_message": "Перелік позицій тендера:\n1. Стержень масляний Piano Maxriter синій 140мм (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-07",
+   "user_message": "Перелік позицій тендера:\n1. Стрічка клейка Buromax канцелярська 24мм 30м 24х30 прозора (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-08",
+   "user_message": "Перелік позицій тендера:\n1. Стрічка клейка пакувальна 48мм 100, 40мКм прозора (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-09",
+   "user_message": "Перелік позицій тендера:\n1. Гумка ВМ. 1111 (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-10",
+   "user_message": "Перелік позицій тендера:\n1. Біндер 32мм чорний Buromax 12шт (CPV: 30190000-7) [пачка]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-11",
+   "user_message": "Перелік позицій тендера:\n1. Біндер 41мм чорний Buromax 12шт (CPV: 30190000-7) [пачка]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-12",
+   "user_message": "Перелік позицій тендера:\n1. Нитки для підшивки (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-13",
+   "user_message": "Перелік позицій тендера:\n1. Голка банківська (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C06-14",
+   "user_message": "Перелік позицій тендера:\n1. Пакет С4 СКЛ 229х324мм (0+0) без розширення білий 90 г/м2 (CPV: 30190000-7) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-01",
+   "user_message": "Перелік позицій тендера:\n1. Активна піна \"Turbo X10\" 10,5 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-02",
+   "user_message": "Перелік позицій тендера:\n1. Активна піна \"Turbo X12\" 22 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-03",
+   "user_message": "Перелік позицій тендера:\n1. Очисник скла концентрат \"Glaxo Concentrate\" 4,8 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-04",
+   "user_message": "Перелік позицій тендера:\n1. Очисник двигуна і комах \"Motor 100 Mosquito\" 5,7 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-05",
+   "user_message": "Перелік позицій тендера:\n1. Поліроль-очисник пластика \"Plastik Servis\"глянсовий блиск 4,8 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-06",
+   "user_message": "Перелік позицій тендера:\n1. Холодний віск \"Cherry wax\" 4,8 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-07",
+   "user_message": "Перелік позицій тендера:\n1. Видалення бітуму \"Bitum Remover\" 1 л (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-08",
+   "user_message": "Перелік позицій тендера:\n1. Чорніння гуми \"Klaus\" (водостійке) 1 л (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-09",
+   "user_message": "Перелік позицій тендера:\n1. Кислотний засіб для очистки дисків \"Disko100\" 5,6 кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-10",
+   "user_message": "Перелік позицій тендера:\n1. Очисник салону \"Textile Boss\" 5,3кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C07-11",
+   "user_message": "Перелік позицій тендера:\n1. Автошампунь \"X Foam\" 2 рама, 20кг (CPV: 39830000-9) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C08-01",
+   "user_message": "Перелік позицій тендера:\n1. Піна монтажна (CPV: 44110000-4) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C08-02",
+   "user_message": "Перелік позицій тендера:\n1. Клей для плитки (CPV: 44110000-4) [кілограм]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C08-03",
+   "user_message": "Перелік позицій тендера:\n1. Покрівельні плівки та мембрани (CPV: 44110000-4) [метр квадратний]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C08-04",
+   "user_message": "Перелік позицій тендера:\n1. Кутники та рейки маячні для штукатурки (CPV: 44110000-4) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C08-05",
+   "user_message": "Перелік позицій тендера:\n1. Склосітка армувальна (штукатурна, фасадна) (CPV: 44110000-4) [метр квадратний]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-01",
+   "user_message": "Перелік позицій тендера:\n1. Гайкокрут (тип 1) (CPV: 42651000-4) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-02",
+   "user_message": "Перелік позицій тендера:\n1. Гайкокрут (тип 2) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-03",
+   "user_message": "Перелік позицій тендера:\n1. Гайкокрут (тип 3) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-04",
+   "user_message": "Перелік позицій тендера:\n1. Гайкокрут (тип 4) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-05",
+   "user_message": "Перелік позицій тендера:\n1. Дриль-шурупокрут (тип 1) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-06",
+   "user_message": "Перелік позицій тендера:\n1. Дриль-шурупокрут (тип 2) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-07",
+   "user_message": "Перелік позицій тендера:\n1. Дриль-шурупокрут (тип 3) (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C09-08",
+   "user_message": "Перелік позицій тендера:\n1. Перфоратор (CPV: 42652000-1) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C10-01",
+   "user_message": "Перелік позицій тендера:\n1. Посвідчення \"Щоденник ліцензованого спеціаліста\" (CPV: 22458000-5) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C10-02",
+   "user_message": "Перелік позицій тендера:\n1. Бланк \"Накопичувальна картка розрахунково-платіжних відомостей працівника по заробітній платі\" (CPV: 22458000-5) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:C10-03",
+   "user_message": "Перелік позицій тендера:\n1. Посвідчення \"Про перевірку знань\" (CPV: 22458000-5) [штука]\n",
+   "response_text": "product",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K01",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з проведення калібрування медичного обладнання, а саме: датчика для аппарата FibroScan 502 за кодом ДК 021:2015: 50420000-5: Послуги з ремонту і технічного обслуговування медичного та хірургічного обладнання. (CPV: 50420000-5) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K02",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з поточного ремонту наркозно - дихального апарату WATO EX-65 (с.н. КТ-78000937) (CPV: 50421000-2) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K03",
+   "user_message": "Перелік позицій тендера:\n1. Транспортно-експедиторські послуги з організації міжнародного перевезення котельного обладнання автомобільним транспортом, код ДК 021:2015 – 63520000-0 — Послуги транспортних агентств (CPV: 63520000-0) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K04",
+   "user_message": "Перелік позицій тендера:\n1. Послуги страхування цивільно-правової відповідальності власників наземних транспортних засобів (CPV: 66510000-8) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K05",
+   "user_message": "Перелік позицій тендера:\n1. Послуги зі страхування цивільної відповідальності власників автомобільного транспорту (CPV: 66510000-8) [одиниця]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K06",
+   "user_message": "Перелік позицій тендера:\n1. Повірка. Газоаналізатори для контролю викидів компонентів (\"Коліон-1В-02\" (2 канали) (CPV: 71630000-3) [штука]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K07",
+   "user_message": "Перелік позицій тендера:\n1. Спилювання сухих дерев (CPV: 77210000-5) [одиниця]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K08",
+   "user_message": "Перелік позицій тендера:\n1. 79410000-1 — Консультаційні послуги з питань підприємницької діяльності та управління (Послуги з оцінки об’єкта малої приватизації – будівля контори з прибудовою (літ. «А») загальною площею 56,3 кв. м; будівля цеху №1 «Ангар» (літ. «Б») загальною площею 360,1 кв. м; будівля цеху переробки №2 з прибудовою (літ. «В») загальною площею 144,2 кв. м; туалет; альтанка; бункер відходів; вагон-столова; вагончик; верстат авт.заточ.л/пил САЗ-127; верстат ленточний «Номінал-М»; верстат розв.л/п УР-1; верстат стрічкопильний «Номінал-М»; візок для подачі; ворота металеві; електро шкаф (2 шт.); естакада розкриж.; естакада для сортування; колонка водяна із водопроводом; кондиціонер ТАС-12СН/ВJСU; кран козловий 10т; кран козловий КК-5; лебідка; навіс для стрічкопильного верстату; огорожа; під’їзна колія; погруз. площадка; пункт зосередження пожежного інвентаря; торцевирівнювач; трансформатор силовий ТМ-400, адреса: Житомирська обл., Коростенський р-н, м. Овруч, вул. Шухевича Романа, 11) (CPV: 79410000-1) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K09",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з патологогістологічного дослідження біологічного матеріалу другої категорії складності (CPV: 85111800-8) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K10",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з благоустрою населених пунктів (Послуги з прибирання стихійних сміттєзвалищ на території Широківської сільської ради Запорізького району Запорізької області) (CPV: 90510000-5) [послуга]\n",
+   "response_text": "service",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K11",
+   "user_message": "Перелік позицій тендера:\n1. Послуга з механізованого копання ям (CPV: 45112410-2) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K12",
+   "user_message": "Перелік позицій тендера:\n1. «Поточний ремонт внутрішньоквартальних територій/проїзду по вул. Володимирська, 78А» в м. Ужгород (ДК 021:2015:45230000-8 — Будівництво трубопроводів, ліній зв’язку та електропередач, шосе, доріг, аеродромів і залізничних доріг; вирівнювання поверхонь) (CPV: 45230000-8) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K13",
+   "user_message": "Перелік позицій тендера:\n1. Відновні роботи шляхом поточного ремонту дорожнього покриття на вулиці В'ячеслава Чорновола міста Рівне (CPV: 45233142-6) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K14",
+   "user_message": "Перелік позицій тендера:\n1. Встановлення тензометричних вагонних ваг військової частини А 2678 на під\"їзній колії №* пункту примикання *** на км ** перегону ** ** - ***-* регіональної філії \"Львівська залізниця\" (CPV: 45234000-6) [робота]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K15",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з поточного ремонту зовнішньої водостічної мережі ф100мм методом санації ПЕ ф50мм(Павільйон №12) на території Замовника за адресою: проспект Академіка Глушкова, 1 в місті Києві (код за ДК021:2015 45330000-9 «Водопровідні та санітарно-технічні роботи») (CPV: 45330000-9) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K16",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з поточного ремонту системи вентиляції харчоблоку Хмельницького закладу дошкільної освіти № 52 «Золотий півник» Хмельницької міської ради ,за адресою:м.Хмельницький,вул.Героїв АТО,8 (CPV: 45331200-8) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K17",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з поточного ремонту пожежної сигналізації в школі І-ІІІ ступенів № 58 за адресою пров. Алли Горської, 3, Шевченківського району, міста Києва, (код ДК 021:2015 (CPV) 45343000-3 встановлення протипожежного обладнання) (CPV: 45343000-3) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K18",
+   "user_message": "Перелік позицій тендера:\n1. Поточний ремонт віконних блоків на 2-му поверсі будівлі їдальні (CPV: 45420000-7) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K19",
+   "user_message": "Перелік позицій тендера:\n1. Послуги з влаштування бетонного майданчика з огорожею та накриттям для встановлення та підключення джерела резервного живлення (генератора дизельного) до внутрішньої електромережі будівлі за адресою: вулиця Шевченко, 14, селище Губиниха, Самарівського району, Дніпропетровської області (CPV: 45450000-6) [послуга]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "classify",
+   "key": "classify:K20",
+   "user_message": "Перелік позицій тендера:\n1. Реконструкція котельні з використанням пальникових пристроїв СНТ з автоматикою керування та безпеки для котла ПТВМ-30М, за адресою: пр.Незалежності, 127А в м. Чернівці (CPV: 45454000-4) [робота]\n",
+   "response_text": "work",
+   "finish_reason": "stop",
+   "output_tokens": 3
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R01",
+   "user_message": "Позиція тендера: \"Перфоратор\" (CPV: 42652000-1) [штука]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R02",
+   "user_message": "Позиція тендера: \"Крупа гречана ядриця, ґатунок перший, ДСТУ 7697\" (CPV: 15610000-7) [кілограм]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R03",
+   "user_message": "Позиція тендера: \"Голка банківська\" (CPV: 30190000-7) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R04",
+   "user_message": "Позиція тендера: \"Видалення бітуму \"Bitum Remover\" 1 л\" (CPV: 39830000-9) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R05",
+   "user_message": "Позиція тендера: \"Біндер 32мм чорний Buromax 12шт\" (CPV: 30190000-7) [пачка]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R06",
+   "user_message": "Позиція тендера: \"Оцет столовий (розчин оцтової кислоти), 9%\" (CPV: 15870000-7) [літр]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R07",
+   "user_message": "Позиція тендера: \"Посвідчення \"Про перевірку знань\"\" (CPV: 22458000-5) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R08",
+   "user_message": "Позиція тендера: \"Очисник салону \"Textile Boss\" 5,3кг\" (CPV: 39830000-9) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R09",
+   "user_message": "Позиція тендера: \"Очисник скла концентрат \"Glaxo Concentrate\" 4,8 кг\" (CPV: 39830000-9) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R10",
+   "user_message": "Позиція тендера: \"Курятина\" (CPV: 15110000-2) [кілограм]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R11",
+   "user_message": "Позиція тендера: \"Контейнер з чорнилом Epson 664\" (CPV: 30125000-1) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R12",
+   "user_message": "Позиція тендера: \"Чорнило BARVA Canon GL41\" (CPV: 30125000-1) [комплект]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R13",
+   "user_message": "Позиція тендера: \"Дриль-шурупокрут (тип 1)\" (CPV: 42652000-1) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R14",
+   "user_message": "Позиція тендера: \"Клей для плитки\" (CPV: 44110000-4) [кілограм]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R15",
+   "user_message": "Позиція тендера: \"Покрівельні плівки та мембрани\" (CPV: 44110000-4) [метр квадратний]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R16",
+   "user_message": "Позиція тендера: \"Послуги страхування цивільно-правової відповідальності власників наземних транспортних засобів\" (CPV: 66510000-8) [послуга]\nМережа: Rozetka",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R17",
+   "user_message": "Позиція тендера: \"Спилювання сухих дерев\" (CPV: 77210000-5) [одиниця]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_desc",
+   "key": "router_desc:R18",
+   "user_message": "Позиція тендера: \"Відновні роботи шляхом поточного ремонту дорожнього покриття на вулиці В'ячеслава Чорновола міста Рівне\" (CPV: 45233142-6) [послуга]\nМережа: Rozetka",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R01",
+   "user_message": "Позиція тендера: \"Перфоратор\" (CPV: 42652000-1) [штука]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R02",
+   "user_message": "Позиція тендера: \"Крупа гречана ядриця, ґатунок перший, ДСТУ 7697\" (CPV: 15610000-7) [кілограм]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R03",
+   "user_message": "Позиція тендера: \"Голка банківська\" (CPV: 30190000-7) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R04",
+   "user_message": "Позиція тендера: \"Видалення бітуму \"Bitum Remover\" 1 л\" (CPV: 39830000-9) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R05",
+   "user_message": "Позиція тендера: \"Біндер 32мм чорний Buromax 12шт\" (CPV: 30190000-7) [пачка]\nМережа: Rozetka",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R06",
+   "user_message": "Позиція тендера: \"Оцет столовий (розчин оцтової кислоти), 9%\" (CPV: 15870000-7) [літр]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R07",
+   "user_message": "Позиція тендера: \"Посвідчення \"Про перевірку знань\"\" (CPV: 22458000-5) [штука]\nМережа: Rozetka",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R08",
+   "user_message": "Позиція тендера: \"Очисник салону \"Textile Boss\" 5,3кг\" (CPV: 39830000-9) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R09",
+   "user_message": "Позиція тендера: \"Очисник скла концентрат \"Glaxo Concentrate\" 4,8 кг\" (CPV: 39830000-9) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R10",
+   "user_message": "Позиція тендера: \"Курятина\" (CPV: 15110000-2) [кілограм]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R11",
+   "user_message": "Позиція тендера: \"Контейнер з чорнилом Epson 664\" (CPV: 30125000-1) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R12",
+   "user_message": "Позиція тендера: \"Чорнило BARVA Canon GL41\" (CPV: 30125000-1) [комплект]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R13",
+   "user_message": "Позиція тендера: \"Дриль-шурупокрут (тип 1)\" (CPV: 42652000-1) [штука]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R14",
+   "user_message": "Позиція тендера: \"Клей для плитки\" (CPV: 44110000-4) [кілограм]\nМережа: Сільпо",
+   "response_text": "{\"sold\": true}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R15",
+   "user_message": "Позиція тендера: \"Покрівельні плівки та мембрани\" (CPV: 44110000-4) [метр квадратний]\nМережа: Сільпо",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R16",
+   "user_message": "Позиція тендера: \"Послуги страхування цивільно-правової відповідальності власників наземних транспортних засобів\" (CPV: 66510000-8) [послуга]\nМережа: Rozetka",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R17",
+   "user_message": "Позиція тендера: \"Спилювання сухих дерев\" (CPV: 77210000-5) [одиниця]\nМережа: Епіцентр",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  },
+  {
+   "task": "router_plain",
+   "key": "router_plain:R18",
+   "user_message": "Позиція тендера: \"Відновні роботи шляхом поточного ремонту дорожнього покриття на вулиці В'ячеслава Чорновола міста Рівне\" (CPV: 45233142-6) [послуга]\nМережа: Rozetka",
+   "response_text": "{\"sold\": false}",
+   "finish_reason": "stop",
+   "output_tokens": 9
+  }
+ ]
+}

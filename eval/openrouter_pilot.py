@@ -646,6 +646,9 @@ def write_summary(models, requests, catalog):
         "конвенцією CPV (45 — роботи, 50–98 — послуги), тому позиції на кшталт «Послуга з поточного ремонту…» з CPV 45* "
         "мають мітку `work`, і модель, що читає текст, може «помилитись» через формулювання замовника, а не через слабкість.",
         "",
+        *([f"**Насичення.** {sum(1 for x in scored if x['classify']['all'] and x['classify']['all']['acc'] == 1.0)} з {len(scored)} моделей "
+           "мають 100% бінарної accuracy: ця задача на нашому наборі моделі не розрізняє (різниця є лише в другорядній тристоронній метриці).", ""]
+          if sum(1 for x in scored if x["classify"]["all"] and x["classify"]["all"]["acc"] == 1.0) >= len(scored) // 2 else []),
         "| Модель | Бінарна accuracy (всі 86) | product-позиції (66) | інші (20) | Тристороння accuracy | помилки формату |",
         "| --- | --- | --- | --- | --- | --- |",
     ]
@@ -690,6 +693,8 @@ def write_summary(models, requests, catalog):
     expected = {t: len(requests[t]) for t in TASKS}
     gaps = []
     for model in models:
+        if not any(load_records(model, t) for t in TASKS):
+            continue  # the model was not part of this run at all
         for task in TASKS:
             got = len({r["key"] for r in load_records(model, task) if "response" in r})
             if got != expected[task]:
