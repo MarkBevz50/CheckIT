@@ -42,3 +42,4 @@ dev = [
 testpaths = ["tests"]
 pythonpath = [".", ".."]
 asyncio_mode = "auto"
+markers = ["live: calls real external websites (network); excluded from CI"]

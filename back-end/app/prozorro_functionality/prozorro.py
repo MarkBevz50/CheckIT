@@ -55,9 +55,10 @@ def get_document_urls(documents):
 
 def ocr_pdf(input_file: str, output_file: str, lang: str = "ukr+eng"):
     """Run OCR on a single PDF file, writing the result to output_file."""
+    # input/output are positional: since ocrmypdf 17 the first parameter is `input_file_or_options`
     ocrmypdf.ocr(
-        input_file=input_file,
-        output_file=output_file,
+        input_file,
+        output_file,
         language=lang,
         tesseract_pagesegmode=3,
         tesseract_oem=1,

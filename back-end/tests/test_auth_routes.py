@@ -4,7 +4,8 @@ from app.main import app
 
 
 def _paths():
-    return {route.path for route in app.routes}
+    # the OpenAPI schema is stable across FastAPI versions; `app.routes` is not
+    return set(app.openapi()["paths"])
 
 
 def test_login_and_register_are_under_single_auth_prefix():
