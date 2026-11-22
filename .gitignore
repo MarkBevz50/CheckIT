@@ -94,3 +94,7 @@ postgres_data/
 # Logs and local Claude Code settings
 *.log
 .claude/settings.local.json
+
+# Eval pilot: raw store responses (~100 MB) and raw model answers; summary and pairs are committed
+eval/data/raw_store/
+eval/results/pilot/
