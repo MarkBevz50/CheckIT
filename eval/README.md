@@ -66,3 +66,13 @@ back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --export-haiku-fixtur
 ```
 Прогін відновлюваний: завершені виклики пропускаються. Дорогі моделі стоять у списку останніми, щоб стоп-кран відсікав саме їх.
 Промпти валідації й класифікації імпортуються із застосунку (`claude_validator`, `tender_classifier`), не копіюються.
+
+### Провайдер Anthropic напряму
+
+Якщо під рукою ключ Anthropic (`sk-ant-…`), а не OpenRouter (`sk-or-…`), можна прогнати лише Haiku 5.5 і Sonnet 5.5 напряму через Anthropic API:
+```powershell
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --provider anthropic --dry-run
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --provider anthropic --models anthropic-api/claude-haiku-5-5 --limit 3 --budget 0.1
+```
+Змінна з ключем задається `--key-var` (за замовчуванням `OPENROUTER_API_KEY`). Скрипт перевіряє префікс ключа й не надсилає його провайдеру, якому він не належить.
+Міркування вимкнено: `thinking: disabled` (Haiku 5.5) і `between_tools` (Sonnet 5.5 відхиляє `disabled`); `temperature` не передається. Запити йдуть на `api.anthropic.com`, проксі застосунку (`ANTHROPIC_BASE_URL`) не використовується.

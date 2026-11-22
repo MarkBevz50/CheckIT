@@ -47,9 +47,22 @@ DATA = ROOT / "eval" / "data"
 RESULTS = ROOT / "eval" / "results"
 RAW = RESULTS / "pilot"
 SUMMARY = RESULTS / "pilot_summary.md"
-HAIKU = "anthropic/claude-haiku-5.5"
+HAIKU_LABELS = ["anthropic/claude-haiku-5.5", "anthropic-api/claude-haiku-5-5"]  # OpenRouter label, direct-API label
 HAIKU_FIXTURES = ROOT / "back-end" / "tests" / "fixtures" / "llm" / "haiku_5_5_pilot_responses.json"
 API = "https://openrouter.ai/api/v1"
+ANTHROPIC_API = "https://api.anthropic.com"  # the application's proxy (ANTHROPIC_BASE_URL) is deliberately not used
+
+# Direct Anthropic API (provider "anthropic"): used when the available key is an Anthropic key, not an OpenRouter one.
+# Prices are list prices per token. Thinking is switched off the documented way for each model: Haiku 5.5 accepts
+# {"type": "disabled"}; Sonnet 5.5 rejects it (400) and takes {"type": "between_tools"} instead. Neither model accepts a
+# non-default temperature, so none is sent.
+ANTHROPIC_MODELS = {
+    "anthropic-api/claude-haiku-5-5": {"api_model": "claude-haiku-5-5", "price_in": 0.10e-6, "price_out": 0.50e-6,
+                                       "thinking": {"type": "disabled"}},
+    "anthropic-api/claude-sonnet-5-5": {"api_model": "claude-sonnet-5-5", "price_in": 2.00e-6, "price_out": 10.00e-6,
+                                        "thinking": {"type": "between_tools"}},
+}
+KEY_PREFIX = {"openrouter": "sk-or-", "anthropic": "sk-ant-"}
 
 # cheap models first: if the budget guard stops the run, the expensive ones are the ones left out
 MODELS = [
@@ -145,14 +158,14 @@ def build_requests(data, limit=None):
 
 # ─── OpenRouter ───────────────────────────────────────────────────────
 
-def load_key():
-    key = os.environ.get("OPENROUTER_API_KEY")
+def load_key(var="OPENROUTER_API_KEY"):
+    key = os.environ.get(var)
     if key:
         return key.strip()
     env = ROOT / ".env"
     if env.exists():
         for line in env.read_text(encoding="utf-8").splitlines():
-            if line.startswith("OPENROUTER_API_KEY="):
+            if line.startswith(var + "="):
                 return line.split("=", 1)[1].strip().strip("\"'")
     return None
 
@@ -322,13 +335,65 @@ async def call_model(client, key, model, meta, task, req, budget, lock, sem):
         return record
 
 
+async def call_anthropic(client, key, model, meta, task, req, budget, lock, sem):
+    """One call through the official Anthropic SDK; the record has the same shape as for OpenRouter."""
+    import anthropic
+
+    base_task = task.split("_")[0]
+    system = SYSTEMS[task]
+    async with sem:
+        async with lock:
+            if not budget.allow():
+                return None
+        record = {"key": req["key"], "task": task, "model": model,
+                  "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                  "request": {"max_tokens": MAX_TOKENS[base_task], "reasoning": meta["thinking"], "temperature": None,
+                              "user": req["user"], "system_sha": hashlib.sha256(system.encode()).hexdigest()[:12],
+                              "api_model": meta["api_model"]}}
+        started = time.perf_counter()
+        try:
+            msg = await client.messages.create(
+                model=meta["api_model"], max_tokens=MAX_TOKENS[base_task], system=system,
+                messages=[{"role": "user", "content": req["user"]}], thinking=meta["thinking"])
+        except anthropic.APIStatusError as exc:
+            record["error"] = f"HTTP {exc.status_code}: {str(exc.message)[:300]}"
+        except anthropic.APIConnectionError as exc:
+            record["error"] = type(exc).__name__
+        else:
+            text = "".join(b.text for b in msg.content if getattr(b, "type", None) == "text")
+            cost = msg.usage.input_tokens * meta["price_in"] + msg.usage.output_tokens * meta["price_out"]
+            finish = "length" if msg.stop_reason == "max_tokens" else msg.stop_reason
+            record["response"] = {"content": text, "finish_reason": finish, "reasoning_chars": 0, "stop_details": getattr(msg, "stop_details", None) and str(msg.stop_details),
+                                  "usage": {"prompt_tokens": msg.usage.input_tokens, "completion_tokens": msg.usage.output_tokens,
+                                            "cost": cost, "completion_tokens_details": {"reasoning_tokens": 0}}}
+        record["latency_s"] = round(time.perf_counter() - started, 3)
+        cost = ((record.get("response") or {}).get("usage") or {}).get("cost") or 0.0
+        async with lock:
+            budget.spent += cost
+        path = result_path(model, task)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        line = json.dumps(record, ensure_ascii=False).replace(key, "<redacted>")
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+        return record
+
+
 def tasks_for(model, tasks, model_tasks):
     return model_tasks.get(model, tasks)
 
 
-async def run(models, tasks, model_tasks, requests, catalog, budget, key):
+async def run(models, tasks, model_tasks, requests, catalog, budget, key, provider="openrouter"):
     lock, sem = asyncio.Lock(), asyncio.Semaphore(CONCURRENCY)
-    async with httpx.AsyncClient() as client:
+    if provider == "anthropic":
+        import anthropic
+        # identity encoding: the installed httpx2 cannot decode a Brotli response with the installed Brotli (TypeError in its decoder)
+        client = anthropic.AsyncAnthropic(api_key=key, base_url=ANTHROPIC_API, max_retries=3, timeout=120,
+                                          default_headers={"Accept-Encoding": "identity"})
+        call = call_anthropic
+    else:
+        client = httpx.AsyncClient()
+        call = call_model
+    async with client:
         for model in models:
             meta = catalog[model]
             for task, (cost, n_calls, source) in estimate_pending(model, meta, tasks_for(model, tasks, model_tasks), requests).items():
@@ -341,7 +406,7 @@ async def run(models, tasks, model_tasks, requests, catalog, budget, key):
                           f"into the remaining ${budget.limit - budget.spent:.4f}")
                     continue
                 finished = done_keys(model, task)
-                jobs = [call_model(client, key, model, meta, task, r, budget, lock, sem)
+                jobs = [call(client, key, model, meta, task, r, budget, lock, sem)
                         for r in requests[task] if r["key"] not in finished]
                 before = budget.spent
                 made = [r for r in await asyncio.gather(*jobs) if r]
@@ -547,6 +612,12 @@ def write_summary(models, requests, catalog):
         "`tender_classifier`, а не скопійовані). Класифікація отримує назву, код CPV і одиницю виміру кожної позиції, "
         "по одній позиції в запиті. Промпт роутера новий, у двох варіантах: з описом мереж (`desc`) і без нього (`plain`).",
         "",
+        *(["**Провайдер.** Моделі `anthropic-api/…` запускались напряму через Anthropic API (офіційний SDK), а не через OpenRouter: "
+           "наданий ключ виявився ключем Anthropic. Вартість рахується за списковими цінами з `usage` (вхід і вихід), "
+           "міркування вимкнено: `thinking: disabled` для Haiku 5.5 і `between_tools` для Sonnet 5.5 (він відхиляє `disabled`); "
+           "`temperature` не передавалась, бо ці моделі не приймають нестандартне значення. "
+           "Серверні `fallbacks` не вмикались, щоб відповідь завжди належала названій моделі.", ""]
+          if any(s["model"].startswith("anthropic-api/") for s in scored) else []),
         "**Міркування.** Де модель дозволяє, їх вимкнено (`effort: none` або `enabled: false`, як у застосунку, що не вмикає thinking); "
         "де вимкнути не можна (`mandatory`), стоїть найнижчий `effort`, а вихідний ліміт збільшено на "
         f"{REASONING_HEADROOM} токенів. Фактичні параметри кожного запиту збережено в сирих відповідях.",
@@ -639,8 +710,11 @@ def write_summary(models, requests, catalog):
 def export_haiku_fixtures(requests):
     """Real answers of anthropic/claude-haiku-5.5 for the JSON-parsing tests (backlog item from E0.7)."""
     out = []
+    haiku = next((m for m in HAIKU_LABELS if any(load_records(m, t) for t in TASKS)), None)
+    if haiku is None:
+        sys.exit("No Haiku answers yet.")
     for task in TASKS:
-        by_key = {r["key"]: r for r in load_records(HAIKU, task)}
+        by_key = {r["key"]: r for r in load_records(haiku, task)}
         for req in requests[task]:
             rec = by_key.get(req["key"])
             if rec and "response" in rec:
@@ -650,7 +724,7 @@ def export_haiku_fixtures(requests):
     if not out:
         sys.exit("No Haiku answers yet.")
     HAIKU_FIXTURES.parent.mkdir(parents=True, exist_ok=True)
-    HAIKU_FIXTURES.write_text(json.dumps({"model": HAIKU, "note": "recorded by eval/openrouter_pilot.py; system prompts are in "
+    HAIKU_FIXTURES.write_text(json.dumps({"model": haiku, "note": "recorded by eval/openrouter_pilot.py; system prompts are in "
                                           "claude_validator / tender_classifier / eval/openrouter_pilot.py",
                                           "responses": out}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(len(out), "Haiku responses ->", HAIKU_FIXTURES.relative_to(ROOT))
@@ -661,7 +735,10 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--budget", type=float, default=2.0, help="stop before spending more than this many USD")
-    ap.add_argument("--models", nargs="*", default=MODELS)
+    ap.add_argument("--provider", choices=("openrouter", "anthropic"), default="openrouter",
+                    help="openrouter: the 10 models via OpenRouter; anthropic: Haiku 5.5 and Sonnet 5.5 directly (Anthropic key)")
+    ap.add_argument("--key-var", default="OPENROUTER_API_KEY", help="name of the variable (environment or .env) that holds the key")
+    ap.add_argument("--models", nargs="*", default=None)
     ap.add_argument("--tasks", nargs="*", default=list(TASKS), choices=TASKS)
     ap.add_argument("--limit", type=int, help="at most N requests per task and model (smoke test)")
     ap.add_argument("--model-tasks", nargs="*", default=[], metavar="MODEL=TASK,TASK",
@@ -681,17 +758,25 @@ def main():
     requests = build_requests(load_data(), None if args.summarize else args.limit)
     if args.export_haiku_fixtures:
         return export_haiku_fixtures(build_requests(load_data()))
-    catalog = fetch_catalog(args.models)
     if args.summarize:
-        return write_summary(args.models, requests, catalog)
+        return write_summary(args.models or MODELS + list(ANTHROPIC_MODELS), requests, {})
+    if args.provider == "anthropic":
+        models = args.models or list(ANTHROPIC_MODELS)
+        catalog = {m: {**ANTHROPIC_MODELS[m], "reasoning": None, "params": []} for m in models}
+    else:
+        models = args.models or MODELS
+        catalog = fetch_catalog(models)
     if args.dry_run:
-        return dry_run(args.models, args.tasks, model_tasks, requests, catalog, args.budget)
-    key = load_key()
+        return dry_run(models, args.tasks, model_tasks, requests, catalog, args.budget)
+    key = load_key(args.key_var)
     if not key:
-        sys.exit("OPENROUTER_API_KEY is not set (environment or .env).")
-    (RAW).mkdir(parents=True, exist_ok=True)
-    (RAW / "models_snapshot.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=1), encoding="utf-8")
-    asyncio.run(run(args.models, args.tasks, model_tasks, requests, catalog, Budget(args.budget), key))
+        sys.exit(f"{args.key_var} is not set (environment or .env).")
+    if not key.startswith(KEY_PREFIX[args.provider]):  # never send a key to a service it does not belong to
+        sys.exit(f"The key in {args.key_var} does not start with {KEY_PREFIX[args.provider]!r}: it is not a "
+                 f"{args.provider} key, nothing was sent.")
+    RAW.mkdir(parents=True, exist_ok=True)
+    (RAW / f"models_snapshot_{args.provider}.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=1), encoding="utf-8")
+    asyncio.run(run(models, args.tasks, model_tasks, requests, catalog, Budget(args.budget), key, args.provider))
 
 
 if __name__ == "__main__":
