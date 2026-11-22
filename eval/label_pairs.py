@@ -7,7 +7,8 @@
 
 Pairs (eval/data/pairs_pilot.jsonl): 1 = same, 2 = analog, 3 = no, s = skip (shown again at
 the end of this run and in the next one), b = back one, q = quit.
-Item types (the control tenders' items): 1 = product, 2 = service, 3 = work, 4 = mixed.
+Item types (the control tenders' items): 1 = product, 2 = service, 3 = work. A tender's own type
+(mixed) is not labeled: code derives it from the item types.
 
 Progress is written to eval/data/labels.json after every answer, and the next run continues
 where the previous one stopped. The expected bucket of a pair (bucket_hint) is NOT shown, so
@@ -25,7 +26,7 @@ LABELS = DATA / "labels.json"
 TENDERS = ROOT / "eval" / "control_tenders.json"
 
 PAIR_KEYS = {"1": "same", "2": "analog", "3": "no"}
-ITEM_KEYS = {"1": "product", "2": "service", "3": "work", "4": "mixed"}
+ITEM_KEYS = {"1": "product", "2": "service", "3": "work"}
 
 
 def load_labels() -> dict:

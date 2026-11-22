@@ -1,0 +1,43 @@
+# eval: контрольні тендери і пілот OpenRouter
+
+Усе тут запускається з кореня репо інтерпретатором `back-end\.venv\Scripts\python.exe`.
+Якщо консоль показує кракозябри: `$env:PYTHONIOENCODING="utf-8"`.
+
+## Файли
+
+| Файл | Призначення |
+| --- | --- |
+| `control_tenders.json` | 10 контрольних тендерів (C01–C10) |
+| `find_control_tenders.py` | пошук кандидатів у контрольні тендери через Prozorro |
+| `collect_candidates.py` | для кожної позиції тендерів шукає товари парсерами магазинів (без LLM, потрібна мережа) |
+| `data/candidates.jsonl` | усі знайдені кандидати (у git) |
+| `build_pairs.py` | з кандидатів будує `data/pairs_pilot.jsonl` (60 пар, відбір зафіксовано в скрипті, без мережі) |
+| `data/pairs_pilot.jsonl` | пари для розмітки (у git) |
+| `label_pairs.py` | консольна розмітка пар (1 same / 2 analog / 3 no) і типів позицій (1 product / 2 service / 3 work) |
+| `data/labels.json` | розмітка, прогрес зберігається після кожної відповіді |
+
+Тип тендера `mixed` не розмічається: його обчислює код з типів позицій.
+
+## `data/raw_store/` локальний
+
+Сирі відповіді магазинів (≈100 МБ, по файлу на пару «позиція + магазин») у git **не додаються** (є в `.gitignore`).
+Для повторного запуску пілоту вони не потрібні: пілот читає лише `pairs_pilot.jsonl` і `labels.json`.
+Відтворити (потрібна мережа, ≈10 хвилин, магазини можуть віддати інші товари, ніж у `candidates.jsonl`):
+
+```powershell
+back-end\.venv\Scripts\python.exe eval\collect_candidates.py
+```
+
+Скрипт перезапише `data/candidates.jsonl`. Щоб не втратити зафіксований набір, перед відтворенням закомітьте або
+скопіюйте поточний `candidates.jsonl`. Пари в `pairs_pilot.jsonl` після цього лишаються, бо містять копію тексту
+товару, а не посилання на кандидата.
+
+## Розмітка
+
+```powershell
+back-end\.venv\Scripts\python.exe eval\label_pairs.py          # типи позицій, потім пари
+back-end\.venv\Scripts\python.exe eval\label_pairs.py --pairs  # лише пари
+back-end\.venv\Scripts\python.exe eval\label_pairs.py --items  # лише типи позицій
+back-end\.venv\Scripts\python.exe eval\label_pairs.py --stats  # прогрес
+```
+Клавіші: `s` пропустити (повернеться наприкінці й у наступному запуску), `b` назад, `q` вихід.
