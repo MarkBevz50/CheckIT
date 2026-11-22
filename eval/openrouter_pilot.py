@@ -203,14 +203,48 @@ def worst_case_cost(meta, system, user, task, headroom):
             + (MAX_TOKENS[task.split("_")[0]] + headroom) * meta["price_out"])
 
 
-class Budget:
-    def __init__(self, limit):
-        self.limit, self.spent, self.stopped = limit, 0.0, False
+SAFETY = 1.3  # margin on the estimate of a whole (model x task) set before it is started
+TYPICAL_OUT = {"validate": 140, "classify": 3, "router": 12}  # visible output tokens per call, before any measurement
 
-    def allow(self, cost):
-        if self.spent + cost > self.limit:
+
+class Budget:
+    """Budget guard. The real check is per (model x task) set: a set is started only if its whole estimated
+    cost fits, so the stop never cuts a model in the middle of a task. The per-call check is an emergency brake."""
+
+    def __init__(self, limit):
+        self.limit, self.spent, self.skipped, self.stopped = limit, 0.0, [], False
+
+    def fits(self, cost):
+        return self.spent + cost <= self.limit
+
+    def allow(self):
+        if self.spent >= self.limit:
             self.stopped = True
         return not self.stopped
+
+
+def observed_out_tokens(model, base_task):
+    """Average completion tokens (visible + reasoning) per call measured so far for the model and task, else None."""
+    used = [(rec["response"].get("usage") or {}).get("completion_tokens")
+            for task in TASKS if task.split("_")[0] == base_task
+            for rec in load_records(model, task) if "response" in rec]
+    used = [u for u in used if u is not None]
+    return sum(used) / len(used) if used else None
+
+
+def estimate_pending(model, meta, tasks, requests):
+    """Typical cost of the calls still to do, per task: {task: (cost, n_calls, source)}.
+    Uses measured output tokens when the model has answers already, else the assumptions above."""
+    _, headroom = reasoning_setting(meta)
+    out = {}
+    for task in tasks:
+        base = task.split("_")[0]
+        pending = [r for r in requests[task] if r["key"] not in done_keys(model, task)]
+        measured = observed_out_tokens(model, base)
+        n_out = measured if measured is not None else TYPICAL_OUT[base] + (TYPICAL_REASONING if headroom else 0)
+        cost = sum(est_tokens(SYSTEMS[task] + r["user"]) * meta["price_in"] + n_out * meta["price_out"] for r in pending)
+        out[task] = (cost, len(pending), "measured" if measured is not None else "assumed")
+    return out
 
 
 def result_path(model, task):
@@ -226,10 +260,9 @@ async def call_model(client, key, model, meta, task, req, budget, lock, sem):
     reasoning, headroom = reasoning_setting(meta)
     base_task = task.split("_")[0]
     system = SYSTEMS[task]
-    estimate = worst_case_cost(meta, system, req["user"], task, headroom)
     async with sem:
         async with lock:
-            if not budget.allow(estimate):
+            if not budget.allow():
                 return None
         body = {"model": model, "max_tokens": MAX_TOKENS[base_task] + headroom,
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": req["user"]}]}
@@ -280,57 +313,79 @@ async def call_model(client, key, model, meta, task, req, budget, lock, sem):
             budget.spent += cost
         path = result_path(model, task)
         path.parent.mkdir(parents=True, exist_ok=True)
+        line = json.dumps(record, ensure_ascii=False).replace(key, "<redacted>")  # the key never reaches the disk
         with path.open("a", encoding="utf-8") as fh:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+            fh.write(line + "\n")
         return record
 
 
-async def run(models, tasks, requests, catalog, budget, key):
+def tasks_for(model, tasks, model_tasks):
+    return model_tasks.get(model, tasks)
+
+
+async def run(models, tasks, model_tasks, requests, catalog, budget, key):
     lock, sem = asyncio.Lock(), asyncio.Semaphore(CONCURRENCY)
     async with httpx.AsyncClient() as client:
         for model in models:
-            if budget.stopped:
-                break
-            jobs = []
-            for task in tasks:
+            meta = catalog[model]
+            for task, (cost, n_calls, source) in estimate_pending(model, meta, tasks_for(model, tasks, model_tasks), requests).items():
+                if not n_calls:
+                    continue
+                need = cost * SAFETY
+                if not budget.fits(need):
+                    budget.skipped.append((model, task))
+                    print(f"{model:36} {task:13} SKIPPED: estimated ${need:.4f} ({source} tokens) does not fit "
+                          f"into the remaining ${budget.limit - budget.spent:.4f}")
+                    continue
                 finished = done_keys(model, task)
-                jobs += [call_model(client, key, model, catalog[model], task, r, budget, lock, sem)
-                         for r in requests[task] if r["key"] not in finished]
-            before = budget.spent
-            results = await asyncio.gather(*jobs)
-            made = [r for r in results if r]
-            errors = sum(1 for r in made if "response" not in r)
-            print(f"{model:36} calls={len(made):4} (skipped by budget: {len(results) - len(made)}) "
-                  f"errors={errors} cost=${budget.spent - before:.4f}  total=${budget.spent:.4f}/{budget.limit}")
+                jobs = [call_model(client, key, model, meta, task, r, budget, lock, sem)
+                        for r in requests[task] if r["key"] not in finished]
+                before = budget.spent
+                made = [r for r in await asyncio.gather(*jobs) if r]
+                errors = sum(1 for r in made if "response" not in r)
+                print(f"{model:36} {task:13} calls={len(made):3} errors={errors} estimate=${need:.4f} "
+                      f"actual=${budget.spent - before:.4f}  total=${budget.spent:.4f}/{budget.limit}")
+    if budget.skipped:
+        print("NOT RUN (did not fit the budget):", ", ".join(f"{m}:{t}" for m, t in budget.skipped))
     if budget.stopped:
-        print(f"BUDGET STOP: ${budget.spent:.4f} spent of ${budget.limit}; partial results are saved, rerun resumes.")
+        print("EMERGENCY STOP: the budget was exhausted inside a set; see the summary for incomplete sets.")
 
 
 # ─── dry run ──────────────────────────────────────────────────────────
 
-def dry_run(models, tasks, requests, catalog, budget_limit):
+def dry_run(models, tasks, model_tasks, requests, catalog, budget_limit):
     print("OPENROUTER_API_KEY:", "found (hidden)" if load_key() else "NOT FOUND")
-    counts = {t: len(requests[t]) for t in tasks}
-    print("calls per model:", counts, "=", sum(counts.values()))
-    total_typ = total_worst = 0.0
-    out_typ = {"validate": 140, "classify": 3, "router": 12}
+    total = 0.0
     for model in models:
         meta = catalog[model]
-        reasoning, headroom = reasoning_setting(meta)
-        typ = worst = 0.0
-        for task in tasks:
-            for r in requests[task]:
-                n_in = est_tokens(SYSTEMS[task] + r["user"])
-                n_out = out_typ[task.split("_")[0]] + (TYPICAL_REASONING if headroom else 0)
-                typ += n_in * meta["price_in"] + n_out * meta["price_out"]
-                worst += worst_case_cost(meta, SYSTEMS[task], r["user"], task, headroom)
-        total_typ += typ
-        total_worst += worst
+        reasoning, _ = reasoning_setting(meta)
+        est = estimate_pending(model, meta, tasks_for(model, tasks, model_tasks), requests)
+        cost = sum(c for c, _, _ in est.values())
+        total += cost
+        detail = ", ".join(f"{t}={n}({src[0]})" for t, (_, n, src) in est.items())
         print(f"{model:36} in ${meta['price_in'] * 1e6:6.3f}/M out ${meta['price_out'] * 1e6:6.3f}/M "
-              f"reasoning={reasoning}  typical ${typ:.3f}  worst-case ${worst:.3f}")
-    print(f"TOTAL typical ${total_typ:.3f}, worst-case ${total_worst:.3f}, budget ${budget_limit}")
-    print(f"(token counts are estimates: characters / 2.2, plus {TYPICAL_REASONING} reasoning tokens per call for models with "
-          "mandatory reasoning; real cost is taken from usage.cost)")
+              f"reasoning={reasoning}  remaining calls: {detail}  estimate ${cost:.3f}")
+    print(f"TOTAL estimate ${total:.3f} (x{SAFETY} safety = ${total * SAFETY:.3f}), budget ${budget_limit}")
+    print(f"(a = assumed, m = measured output tokens from answers already received; assumption for models with "
+          f"mandatory reasoning: {TYPICAL_REASONING} reasoning tokens per call; input tokens are characters / 2.2)")
+
+
+def check_secrets():
+    """Look for the key or an Authorization header in the raw results without printing the key."""
+    key = load_key()
+    hits = {"key": 0, "authorization": 0, "bearer": 0, "sk-or-": 0}
+    files = list(RAW.rglob("*")) if RAW.exists() else []
+    scanned = 0
+    for path in (f for f in files if f.is_file()):
+        scanned += 1
+        text = path.read_text(encoding="utf-8", errors="replace")
+        low = text.lower()
+        hits["key"] += bool(key and key in text)
+        hits["authorization"] += "authorization" in low
+        hits["bearer"] += "bearer" in low
+        hits["sk-or-"] += "sk-or-" in low
+    print(f"scanned {scanned} files in eval/results/pilot/; files with: {hits}")
+    return not any(hits.values())
 
 
 # ─── scoring and summary ─────────────────────────────────────────────
@@ -395,6 +450,8 @@ def score_model(model, requests):
     # validation: per pair, binary relevant = same or analog
     rows, by_label, fmt = [], defaultdict(list), 0
     by_key = {r["key"]: r for r in load_records(model, "validate")}
+    if len(by_key) < len(requests["validate"]):
+        by_key = {}  # incomplete set: no metrics, it is listed under "incomplete sets" instead
     for req in requests["validate"]:
         rec = by_key.get(req["key"])
         parsed = parse_validate(((rec or {}).get("response") or {}).get("content")) if rec else None
@@ -412,6 +469,8 @@ def score_model(model, requests):
     res["validate_fmt"] = fmt
     # classification
     by_key = {r["key"]: r for r in load_records(model, "classify")}
+    if len(by_key) < len(requests["classify"]):
+        by_key = {}
     binary_control, binary_extra, three = [], [], []
     fmt = 0
     for req in requests["classify"]:
@@ -431,6 +490,8 @@ def score_model(model, requests):
     # router
     for task in ("router_desc", "router_plain"):
         by_key = {r["key"]: r for r in load_records(model, task)}
+        if len(by_key) < len(requests[task]):
+            by_key = {}
         rows, hard, fmt = [], [], 0
         for req in requests[task]:
             rec = by_key.get(req["key"])
@@ -524,6 +585,11 @@ def write_summary(models, requests, catalog):
         "",
         "Бінарна accuracy; «неочевидні» це товари, які мережа продає, хоча цього не очікуєш (бланки на Rozetka, побутова хімія в Сільпо).",
         "",
+        "**Обмеження еталона.** 6 з 9 відповідей «ні» стосуються Сільпо. Перекіс відображає реальність: Rozetka як маркетплейс продає майже все, "
+        "включно з продуктами, тому чесних «ні» для неї серед товарів майже немає (її «ні» це лише послуги й роботи). "
+        "Крім того, «ні» для товарів спирається на топ-5 кандидатів, які повернув парсер мережі, а не на повний каталог, "
+        "а «так» на ваші мітки пар або на назви кандидатів. 18 питань це орієнтир, не вимірювання.",
+        "",
         "| Модель | desc: accuracy | desc: recall «так» | desc: неочевидні (3) | plain: accuracy | plain: recall «так» | plain: неочевидні (3) | помилки формату |",
         "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
@@ -547,11 +613,22 @@ def write_summary(models, requests, catalog):
         o = s["ops"]
         lines.append(f"| `{s['model']}` | {o['calls']} | {o['cost']:.4f} | {o['per1000']:.3f} | {o['p50']:.1f} | {o['p95']:.1f} | "
                      f"{o['tin']} | {o['tout']} | {o['reasoning']} | {o['truncated']} | {o['errors']} |")
+    expected = {t: len(requests[t]) for t in TASKS}
+    gaps = []
+    for model in models:
+        for task in TASKS:
+            got = len({r["key"] for r in load_records(model, task) if "response" in r})
+            if got != expected[task]:
+                gaps.append(f"`{model}`: {task} {got}/{expected[task]}" + (" (не запускалось)" if got == 0 else " (неповний набір)"))
     lines += [
         "",
         f"Загальна вартість пілоту: ${sum(s['ops']['cost'] for s in scored):.4f}.",
         "",
     ]
+    if gaps:
+        lines += ["**Неповні або не запущені набори** (такі результати не можна порівнювати з повними; "
+                  "рядки таблиць вище для цих моделей і задач дивіться з цим застереженням):", ""]
+        lines += [f"- {g}" for g in gaps] + [""]
     SUMMARY.write_text("\n".join(lines), encoding="utf-8")
     print("saved", SUMMARY.relative_to(ROOT))
 
@@ -584,11 +661,20 @@ def main():
     ap.add_argument("--models", nargs="*", default=MODELS)
     ap.add_argument("--tasks", nargs="*", default=list(TASKS), choices=TASKS)
     ap.add_argument("--limit", type=int, help="at most N requests per task and model (smoke test)")
+    ap.add_argument("--model-tasks", nargs="*", default=[], metavar="MODEL=TASK,TASK",
+                    help="run only these tasks for a model, e.g. anthropic/claude-sonnet-5.5=validate")
+    ap.add_argument("--check-secrets", action="store_true", help="scan the raw results for the key or an Authorization header")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--summarize", action="store_true")
     ap.add_argument("--export-haiku-fixtures", action="store_true")
     args = ap.parse_args()
 
+    model_tasks = {}
+    for item in args.model_tasks:
+        model, _, names = item.partition("=")
+        model_tasks[model] = [t for t in names.split(",") if t in TASKS]
+    if args.check_secrets:
+        sys.exit(0 if check_secrets() else 1)
     requests = build_requests(load_data(), None if args.summarize else args.limit)
     if args.export_haiku_fixtures:
         return export_haiku_fixtures(build_requests(load_data()))
@@ -596,13 +682,13 @@ def main():
     if args.summarize:
         return write_summary(args.models, requests, catalog)
     if args.dry_run:
-        return dry_run(args.models, args.tasks, requests, catalog, args.budget)
+        return dry_run(args.models, args.tasks, model_tasks, requests, catalog, args.budget)
     key = load_key()
     if not key:
         sys.exit("OPENROUTER_API_KEY is not set (environment or .env).")
     (RAW).mkdir(parents=True, exist_ok=True)
     (RAW / "models_snapshot.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=1), encoding="utf-8")
-    asyncio.run(run(args.models, args.tasks, requests, catalog, Budget(args.budget), key))
+    asyncio.run(run(args.models, args.tasks, model_tasks, requests, catalog, Budget(args.budget), key))
 
 
 if __name__ == "__main__":
