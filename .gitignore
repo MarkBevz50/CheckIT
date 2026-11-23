@@ -98,3 +98,6 @@ postgres_data/
 # Eval pilot: raw store responses (~100 MB) and raw model answers; summary and pairs are committed
 eval/data/raw_store/
 eval/results/pilot/
+
+# Eval snapshots: raw source responses of control tenders and diploma experiments (kept locally, no expiry)
+eval/snapshots/
