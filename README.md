@@ -49,8 +49,9 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_secure_password
 POSTGRES_DB=check_it
 
-# JWT (замініть на випадковий рядок у продакшені)
-SECRET_KEY=your-super-secret-key-change-me
+# JWT: випадковий ключ не коротший за 32 символи; застосунок не стартує з коротким або відомим (опублікованим) значенням.
+# Згенеруйте і вставте: python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=
 
 # Anthropic Claude — основний LLM (вмикає ШІ-функції)
 ANTHROPIC_API_KEY=sk-ant-...
@@ -171,7 +172,7 @@ pyman/
 | Змінна | Обов'язкова | За замовчуванням | Опис |
 |--------|:-----------:|-----------------|------|
 | `POSTGRES_PASSWORD` | ✅ | — | Пароль PostgreSQL |
-| `SECRET_KEY` | ✅ | — | Секрет для підпису JWT-токенів |
+| `SECRET_KEY` | ✅ | — | Секрет для підпису JWT-токенів: не менше 32 символів, випадковий (`python -c "import secrets; print(secrets.token_hex(32))"`) |
 | `POSTGRES_USER` | | `postgres` | Користувач PostgreSQL |
 | `POSTGRES_DB` | | `check_it` | Назва бази даних |
 | `ANTHROPIC_API_KEY` | | — | API-ключ Claude (вмикає ШІ-функції) |
