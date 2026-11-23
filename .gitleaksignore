@@ -1,0 +1,23 @@
+# Historical gitleaks findings, accepted by the owner on 2026-11-23 (E0.5b).
+# Fingerprints only (commit:file:rule:line); no secret values. Git history was not rewritten:
+# every secret below is invalid (see PLAN/DIPLOMA_NOTES.md, section 'Секрети в історії git').
+# New findings are NOT covered by this file and fail the CI job 'gitleaks'.
+
+# old JWT SECRET_KEY value from 2025 (replaced; no longer valid)
+9bbf93f4b02e0bb18c207941247860a5526b0776:back-end/app/auth/authentication.py:generic-api-key:14
+891cfb6421662481c6505162b13b0691045f61ba:back-end/.env:generic-api-key:2
+237a9cb46e09d1daa68e39c197d240977e0ad522:back-end/.env:generic-api-key:2
+07de7067178c9bca2913cc3b223b85e3ba67a392:back-end/.env:generic-api-key:2
+83e13f726292b53bc19bc5f1e982a9b2e050f1ab:back-end/.env:generic-api-key:2
+7f5629651bbd5c825c5bbf14b496725a92a00af7:back-end/app/routers/authorization.py:generic-api-key:19
+207a6b3f2ac80e1b61f891872866c268868b93b1:back-end/app/routers/authorization.py:generic-api-key:19
+5b9956800d328a839a9992828e2f12d4b3ae4589:back-end/.env:generic-api-key:3
+5b9956800d328a839a9992828e2f12d4b3ae4589:back-end/app/routers/authorization.py:generic-api-key:18
+
+# example access_token in the OpenAPI schema (not a secret)
+207a6b3f2ac80e1b61f891872866c268868b93b1:back-end/app/schemas/schema.py:generic-api-key:40
+7f5629651bbd5c825c5bbf14b496725a92a00af7:back-end/app/schemas/schema.py:generic-api-key:41
+5b9956800d328a839a9992828e2f12d4b3ae4589:back-end/app/schemas/schema.py:generic-api-key:44
+
+# Google API key (revoked by the owner on 2026-11-23)
+7ed4739a061928650ca41c80c91a9de527b52f46:back-end/.env:gcp-api-key:12
