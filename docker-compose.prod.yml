@@ -1,0 +1,113 @@
+# Production / staging overlay (E0.6). Use it together with the base file:
+#
+#   docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# What it changes compared with the development setup:
+#   * only Caddy is published (80/443): db, redis, backend and frontend are reachable inside the compose network only
+#     (published Docker ports bypass ufw, so they must not exist at all);
+#   * no default passwords: POSTGRES_* and DOMAIN must be set in .env.staging (see .env.staging.example);
+#   * healthchecks and ordered start for every service, restart: unless-stopped;
+#   * memory limits (defaults sized for a 4 GB VPS, raise them with the *_MEM_LIMIT variables on 8 GB);
+#   * log rotation (10 MB x 5 files per service);
+#   * automatic HTTPS through Caddy (Caddyfile).
+# Requires Docker Compose >= 2.24 (the `!reset` tag).
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  db:
+    restart: unless-stopped
+    ports: !reset []
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is not set, see .env.staging.example}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set, see .env.staging.example}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is not set, see .env.staging.example}
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: ${DB_MEM_LIMIT:-512m}
+
+  redis:
+    restart: unless-stopped
+    ports: !reset []
+    # a cache: bounded memory, least recently used keys are evicted
+    command: ["redis-server", "--maxmemory", "${REDIS_MAXMEMORY:-128mb}", "--maxmemory-policy", "allkeys-lru"]
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: ${REDIS_MEM_LIMIT:-192m}
+
+  backend:
+    restart: unless-stopped
+    ports: !reset []
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      FRONTEND_URL: https://${DOMAIN:?DOMAIN is not set, see .env.staging.example}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/openapi.json', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEM_LIMIT:-1536m}
+
+  frontend:
+    restart: unless-stopped
+    ports: !reset []
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: ${FRONTEND_MEM_LIMIT:-64m}
+
+  caddy:
+    image: caddy:2.11.9-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN is not set, see .env.staging.example}
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL is not set, see .env.staging.example}
+      # Let's Encrypt production by default; use the staging directory for the first run (see docs/RUNBOOK.md)
+      ACME_CA: ${ACME_CA:-https://acme-v02.api.letsencrypt.org/directory}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:2019/config/"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    deploy:
+      resources:
+        limits:
+          memory: ${CADDY_MEM_LIMIT:-128m}
+
+volumes:
+  caddy_data:
+  caddy_config:
