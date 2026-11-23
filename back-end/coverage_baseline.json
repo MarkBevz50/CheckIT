@@ -1,0 +1,18 @@
+{
+ "_comment": "Coverage baseline for CI (tools/check_coverage.py). Raise it only by an explicit commit; numbers come from CI (--print-baseline). app_total: all of app/; modules_total: the modules below taken together; module_min: every file of these modules.",
+ "app_total": 54.9,
+ "modules_total": 90.5,
+ "module_min": 76.8,
+ "tolerance": 0.0,
+ "modules": [
+  "app/core/",
+  "app/database.py",
+  "app/models/",
+  "app/schemas/",
+  "app/routers/authorization.py",
+  "app/services/cache.py",
+  "app/services/llm_validator.py",
+  "app/services/risk_analyzer.py",
+  "app/services/tender_classifier.py"
+ ]
+}
