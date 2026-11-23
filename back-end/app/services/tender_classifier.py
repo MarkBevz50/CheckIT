@@ -57,27 +57,7 @@ def _classify_by_regex(items: List[Dict[str, Any]]) -> TenderType:
     return TenderType.PRODUCT
 
 
-async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
-    """Use an LLM to semantically classify tender type from item names and CPV codes.
-
-    Tries Claude first; falls back to Gemini if Claude is unavailable.
-    """
-    import os
-
-    # Build item descriptions for the prompt
-    items_text = ""
-    for i, item in enumerate(items[:30], 1):  # Limit to 30 items
-        name = item.get("name", "") or item.get("description", "") or ""
-        cpv = item.get("dk_code", "") or item.get("cpv", "") or ""
-        unit = item.get("unit_name", "")
-        cpv_part = f" (CPV: {cpv})" if cpv else ""
-        unit_part = f" [{unit}]" if unit else ""
-        items_text += f"{i}. {name}{cpv_part}{unit_part}\n"
-
-    if not items_text.strip():
-        return None
-
-    system_prompt = """Ти — експерт з класифікації тендерних закупівель в Україні.
+CLASSIFY_SYSTEM_PROMPT = """Ти — експерт з класифікації тендерних закупівель в Україні.
 
 ЗАДАЧА: Визнач тип тендера на основі переліку товарів/послуг/робіт.
 
@@ -95,6 +75,32 @@ async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
 - CPV 09-43: товари
 
 Відповідай ТІЛЬКИ одним словом з варіантів: product, service, work, mixed"""
+
+
+def build_items_text(items: List[Dict[str, Any]]) -> str:
+    """Numbered item list for the classification prompt: name, CPV code and unit of every item."""
+    items_text = ""
+    for i, item in enumerate(items[:30], 1):  # Limit to 30 items
+        name = item.get("name", "") or item.get("description", "") or ""
+        cpv = item.get("dk_code", "") or item.get("cpv", "") or ""
+        unit = item.get("unit_name", "")
+        cpv_part = f" (CPV: {cpv})" if cpv else ""
+        unit_part = f" [{unit}]" if unit else ""
+        items_text += f"{i}. {name}{cpv_part}{unit_part}\n"
+    return items_text
+
+
+async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
+    """Use an LLM to semantically classify tender type from item names and CPV codes.
+
+    Tries Claude first; falls back to Gemini if Claude is unavailable.
+    """
+    items_text = build_items_text(items)
+
+    if not items_text.strip():
+        return None
+
+    system_prompt = CLASSIFY_SYSTEM_PROMPT
 
     type_map = {
         "product": TenderType.PRODUCT,

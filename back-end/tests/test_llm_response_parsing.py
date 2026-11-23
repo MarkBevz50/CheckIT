@@ -2,8 +2,9 @@
 
 These functions take plain text, so they survive the provider refactoring in E2-E5 and
 will be used to check Haiku 5.5 output in E0.7. NOTE: the samples below are hand-written
-in the shapes models really produce (bare JSON, ```json fences, chatter around the JSON);
-replace or extend them with recorded Haiku 5.5 replies when the control run happens.
+in the shapes models really produce (bare JSON, ```json fences, chatter around the JSON).
+Real recorded Haiku 5.5 replies for validation, classification and the router are tested in
+test_haiku_recorded_replies.py; replies for item extraction and document analysis are still to be recorded in E0.7.
 """
 
 import json
