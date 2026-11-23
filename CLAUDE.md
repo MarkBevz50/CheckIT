@@ -35,7 +35,7 @@
 - `dev` → `main` лише після закриття етапу, з тегом версії.
 - Термінові виправлення: `hotfix/назва` від `main`, зливаються в `main` і в `dev`.
 - **Видалення гілок:** перед видаленням гілки перевірити стан PR через `gh pr view <номер>` (потрібен `state: MERGED`). Гілку відкритого PR не видаляти ніколи: GitHub закриває PR.
-- Прямих комітів у `main` і `dev` немає (виняток: службові правки плану/документації, якщо власник дозволив).
+- **Прямі коміти в `main` і `dev` заборонені, без винятків:** навіть дрібні правки документації й плану йдуть через гілку і pull request (`docs/назва` або `feature/…`). Захист гілок із обов'язковими перевірками CI вмикається після першого зеленого прогону окремим рішенням власника (E0.5b).
 
 ## Структура
 
@@ -68,6 +68,10 @@ scraper/parsers/             RozetkaParser, SilpoParser, EpicentrParser (sync, r
 scraper/tests/               unittest-тести парсерів (ходять у живу мережу)
 front-project/               Vue 3 + Vite + Pinia (src/views, components, stores, api/config.js), nginx.conf, Dockerfile
 docker-compose.yml           db, redis, backend, frontend
+ruff.toml                    конфіг лінтера (E0.5b)
+.github/workflows/ci.yml     CI: backend, frontend, gitleaks, docker-build
+.gitleaksignore              відбитки історичних знахідок gitleaks (без значень секретів)
+back-end/tools/              службові скрипти (check_coverage.py)
 PLAN/                        план робіт
 ```
 
@@ -114,11 +118,19 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
   Покриття: `python -m pytest --cov=app --cov-report=term`; для модулів, що не переписуються в E1–E2 (див. E0.2 у плані):
   `python -m pytest --cov=app.core --cov=app.database --cov=app.models --cov=app.schemas --cov=app.routers.authorization --cov=app.services.cache --cov=app.services.llm_validator --cov=app.services.risk_analyzer --cov=app.services.tender_classifier`. `app/db_test.py` — не тест, а перевірка підключення. Тести: налаштування, авторизація, імпорт тендера, ризик-аналіз, класифікатор, кеш, розбір відповідей LLM, скрапери на записаних відповідях.
 - `scraper/tests/` — unittest-класи, **потребують живої мережі**; `scraper/tests/conftest.py` ставить їм маркер `live`.
-  Запуск через pytest з `back-end`: `python -m pytest ../scraper/tests -m live` (живі), `-m "not live"` (їх виключає; так буде в CI).
+  Запуск через pytest з `back-end`: `python -m pytest ../scraper/tests -m live` (живі), `-m "not live"` (їх виключає; так і в CI).
   9 застарілих тестів (`info_about_product`) пропущені до E2.2, `test_category_search` для Rozetka позначений `xfail(strict=True)` до E2.2.
   `python -m unittest discover -s scraper/tests -t .` (з кореня репо) запускає все без маркерів і, як і раніше, дає 1 failure + 9 errors.
 - Фронтенд: `cd front-project && npm run test:unit -- --run` (vitest; тести в `src/**/__tests__/`). Лінт: `npm run lint`.
-- CI відсутній (крок E0.5).
+- **Лінтер:** `ruff check .` з кореня репо (конфіг `ruff.toml`, набір `E4,E7,E9,F`; `ruff` ставиться з `requirements-dev.txt`).
+- **Перевірка покриття** (не нижче базової лінії `back-end/coverage_baseline.json`):
+  ```powershell
+  cd back-end
+  .\.venv\Scripts\python.exe -m pytest tests ../scraper/tests -m "not live" --cov=app --cov-report=json:coverage.json
+  .\.venv\Scripts\python.exe tools/check_coverage.py coverage.json            # --print-baseline показує поточні числа
+  ```
+  Базову лінію підвищують лише окремим комітом з числами з CI.
+- **CI** (GitHub Actions, `.github/workflows/ci.yml`) на кожен pull request у `dev` і `main` та на push у них: `backend` (ruff, pytest з покриттям і перевіркою базової лінії, тест міграцій із Postgres), `frontend` (`eslint .` без `--fix`, vitest), `gitleaks` (нові коміти PR; на push уся історія; історичні знахідки лише відбитками в `.gitleaksignore`), `docker-build` (збірка образів без публікації, кеш buildx, `docker compose config -q`). Червоний CI означає, що PR не зливаємо. Нові знахідки gitleaks в `.gitleaksignore` не додавати без рішення власника.
 
 ## Змінні середовища
 
