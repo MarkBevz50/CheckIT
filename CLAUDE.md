@@ -67,7 +67,12 @@ back-end/
 scraper/parsers/             RozetkaParser, SilpoParser, EpicentrParser (sync, requests), ProductInfo
 scraper/tests/               unittest-тести парсерів (ходять у живу мережу)
 front-project/               Vue 3 + Vite + Pinia (src/views, components, stores, api/config.js), nginx.conf, Dockerfile
-docker-compose.yml           db, redis, backend, frontend
+docker-compose.yml           db, redis, backend, frontend (розробка)
+docker-compose.prod.yml      оверлей для staging/продакшну: лише Caddy назовні, healthcheck, ліміти пам'яті, ротація логів
+Caddyfile                    автоматичний HTTPS для $DOMAIN (використовує docker-compose.prod.yml)
+.env.staging.example         перелік змінних сервера без значень (реальний .env.staging лише на сервері, у .gitignore)
+scripts/                     check_env_staging.py (перевірка .env.staging), check_sources.py (доступність магазинів з сервера)
+docs/RUNBOOK.md              підготовка Ubuntu, перший деплой, оновлення, логи, зупинка, бекап
 ruff.toml                    конфіг лінтера (E0.5b)
 .github/workflows/ci.yml     CI: backend, frontend, gitleaks, docker-build
 .gitleaksignore              відбитки історичних знахідок gitleaks (без значень секретів)
@@ -103,6 +108,10 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 - Назви обмежень і індексів задає `NAMING_CONVENTION` у `app/database.py` (ix, uq, ck, fk, pk).
 - База, створена до E0.3 через `create_all` (без `alembic_version`), позначається один раз: `alembic stamp head` (у Docker: `docker compose run --rm backend alembic stamp head`). Порожню базу достатньо запустити.
 - Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`. Приклад: `docker compose up -d db`, створити базу `check_it_test`, `TEST_DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5433/check_it_test`.
+
+## Staging і продакшн (E0.6)
+
+Окремий оверлей, не змінює режим розробки: `docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.prod.yml up -d --build`. Назовні опубліковано лише Caddy (80/443), решта сервісів доступні тільки всередині мережі compose (опубліковані порти Docker обходять `ufw`, тому `ports:` до них додавати не можна). Паролі без дефолтів, healthcheck усіх сервісів, ліміти пам'яті (змінні `*_MEM_LIMIT`, типові значення для VPS на 4 ГБ), ротація логів. Потрібен Docker Compose не нижче 2.24 (тег `!reset`). Перед деплоєм: `python3 scripts/check_env_staging.py`; на новому сервері першим ділом `python3 scripts/check_sources.py`. Усі кроки: `docs/RUNBOOK.md`. Репетиція без сервера: окремий проєкт `-p pyman-stagingtest` з `DOMAIN=localhost` (внутрішній сертифікат Caddy), після неї `down` без `-v` і точкове видалення її томів за іменами (дозвіл власника потрібен щоразу).
 
 ## Тести
 

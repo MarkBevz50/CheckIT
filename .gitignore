@@ -85,6 +85,10 @@ back-end/app/schemas/__pycache__/
 back-end/.env
 scraper/.env
 
+# Staging/production environment of the server (E0.6): never committed
+.env.staging
+.env.production
+
 # Temporary PDF files
 back-end/app/prozorro_functionality/temp_pdf/*.pdf
 
