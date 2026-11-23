@@ -452,7 +452,7 @@ def check_secrets():
         hits["authorization"] += "authorization" in low
         hits["bearer"] += "bearer" in low
         hits["sk-or-"] += bool(re.search(r"sk-or-[A-Za-z0-9_-]{20,}", text))  # a key-like string, not the error text
-    print(f"scanned {scanned} files in eval/results/pilot/; files with: {hits}")
+    print(f"scanned {scanned} files in {RAW}; files with: {hits}")
     return not any(hits.values())
 
 
@@ -709,7 +709,7 @@ def write_summary(models, requests, catalog):
                   "рядки таблиць вище для цих моделей і задач дивіться з цим застереженням):", ""]
         lines += [f"- {g}" for g in gaps] + [""]
     SUMMARY.write_text("\n".join(lines), encoding="utf-8")
-    print("saved", SUMMARY.relative_to(ROOT))
+    print("saved", SUMMARY.relative_to(ROOT) if SUMMARY.is_relative_to(ROOT) else SUMMARY)
 
 
 def export_haiku_fixtures(requests):
@@ -736,6 +736,7 @@ def export_haiku_fixtures(requests):
 
 
 def main():
+    global RAW, SUMMARY
     if sys.stdout.encoding != "utf-8":
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -748,12 +749,19 @@ def main():
     ap.add_argument("--limit", type=int, help="at most N requests per task and model (smoke test)")
     ap.add_argument("--model-tasks", nargs="*", default=[], metavar="MODEL=TASK,TASK",
                     help="run only these tasks for a model, e.g. anthropic/claude-sonnet-5.5=validate")
+    ap.add_argument("--raw-dir", type=Path, help="read/write raw answers here instead of eval/results/pilot "
+                    "(e.g. a copy in eval/snapshots/experiments/openrouter_pilot/<date>/pilot)")
+    ap.add_argument("--summary-out", type=Path, help="write the summary here instead of eval/results/pilot_summary.md")
     ap.add_argument("--check-secrets", action="store_true", help="scan the raw results for the key or an Authorization header")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--summarize", action="store_true")
     ap.add_argument("--export-haiku-fixtures", action="store_true")
     args = ap.parse_args()
 
+    if args.raw_dir:
+        RAW = args.raw_dir.resolve()
+    if args.summary_out:
+        SUMMARY = args.summary_out.resolve()
     model_tasks = {}
     for item in args.model_tasks:
         model, _, names = item.partition("=")

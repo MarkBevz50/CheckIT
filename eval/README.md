@@ -67,7 +67,7 @@ eval/snapshots/
 
 Як відтворити:
 1. **Контрольні тендери.** Знімок створює крок E0.7 першим прогоном на 10 тендерах (скрипт з'явиться в цьому кроці). Вручну: `GET https://public.api.openprocurement.org/api/2.5/tenders/<hex_id>` (`hex_id` лежить у `eval/control_tenders.json`) зберегти в `tender.json`, а документи завантажити за `data.documents[].url`. Тендер міг змінитися після відбору (відбір 12 листопада 2026), тому живий запит може дати інші дані: зберігайте знімок одразу.
-2. **Експерименти.** Кожен експеримент пише сирі відповіді в `experiments/<назва>/<дата>/` і описує команду у своєму розділі цього README. Уже проведений пілот OpenRouter: відповіді моделей лежать у `eval/results/pilot/`, відповіді магазинів у `eval/data/raw_store/`; обидва каталоги теж не в git, їх треба скопіювати в `experiments/openrouter_pilot/<дата>/` і зберігати разом зі знімками. Повторний запуск `openrouter_pilot.py` дасть інші відповіді (моделі не детерміновані, ціни й версії моделей змінюються), тож з нуля відтворити їх неможливо: тримайте копію.
+2. **Експерименти.** Кожен експеримент пише сирі відповіді в `experiments/<назва>/<дата>/` і описує команду у своєму розділі цього README. Уже проведений пілот OpenRouter скопійовано (копія, не переміщення) в `experiments/openrouter_pilot/2026-11-23/`: `pilot/` (відповіді моделей), `raw_store/` (відповіді магазинів) і `README.txt` з командою. Зведення відновлюється з копії без мережі й ключа: `openrouter_pilot.py --summarize --raw-dir <копія>/pilot --summary-out <файл>` (перевірено: збігається з `eval/results/pilot_summary.md`, крім рядка з часом). Оригінали в `eval/results/pilot/` і `eval/data/raw_store/` лишаються на місці. Повторний запуск `openrouter_pilot.py` дасть інші відповіді (моделі не детерміновані, ціни й версії моделей змінюються), тож з нуля відтворити їх неможливо: тримайте копію.
 3. **Резервна копія.** Каталог поза git, тому робіть архів і зберігайте його на іншому диску.
 
 ## Пілот OpenRouter
@@ -80,6 +80,7 @@ back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --dry-run      # оц
 back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --models anthropic/claude-haiku-5.5 --limit 3 --budget 0.1   # димовий тест
 back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --budget 2     # повний прогін (стоп-кран: зупиняється перед викликом, що перевищить бюджет)
 back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --summarize    # перебудувати eval/results/pilot_summary.md
+back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --summarize --raw-dir <каталог з відповідями> --summary-out <файл>   # те саме з копії зі знімків
 back-end\.venv\Scripts\python.exe eval\openrouter_pilot.py --export-haiku-fixtures   # відповіді Haiku 5.5 як фікстури тестів розбору JSON
 ```
 Прогін відновлюваний: завершені виклики пропускаються. Дорогі моделі стоять у списку останніми, щоб стоп-кран відсікав саме їх.
