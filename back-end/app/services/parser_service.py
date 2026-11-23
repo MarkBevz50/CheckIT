@@ -5,7 +5,7 @@ Parser service — wraps parsers and provides a unified interface for multiple s
 import asyncio
 import logging
 import re
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
 from scraper.parsers.rozetka_parser import RozetkaParser
 from scraper.parsers.silpo_parser import SilpoParser

@@ -32,7 +32,7 @@ class TestSilpoParser(unittest.TestCase):
         self.assertIsNotNone(product_info.title)
 
     def is_not_empty(self, product):
-        result = (not product.title is None) and (not product.price is None)
+        result = (product.title is not None) and (product.price is not None)
         return result
 
     def test_basic_search(self):
