@@ -132,6 +132,23 @@ jobs:
       - name: docker-compose.yml is valid
         run: SECRET_KEY=ci docker compose config -q
 
+      # the production overlay (E0.6) and the Caddyfile; dummy values, nothing is started
+      - name: Production overlay and Caddyfile are valid
+        env:
+          SECRET_KEY: ci
+          DOMAIN: example.com
+          ACME_EMAIL: ci@example.com
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml config -q
+          CADDY_IMAGE=$(docker compose -f docker-compose.yml -f docker-compose.prod.yml config --images | grep caddy)
+          docker run --rm -e DOMAIN -e ACME_EMAIL \
+            -e ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory \
+            -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" "$CADDY_IMAGE" \
+            caddy validate --config /etc/caddy/Caddyfile
+
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Build the backend image (not pushed)
