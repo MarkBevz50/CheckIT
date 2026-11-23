@@ -36,7 +36,7 @@ import httpx
 ROOT = Path(__file__).resolve().parents[1]
 # the application modules read Settings on import; these placeholders are never used to connect anywhere
 os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://pilot:pilot@localhost:5432/pilot")
-os.environ.setdefault("SECRET_KEY", "pilot-not-a-secret")
+os.environ.setdefault("SECRET_KEY", "pilot-dummy-key-never-used-0123456789")
 sys.path[:0] = [str(ROOT), str(ROOT / "back-end")]
 
 from app.services.claude_validator import (  # noqa: E402

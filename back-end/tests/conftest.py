@@ -8,7 +8,7 @@ import pytest
 # required variables. Give the test process harmless dummy values (no real DB is used);
 # individual tests override or remove them as needed.
 os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://test:test@localhost:5432/test")
-os.environ.setdefault("SECRET_KEY", "test-secret-key")
+os.environ.setdefault("SECRET_KEY", "test-only-key-for-pytest-0123456789abcdef")  # >= 32 chars (E0.11)
 
 # Whatever the developer keeps in .env, tests must never reach a paid API or a cache:
 # process variables win over .env, so empty values switch these features off.

@@ -135,14 +135,14 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 ## Змінні середовища
 
 Усі змінні читає лише `back-end/app/core/config.py` (`Settings`, pydantic-settings); `os.getenv` в іншому місці
-забороняє тест. Порядок: змінні процесу → `.env` у корені → `back-end/.env`. Шаблон — `.env.example`.
+забороняє тест. Пріоритет від вищого до нижчого: змінні процесу → `back-end/.env` → `.env` у корені (пізніший файл перекриває ранніший, тому застарілий `back-end/.env` перекриє ключі з кореневого `.env`; краще його не мати). Шаблон — `.env.example`.
 Обов'язкові (без дефолтів, застосунок не стартує і називає відсутню змінну): `DATABASE_URL`, `SECRET_KEY`.
 У Docker `DATABASE_URL` збирає `docker-compose.yml`; локально без Docker її треба додати в `.env`.
 
 | Змінна | Призначення |
 | --- | --- |
 | `DATABASE_URL` (`postgresql+asyncpg://…`) | **обов'язкова**, єдиний async engine в `database.py`, alembic |
-| `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback |
+| `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback; не менше 32 символів і не з опублікованих значень (застосунок не стартує, E0.11); згенерувати: `python -c "import secrets; print(secrets.token_hex(32))"` |
 | `DB_ECHO` | логувати SQL (за замовчуванням `false`) |
 | `ALGORITHM` (HS256), `FRONTEND_URL` | JWT, CORS |
 | `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_MODEL_SMART` | Claude (дефолти моделей застарілі, оновить E0.7) |
