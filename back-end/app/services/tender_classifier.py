@@ -7,7 +7,6 @@ when the model is unavailable.
 
 from app.core.config import settings
 import asyncio
-import json
 import logging
 import re
 from typing import Any, Dict, List, Optional

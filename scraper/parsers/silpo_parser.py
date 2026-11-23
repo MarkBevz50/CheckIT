@@ -44,7 +44,6 @@ class SilpoParser:
                     actual_price = old_price if is_on_sale else price
 
                     slug = item.get("slug", "")
-                    section_slug = item.get("sectionSlug", "")
                     url = f"{SILPO_BASE_URL}/product/{slug}" if slug else SILPO_BASE_URL
 
                     info = ProductInfo(

@@ -1,16 +1,14 @@
 import logging
 from io import BytesIO
-from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Depends, File, UploadFile, Query
 from fastapi.middleware.cors import CORSMiddleware
 from openpyxl import load_workbook
-from pydantic import BaseModel
 
 from app.routers.prozorro_router import prozorro_router
 from app.routers.tender_router import tender_router
 from app.routers.ai_assistant import router as assistant_router
-from app.services.parser_service import search_products_async, get_available_stores
+from app.services.parser_service import search_products_async
 
 # Ensure tender models are registered with Base.metadata
 import app.models.tender  # noqa: F401

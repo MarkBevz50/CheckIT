@@ -15,7 +15,7 @@ import logging
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select, func
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -31,7 +31,7 @@ from app.schemas.tender import (
     ServiceTenderCreate,
     WorkTenderCreate,
 )
-from app.services.tender_classifier import classify_tender_type, classify_tender_type_async
+from app.services.tender_classifier import classify_tender_type_async
 
 logger = logging.getLogger(__name__)
 
