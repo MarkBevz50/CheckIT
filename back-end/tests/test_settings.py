@@ -160,7 +160,7 @@ def test_the_hash_list_holds_exactly_the_published_values():
 def test_the_repository_documents_no_known_or_short_secret_key():
     """No example file or README may suggest a SECRET_KEY value that is public or too short to be accepted."""
     root = Path(__file__).resolve().parents[2]
-    for name in (".env.example", "back-end/.env.example", "README.md"):
+    for name in (".env.example", "README.md"):
         for match in re.finditer(r"^\s*SECRET_KEY\s*=[ \t]*[\"']?([^\"'\s#]*)", (root / name).read_text(encoding="utf-8"), re.M):
             value = match.group(1)
             assert value == "" or len(value) >= 32, f"{name}: SECRET_KEY example is shorter than 32 characters"

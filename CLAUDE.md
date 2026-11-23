@@ -135,9 +135,9 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 ## Змінні середовища
 
 Усі змінні читає лише `back-end/app/core/config.py` (`Settings`, pydantic-settings); `os.getenv` в іншому місці
-забороняє тест. Пріоритет від вищого до нижчого: змінні процесу → `back-end/.env` → `.env` у корені (пізніший файл перекриває ранніший, тому застарілий `back-end/.env` перекриє ключі з кореневого `.env`; краще його не мати). Шаблон — `.env.example`.
+забороняє тест. Пріоритет: змінні процесу → `.env` у корені. **Єдиний файл конфігурації — кореневий `.env`** (його ж використовує Docker, E0.12). `back-end/.env` не читається: якщо він з'явиться, у лог при старті потрапить попередження з назвами його змінних (без значень), а сам файл треба видалити. Шаблон — `.env.example`.
 Обов'язкові (без дефолтів, застосунок не стартує і називає відсутню змінну): `DATABASE_URL`, `SECRET_KEY`.
-У Docker `DATABASE_URL` збирає `docker-compose.yml`; локально без Docker її треба додати в `.env`.
+У Docker `DATABASE_URL` збирає `docker-compose.yml` (хост `db`, порт 5432) і вона **завжди перекриває** значення з `.env` (перевірено `docker compose config`, тест у `test_env_file.py`). `DATABASE_URL` у кореневому `.env` (`…@localhost:5433/…`) потрібна **лише для локального `uvicorn`/alembic** без Docker; контейнер її не бачить.
 
 | Змінна | Призначення |
 | --- | --- |
@@ -166,6 +166,7 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 - **`docker compose up --build` — лише для фінальної перевірки кроку.** Проміжні перевірки — `pytest` у `.venv`.
 - **Прибирання після кожної Docker-перевірки:** `docker builder prune -f` і `docker image prune -f`. Після цього перевірити розмір
   `D:\Docker\wsl\disk\docker_data.vhdx` і вказати його у звіті; якщо він більший за 40 ГБ — повідомити власника.
+- Томи compose іменовані: `pyman_postgres_data` (база) і `pyman_redis_data` (кеш Redis); безіменних томів `up` не створює.
 - **Ніколи** не виконувати `docker volume prune`, `docker system prune --volumes` чи `docker compose down -v` без прямого дозволу власника
   (знищують дані БД).
 
