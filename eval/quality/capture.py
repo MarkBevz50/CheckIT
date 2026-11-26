@@ -3,7 +3,7 @@
 Installed in-process, so the run goes through the real handlers (import, analysis, risk analysis) and the real
 services. What is intercepted:
 
-  Prozorro        requests.get to *prozorro* hosts                  (kind "http")
+  Prozorro        requests.get to prozorro / openprocurement hosts   (kind "http")
   UA-ID -> hex    prozorro_router.convert_ua_to_hex_id               (kind "ua")
   store search    parser_service.search_products_async               (kind "search")
   Claude          claude_validator._client (messages.create)         (kind "llm", key = hash of all parameters)
@@ -26,6 +26,10 @@ from typing import Any, Dict, List
 from .snapshot import Snapshot, decode_body, digest, encode_body
 
 PRICES = {"claude-haiku-5-5": (0.10e-6, 0.50e-6), "claude-sonnet-5-5": (2.00e-6, 10.00e-6)}  # list price per token
+
+
+# the tender API lives at public.api.openprocurement.org, the documents at public-docs.prozorro.gov.ua
+PROZORRO_HOSTS = ("prozorro", "openprocurement")
 
 
 class ReplayMiss(RuntimeError):
@@ -139,7 +143,7 @@ class Capture:
         real_get = requests.get
 
         def get(url, *args, **kwargs):
-            if "prozorro" not in str(url):
+            if not any(host in str(url) for host in PROZORRO_HOSTS):
                 if capture.mode == "replay":
                     raise ReplayMiss(f"network request in replay mode: {url}")
                 return real_get(url, *args, **kwargs)

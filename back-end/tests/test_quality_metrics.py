@@ -253,3 +253,10 @@ def test_doc_findings_metrics_count_true_false_and_duplicates_per_mode():
     assert b["precision"] == round(1 / 2, 4)                       # the unlabeled one is not counted
     assert result["union_true"] == 1 and a["share_of_union_true"] == 1.0
     assert a["cost_total"] == 0.006 and a["cost_per_call"] == 0.003
+
+
+def test_the_prozorro_tender_api_host_is_recorded_too():
+    from quality.capture import PROZORRO_HOSTS
+
+    for url in ("https://public.api.openprocurement.org/api/2.5/tenders/abc", "https://public-docs.prozorro.gov.ua/get/x"):
+        assert any(host in url for host in PROZORRO_HOSTS), url
