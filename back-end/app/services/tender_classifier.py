@@ -118,6 +118,7 @@ async def _classify_by_llm(items: List[Dict[str, Any]]) -> Optional[TenderType]:
                 msg = await client.messages.create(
                     model=claude_validator._model(),
                     max_tokens=16,  # one word; margin for the Haiku 5.5 tokenizer
+                    **claude_validator.thinking_kwargs(settings.llm_thinking_classify),
                     system=[
                         {
                             "type": "text",

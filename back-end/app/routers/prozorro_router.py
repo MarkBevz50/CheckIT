@@ -14,10 +14,6 @@ from app.services.parser_service import (
 
 prozorro_router = APIRouter()
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
 logger = logging.getLogger(__name__)
 
 PROZORRO_SEARCH_URL = "https://prozorro.gov.ua/api/search/tenders"

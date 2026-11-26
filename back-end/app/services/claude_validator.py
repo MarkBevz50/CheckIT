@@ -74,6 +74,11 @@ MAX_TOKENS_DISCRIM = 5200
 INPUT_TOKENS_WARN = 80_000
 
 
+def thinking_kwargs(mode: str) -> Dict[str, Any]:
+    """Request arguments for the reasoning mode configured for a task ("default" sends nothing)."""
+    return {} if mode == "default" else {"thinking": {"type": mode}}
+
+
 def _log_usage(label: str, message, max_tokens: int) -> None:
     """Log token usage and warn about truncated output or very large prompts."""
     usage = message.usage
@@ -242,6 +247,7 @@ async def extract_items_from_text(text: str) -> Optional[List[Dict[str, Any]]]:
         message = await client.messages.create(
             model=_document_model(),
             max_tokens=MAX_TOKENS_EXTRACT,
+            **thinking_kwargs(settings.llm_thinking_extract),
             system=[
                 {
                     "type": "text",
@@ -358,6 +364,7 @@ async def validate_matches(
         message = await client.messages.create(
             model=_model(),
             max_tokens=MAX_TOKENS_VALIDATE,
+            **thinking_kwargs(settings.llm_thinking_validate),
             system=[
                 {
                     "type": "text",
@@ -442,6 +449,7 @@ async def analyze_discriminatory_requirements(
         message = await client.messages.create(
             model=_document_model(),
             max_tokens=MAX_TOKENS_DISCRIM,
+            **thinking_kwargs(settings.llm_thinking_documents),
             system=[
                 {
                     "type": "text",

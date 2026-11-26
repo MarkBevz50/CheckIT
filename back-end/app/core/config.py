@@ -32,6 +32,9 @@ logger = logging.getLogger(__name__)
 # SECRET_KEY strength (E0.11): the policy and the SHA-256 list of published values live in secret_policy.py
 
 
+ThinkingMode = Literal["disabled", "between_tools", "default"]
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
@@ -60,6 +63,14 @@ class Settings(BaseSettings):
     # Which model analyses documents (item extraction, discriminatory requirements):
     # "fast" (Haiku) or "smart" (Sonnet). Final choice is made on the E5.2 benchmark.
     llm_document_tier: Literal["fast", "smart"] = "fast"
+    # Reasoning ("thinking") parameter of each kind of request, set per task and never guessed from the model name.
+    # "disabled": Haiku 5.5 (Sonnet 5.5 rejects it with 400); "between_tools": the switch-off value Sonnet 5.5 accepts;
+    # "default": send no parameter (Haiku 5.5 then reasons: slower, 3-10x more output tokens for the same answer).
+    # With LLM_DOCUMENT_TIER=smart set the extract and documents values to "between_tools".
+    llm_thinking_classify: ThinkingMode = "disabled"
+    llm_thinking_validate: ThinkingMode = "disabled"
+    llm_thinking_extract: ThinkingMode = "disabled"
+    llm_thinking_documents: ThinkingMode = "disabled"
     gemini_api_key: str = ""
     gemini_models: str = "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-flash-lite"
     huggingface_api_key: str = ""

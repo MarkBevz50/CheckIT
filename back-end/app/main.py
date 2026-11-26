@@ -20,14 +20,12 @@ import app.models.tender  # noqa: F401
 from .models.model import User
 from .routers.authorization import router as auth_router, get_current_user
 from .core.config import settings
+from .core.logging_config import configure_logging
 from .db_test import verify_database_connection
 # ... решта коду без змін
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+# Configure logging (the only place; see app/core/logging_config.py)
+configure_logging(db_echo=settings.db_echo)
 logger = logging.getLogger(__name__)
 
 app = FastAPI(

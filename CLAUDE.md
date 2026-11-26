@@ -160,6 +160,7 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 | `ANTHROPIC_API_KEY` | Claude, ключ з platform.claude.com (завжди `api.anthropic.com`, роутера немає) |
 | `LLM_FAST_MODEL` (claude-haiku-5-5), `LLM_SMART_MODEL` (claude-sonnet-5-5) | моделі Claude |
 | `LLM_DOCUMENT_TIER` (`fast`/`smart`) | модель для аналізу документації; за замовчуванням fast |
+| `LLM_THINKING_CLASSIFY/VALIDATE/EXTRACT/DOCUMENTS` (`disabled`/`between_tools`/`default`) | міркування Claude для кожної задачі окремо, не за назвою моделі: `disabled` для Haiku 5.5, `between_tools` для Sonnet 5.5 (він відхиляє `disabled`), `default` не надсилає параметр; за замовчуванням `disabled`; при `LLM_DOCUMENT_TIER=smart` для EXTRACT і DOCUMENTS ставити `between_tools` |
 | `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв), ланцюжок моделей через кому |
 | `HUGGINGFACE_API_KEY` | чат-помічник (буде видалено в E6.6) |
 | `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | кеш; без `REDIS_URL` вимкнений |
