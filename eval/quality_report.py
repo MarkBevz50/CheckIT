@@ -30,15 +30,25 @@ from quality.runner import prepare_environment  # noqa: E402
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--stage", required=True, help='label of the stage, e.g. "E0.7 база"')
-    parser.add_argument("--mode", choices=("live", "replay"), required=True)
+    parser.add_argument("--stage", required=False, help='label of the stage, e.g. "E0.7 база"')
+    parser.add_argument("--mode", choices=("live", "replay"))
     parser.add_argument("--llm", choices=("replay", "live"), default="replay")
     parser.add_argument("--snapshot", help="snapshot date (replay: default the latest; live: default today)")
     parser.add_argument("--tenders", help="comma-separated control ids, default all ten")
     parser.add_argument("--budget", type=float, default=1.0, help="stop-cock for real Claude requests, USD (default 1)")
     parser.add_argument("--stability", action="store_true", help="validate 20 labeled pairs 3 times with the real API")
     parser.add_argument("--no-history", action="store_true", help="do not append to history.jsonl (trial run)")
+    parser.add_argument("--report-only", action="store_true", help="only rebuild quality_report.md and the chart from the history")
     args = parser.parse_args(argv)
+
+    if not args.report_only and not (args.stage and args.mode):
+        parser.error("--stage and --mode are required (except with --report-only)")
+    if args.report_only:
+        from quality import report
+
+        chart = report.write_report(report.read_history())
+        print(f"report rebuilt{'' if chart else ' (no chart: matplotlib is missing)'}")
+        return 0
 
     url = prepare_environment()
     from quality import labels as label_store, metrics, report, runner, stability

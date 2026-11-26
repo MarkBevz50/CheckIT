@@ -1,6 +1,7 @@
 """History of runs (eval/metrics/history.jsonl, in git), the markdown report and the chart for the diploma."""
 
 import json
+import os
 import subprocess
 from pathlib import Path
 from typing import List, Optional
@@ -13,6 +14,9 @@ CHART = METRICS / "quality_metrics.png"
 
 
 def git_sha() -> str:
+    """GIT_SHA from the environment (set when the run happens inside the container, which has no git), else git."""
+    if os.environ.get("GIT_SHA"):
+        return os.environ["GIT_SHA"]
     try:
         sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT).stdout.strip()
         dirty = subprocess.run(["git", "status", "--porcelain", "--", "back-end/app", "scraper"], capture_output=True,

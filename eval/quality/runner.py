@@ -33,11 +33,14 @@ def read_env(path: Path = ROOT / ".env") -> Dict[str, str]:
 
 
 def eval_database_url() -> str:
+    """EVAL_DATABASE_URL, else the compose PostgreSQL: from the root .env on the host (port 5433) or, inside the backend
+    container (EVAL_DB_HOST=db, EVAL_DB_PORT=5432), from the POSTGRES_* variables the container was given."""
     explicit = os.environ.get("EVAL_DATABASE_URL")
     if explicit:
         return explicit
-    env = read_env()
-    return (f"postgresql+asyncpg://{env['POSTGRES_USER']}:{env['POSTGRES_PASSWORD']}@127.0.0.1:5433/check_it_eval")
+    env = {**read_env(), **{k: v for k, v in os.environ.items() if k.startswith("POSTGRES_")}}
+    host, port = os.environ.get("EVAL_DB_HOST", "127.0.0.1"), os.environ.get("EVAL_DB_PORT", "5433")
+    return f"postgresql+asyncpg://{env['POSTGRES_USER']}:{env['POSTGRES_PASSWORD']}@{host}:{port}/check_it_eval"
 
 
 def prepare_environment() -> str:
