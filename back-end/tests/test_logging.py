@@ -69,3 +69,14 @@ def test_basic_config_is_called_only_by_the_logging_module():
             if re.search(r"^\s*logging\.basicConfig\(", path.read_text(encoding="utf-8"), re.MULTILINE):
                 offenders.append(str(path.relative_to(ROOT)))
     assert offenders == []
+
+
+def test_ocr_orientation_noise_is_dropped_but_real_ocr_errors_are_not():
+    configure_logging()
+    logger = logging.getLogger("ocrmypdf._exec.tesseract")
+    make = lambda message: logging.LogRecord(logger.name, logging.ERROR, __file__, 1, message, None, None)  # noqa: E731
+    assert not logger.filter(make("[tesseract] Error: LSTM requested, but not present!! Loading tesseract."))
+    assert not logger.filter(make("[tesseract] Error during processing."))
+    assert logger.filter(make("[tesseract] Failed to load language data for ukr"))
+    configure_logging()  # a second call must not stack the filter
+    assert len(logger.filters) == 1
