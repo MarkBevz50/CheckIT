@@ -17,6 +17,7 @@ import app.models.tender  # noqa: F401
 
 
 # Local imports
+from .models.model import User
 from .routers.authorization import router as auth_router, get_current_user
 from .core.config import settings
 from .db_test import verify_database_connection
@@ -124,7 +125,7 @@ def parse_excel_file(file_content: bytes):
 async def upload_excel(
     file: UploadFile = File(...),
     stores: str = Query(default="rozetka", description="Comma-separated store keys: rozetka,silpo,epicentr"),
-    current_user: str = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Upload an Excel file with tender items and compare prices from selected stores.

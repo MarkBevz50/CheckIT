@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.model import User
 from app.models.tender import Tender
+from app.routers.authorization import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -151,6 +152,7 @@ async def analyze_risks(
     tender_id: int = Query(..., description="ID тендера для аналізу ризиків"),
     stores: str = Query(default="rozetka,silpo,epicentr", description="Магазини для порівняння цін"),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Analyze corruption risks for a tender: price deviations + discriminatory requirements."""
     from app.services.risk_analyzer import (
@@ -163,7 +165,9 @@ async def analyze_risks(
     from app.prozorro_functionality.prozorro import get_contract, get_document_urls, parse_documents
 
     # Fetch tender
-    result = await db.execute(select(Tender).where(Tender.id == tender_id))
+    result = await db.execute(
+        select(Tender).where(Tender.id == tender_id, Tender.user_id == current_user.id)
+    )
     tender = result.scalar_one_or_none()
     if not tender:
         raise HTTPException(status_code=404, detail="Тендер не знайдено")
