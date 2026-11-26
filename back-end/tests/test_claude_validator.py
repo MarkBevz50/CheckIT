@@ -50,3 +50,13 @@ def test_no_warning_for_normal_request(caplog):
     with caplog.at_level(logging.WARNING, logger=cv.logger.name):
         cv._log_usage("t", _message(input_tokens=5000), 100)
     assert caplog.text == ""
+
+
+def test_client_uses_the_anthropic_api_even_if_the_environment_names_another_url(monkeypatch):
+    """ANTHROPIC_BASE_URL in the environment (an old router URL in a developer .env) must not redirect the requests."""
+    monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://old-router.example.com")
+    monkeypatch.setattr(settings, "anthropic_api_key", "sk-ant-test")
+    monkeypatch.setattr(cv, "_client", None)
+    client = cv._get_client()
+    assert str(client.base_url).rstrip("/") == "https://api.anthropic.com"
+    monkeypatch.setattr(cv, "_client", None)

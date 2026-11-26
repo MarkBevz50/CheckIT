@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 _client = None  # lazy-initialised AsyncAnthropic
+ANTHROPIC_BASE_URL = "https://api.anthropic.com"
 
 
 def _get_client():
@@ -39,7 +40,9 @@ def _get_client():
     try:
         import anthropic
 
-        _client = anthropic.AsyncAnthropic(api_key=api_key)
+        # base_url is explicit: the SDK would otherwise honour an ANTHROPIC_BASE_URL left in the environment
+        # (an old router URL did exactly that and every request failed with "Connection error")
+        _client = anthropic.AsyncAnthropic(api_key=api_key, base_url=ANTHROPIC_BASE_URL)
         logger.info(
             f"Anthropic client initialised (fast={settings.llm_fast_model}, "
             f"smart={settings.llm_smart_model}, document_tier={settings.llm_document_tier})"
