@@ -19,6 +19,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
+from app.models.model import User
 from app.models.tender import Tender, TenderItem
 from app.routers.authorization import get_current_user
 from app.schemas.tender import (
@@ -70,7 +71,7 @@ def _tender_to_list_item(tender: Tender) -> dict:
 async def create_tender(
     data: TenderCreate,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Create a new tender. The schema is validated per tender_type."""
     # Check for duplicate prozorro_id
@@ -91,7 +92,7 @@ async def create_tender(
         customer_name=data.customer_name,
         region=data.region,
         total_amount=data.total_amount,
-        user_id=current_user.id if hasattr(current_user, "id") else 1,
+        user_id=current_user.id,
     )
 
     # Set type-specific fields
@@ -121,10 +122,10 @@ async def list_tenders(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """List tenders for current user with optional filters and pagination."""
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     q = select(Tender).where(Tender.user_id == user_id)
 
     if tender_type:
@@ -147,10 +148,10 @@ async def list_tenders(
 async def get_tender(
     tender_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Get full tender details with items."""
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     result = await db.execute(
         select(Tender).where(Tender.id == tender_id, Tender.user_id == user_id)
     )
@@ -167,10 +168,10 @@ async def update_tender(
     tender_id: int,
     data: TenderUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Update tender metadata (not items)."""
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     result = await db.execute(
         select(Tender).where(Tender.id == tender_id, Tender.user_id == user_id)
     )
@@ -195,10 +196,10 @@ async def update_tender(
 async def delete_tender(
     tender_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Delete a tender and all its items."""
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     result = await db.execute(
         select(Tender).where(Tender.id == tender_id, Tender.user_id == user_id)
     )
@@ -219,7 +220,7 @@ async def delete_tender(
 async def import_from_prozorro(
     prozorro_id: str,
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Import a tender from Prozorro API and auto-classify its type."""
     from app.prozorro_functionality.prozorro import get_contract, get_contract_info
@@ -318,7 +319,7 @@ async def import_from_prozorro(
     if not total_amount:
         total_amount = contract.get("value", {}).get("amount", 0)
 
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
 
     tender = Tender(
         tender_type=tender_type.value,
@@ -400,12 +401,12 @@ async def analyze_tender(
     tender_id: int,
     stores: str = Query(default="rozetka", description="Comma-separated store keys"),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Run price comparison for a tender's items using configured stores."""
     from app.services.parser_service import search_and_validate_items
 
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     result = await db.execute(
         select(Tender).where(Tender.id == tender_id, Tender.user_id == user_id)
     )
@@ -469,13 +470,13 @@ async def get_price_history(
     tender_id: int,
     days: int = Query(default=30, ge=1, le=365, description="Number of days to look back"),
     db: AsyncSession = Depends(get_db),
-    current_user=Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """Get price history for all items in a tender."""
     from datetime import datetime, timedelta
     from app.models.tender import PriceHistory
 
-    user_id = current_user.id if hasattr(current_user, "id") else 1
+    user_id = current_user.id
     result = await db.execute(
         select(Tender).where(Tender.id == tender_id, Tender.user_id == user_id)
     )
