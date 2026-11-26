@@ -29,7 +29,7 @@ import pytest
 import requests
 from alembic import command
 from fastapi.testclient import TestClient
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
@@ -56,6 +56,13 @@ def database():
     cfg = alembic_config(database_url=TEST_DATABASE_URL)
     command.upgrade(cfg, "head")
     yield TEST_DATABASE_URL
+
+    async def empty_tables(session):
+        # since E0.14 downgrade refuses to run while two users hold the same Prozorro ID, so clear the data first
+        await session.execute(text("TRUNCATE users, tenders, tender_items, price_history RESTART IDENTITY CASCADE"))
+        await session.commit()
+
+    run_sql(empty_tables)
     command.downgrade(cfg, "base")
 
 
@@ -251,3 +258,48 @@ def test_an_imported_tender_belongs_to_the_importer(client, world, monkeypatch):
     assert "aaaa0000bbbb1111cccc2222dddd3333" not in [
         t["prozorro_id"] for t in client.get("/tenders/", headers=auth(world["token_a"])).json()
     ]
+
+
+# ---- E0.14: every user has their own copy of a tender --------------------------------
+
+def serve_prozorro(monkeypatch, hex_id, name):
+    body = synthetic_tender(hex_id, name)
+    monkeypatch.setattr(
+        requests, "get",
+        lambda url, *a, **k: FakeResponse(200, body) if url.endswith(f"/tenders/{hex_id}") else FakeResponse(404, {"errors": []}),
+    )
+
+
+def test_two_users_import_the_same_tender_and_each_has_their_own_copy(client, world, monkeypatch):
+    hex_id = "eeee0000ffff1111aaaa2222bbbb3333"
+    serve_prozorro(monkeypatch, hex_id, "Спільний товар")
+
+    first = client.post(f"/tenders/import/{hex_id}", headers=auth(world["token_a"]))
+    second = client.post(f"/tenders/import/{hex_id}", headers=auth(world["token_b"]))
+    assert (first.status_code, second.status_code) == (201, 201), (first.text, second.text)
+    assert first.json()["id"] != second.json()["id"]
+
+    # the same user cannot import it twice, and the answer says nothing about other users
+    again = client.post(f"/tenders/import/{hex_id}", headers=auth(world["token_a"]))
+    assert again.status_code == 409
+    assert again.json()["detail"] == "Цей тендер уже є у вашому списку"
+
+    # each sees only their own copy
+    own_a = [t["id"] for t in client.get("/tenders/", headers=auth(world["token_a"])).json() if t["prozorro_id"] == hex_id]
+    own_b = [t["id"] for t in client.get("/tenders/", headers=auth(world["token_b"])).json() if t["prozorro_id"] == hex_id]
+    assert own_a == [first.json()["id"]] and own_b == [second.json()["id"]]
+
+    # deleting one copy leaves the other untouched
+    assert client.delete(f"/tenders/{second.json()['id']}", headers=auth(world["token_b"])).status_code == 200
+    assert client.get(f"/tenders/{first.json()['id']}", headers=auth(world["token_a"])).status_code == 200
+    assert client.get(f"/tenders/{second.json()['id']}", headers=auth(world["token_b"])).status_code == 404
+
+
+def test_manual_tenders_with_the_same_prozorro_id_for_two_users(client, world):
+    payload = {"tender_type": "product", "prozorro_id": "UA-MANUAL-SHARED", "title": "Ручний", "total_amount": 20.0,
+               "items": [{"name": "Товар", "quantity": 2, "unit_name": "шт", "unit_price": 10.0}]}
+    assert client.post("/tenders/", json=payload, headers=auth(world["token_a"])).status_code == 201
+    assert client.post("/tenders/", json=payload, headers=auth(world["token_b"])).status_code == 201
+    repeated = client.post("/tenders/", json=payload, headers=auth(world["token_a"]))
+    assert repeated.status_code == 409
+    assert repeated.json()["detail"] == "Цей тендер уже є у вашому списку"
