@@ -4,6 +4,7 @@
     python eval/label_pairs.py --pairs     pairs only
     python eval/label_pairs.py --items     item types only
     python eval/label_pairs.py --queue     pairs the validator accepted in a control run (eval/data/pairs_queue.jsonl)
+    python eval/label_pairs.py --findings  documentation findings (eval/data/doc_findings_pool.json): blind, no model mark
     python eval/label_pairs.py --stats     progress and label distribution
 
 Pairs (eval/data/pairs_pilot.jsonl): 1 = same, 2 = analog, 3 = no, s = skip (shown again at
@@ -23,6 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "eval" / "data"
 PAIRS = DATA / "pairs_pilot.jsonl"
+FINDINGS = DATA / "doc_findings_pool.json"  # made by eval/collect_doc_findings.py
 QUEUE = DATA / "pairs_queue.jsonl"  # filled by eval/quality_report.py with accepted matches nobody has labeled
 LABELS = DATA / "labels.json"
 TENDERS = ROOT / "eval" / "control_tenders.json"
@@ -114,6 +116,62 @@ def show_pair(pair):
     print(f'  Посилання       : {pair.get("url")}')
 
 
+FINDING_KEYS = {"1": "true", "2": "false", "3": "duplicate"}
+
+
+def show_finding(finding):
+    print(f'  Тендер     : {finding["tender"]}')
+    print(f'  Тип/вага   : {finding.get("type")} / {finding.get("severity")}')
+    print(f'  Цитата     : {finding.get("quote")}')
+    print(f'  Пояснення  : {finding.get("explanation")}')
+
+
+def run_findings(labels):
+    """1 = a real discriminatory requirement, 2 = not one, 3 = a duplicate of another finding (asks which)."""
+    if not FINDINGS.exists():
+        sys.exit(f"No {FINDINGS.relative_to(ROOT)} yet: run eval/collect_doc_findings.py first.")
+    pool = json.loads(FINDINGS.read_text(encoding="utf-8"))
+    section = labels.setdefault("findings", {})
+    queue = [f for f in pool if f["id"] not in section]
+    skipped, history = [], []
+    print(f"\n=== Знахідки документації: {len(pool) - len(queue)} of {len(pool)} done, {len(queue)} left ===")
+    print("1 = справжня дискримінаційна вимога, 2 = ні, 3 = дубль іншої знахідки")
+    while queue or skipped:
+        if not queue:
+            print("-- skipped entries again --")
+            queue, skipped = skipped, []
+        finding = queue.pop(0)
+        print(f"\n[{len(section) + 1}/{len(pool)}] {finding['id']}")
+        show_finding(finding)
+        answer = ask("label", FINDING_KEYS)
+        if answer == "q":
+            return False
+        if answer == "s":
+            skipped.append(finding)
+        elif answer == "b":
+            if history:
+                previous = history.pop()
+                section.pop(previous["id"], None)
+                queue.insert(0, finding)
+                queue.insert(0, previous)
+                save_labels(labels)
+            else:
+                queue.insert(0, finding)
+        else:
+            record = {"label": FINDING_KEYS[answer]}
+            if record["label"] == "duplicate":
+                for other in pool:
+                    if other["tender"] == finding["tender"] and section.get(other["id"], {}).get("label") == "true":
+                        print(f'     {other["id"]}: {str(other["quote"])[:110]}')
+                original = input("   дубль якої вимоги (id, наприклад F012; Enter = не вказувати) > ").strip().upper()
+                if original:
+                    record["of"] = original
+            section[finding["id"]] = record
+            history.append(finding)
+            save_labels(labels)
+    return True
+
+
 def show_item(item):
     print(f'  Тендер: {item["tender_title"]}')
     print(f'  Позиція: {item["description"]}  ({item["unit"]}, CPV {item["cpv"]})')
@@ -139,6 +197,8 @@ def main():
         return stats()
     labels = load_labels()
     _labels_ref["labels"] = labels
+    if "--findings" in args:
+        return print("Готово.") if run_findings(labels) else print("Збережено. До наступного разу.")
     from_queue = "--queue" in args
     do_items = "--pairs" not in args and not from_queue
     do_pairs = "--items" not in args

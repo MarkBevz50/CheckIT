@@ -227,3 +227,29 @@ def test_history_rows_round_trip_and_the_report_has_the_tables(tmp_path, monkeyp
 def test_a_history_file_line_is_valid_json_with_the_expected_keys():
     row = make_row("E0.7 база")
     assert set(json.loads(json.dumps(row))) >= {"date", "sha", "stage", "mode", "summary", "tenders", "stability"}
+
+
+# ---- documentation findings per mode -----------------------------------------------------------
+
+def test_doc_findings_metrics_count_true_false_and_duplicates_per_mode():
+    sys.path.insert(0, str(ROOT / "eval"))
+    import doc_findings_report as dfr
+
+    provenance = {
+        "modes": {"A": {"label": "a"}, "B": {"label": "b"}},
+        "calls": [{"mode": "A", "cost_usd": 0.002}, {"mode": "A", "cost_usd": 0.004}, {"mode": "B", "cost_usd": 0.03}],
+        "pool": [
+            {"id": "F001", "tender": "C05", "sources": [{"mode": "A", "run": 1, "index": 1}, {"mode": "B", "run": 1, "index": 1}]},
+            {"id": "F002", "tender": "C05", "sources": [{"mode": "A", "run": 1, "index": 2}, {"mode": "A", "run": 2, "index": 1}]},
+            {"id": "F003", "tender": "C05", "sources": [{"mode": "B", "run": 1, "index": 2}]},
+            {"id": "F004", "tender": "C05", "sources": [{"mode": "B", "run": 1, "index": 3}]},
+        ],
+    }
+    labels = {"findings": {"F001": {"label": "true"}, "F002": {"label": "false"}, "F003": {"label": "duplicate", "of": "F001"}}}
+    result = dfr.compute(provenance, labels)
+    a, b = result["modes"]["A"], result["modes"]["B"]
+    assert (a["findings"], a["true"], a["false"], a["precision"]) == (3, 1, 2, round(1 / 3, 4))
+    assert (b["findings"], b["true"], b["duplicate"], b["unlabeled"]) == (3, 1, 1, 1)
+    assert b["precision"] == round(1 / 2, 4)                       # the unlabeled one is not counted
+    assert result["union_true"] == 1 and a["share_of_union_true"] == 1.0
+    assert a["cost_total"] == 0.006 and a["cost_per_call"] == 0.003
