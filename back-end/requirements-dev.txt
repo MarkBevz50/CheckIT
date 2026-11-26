@@ -4,3 +4,4 @@ pytest-asyncio==1.4.0
 respx==0.23.1
 pytest-cov==7.1.0
 ruff==0.17.6
+matplotlib==3.11.2

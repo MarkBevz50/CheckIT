@@ -3,6 +3,7 @@
     python eval/label_pairs.py             items first, then pairs
     python eval/label_pairs.py --pairs     pairs only
     python eval/label_pairs.py --items     item types only
+    python eval/label_pairs.py --queue     pairs the validator accepted in a control run (eval/data/pairs_queue.jsonl)
     python eval/label_pairs.py --stats     progress and label distribution
 
 Pairs (eval/data/pairs_pilot.jsonl): 1 = same, 2 = analog, 3 = no, s = skip (shown again at
@@ -22,6 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "eval" / "data"
 PAIRS = DATA / "pairs_pilot.jsonl"
+QUEUE = DATA / "pairs_queue.jsonl"  # filled by eval/quality_report.py with accepted matches nobody has labeled
 LABELS = DATA / "labels.json"
 TENDERS = ROOT / "eval" / "control_tenders.json"
 
@@ -41,10 +43,10 @@ def save_labels(labels: dict) -> None:
     tmp.replace(LABELS)  # atomic: an interrupted write never corrupts the progress
 
 
-def load_pairs() -> list[dict]:
-    if not PAIRS.exists():
-        sys.exit(f"No {PAIRS.relative_to(ROOT)} yet: generate the pairs first.")
-    return [json.loads(x) for x in PAIRS.read_text(encoding="utf-8").splitlines() if x]
+def load_pairs(path: Path = PAIRS) -> list[dict]:
+    if not path.exists():
+        sys.exit(f"No {path.relative_to(ROOT)} yet: generate the pairs first (the queue is filled by eval/quality_report.py).")
+    return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x]
 
 
 def load_items() -> list[dict]:
@@ -122,7 +124,10 @@ def stats():
     pairs = load_pairs() if PAIRS.exists() else []
     items = load_items()
     from collections import Counter
-    print(f"pairs : {len(labels['pairs'])}/{len(pairs)}", dict(Counter(labels["pairs"].values())))
+    queue = load_pairs(QUEUE) if QUEUE.exists() else []
+    labeled_queue = sum(1 for p in queue if p["pair_id"] in labels["pairs"])
+    print(f"pairs : {len(labels['pairs'])}/{len(pairs) + len(queue)}", dict(Counter(labels["pairs"].values())))
+    print(f"queue : {labeled_queue}/{len(queue)} labeled")
     print(f"items : {len(labels['item_types'])}/{len(items)}", dict(Counter(labels["item_types"].values())))
 
 
@@ -134,13 +139,14 @@ def main():
         return stats()
     labels = load_labels()
     _labels_ref["labels"] = labels
-    do_items = "--pairs" not in args
+    from_queue = "--queue" in args
+    do_items = "--pairs" not in args and not from_queue
     do_pairs = "--items" not in args
     if do_items and not run(load_items(), labels["item_types"], show_item, ITEM_KEYS, "Типи позицій"):
         return print("Збережено. До наступного разу.")
     if do_pairs:
-        pairs = [{**p, "id": p["pair_id"]} for p in load_pairs()]
-        if not run(pairs, labels["pairs"], show_pair, PAIR_KEYS, "Пари"):
+        pairs = [{**p, "id": p["pair_id"]} for p in load_pairs(QUEUE if from_queue else PAIRS)]
+        if not run(pairs, labels["pairs"], show_pair, PAIR_KEYS, "Черга пар" if from_queue else "Пари"):
             return print("Збережено. До наступного разу.")
     print("\nГотово.")
     stats()
