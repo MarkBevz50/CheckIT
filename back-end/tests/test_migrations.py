@@ -57,7 +57,7 @@ def test_base_metadata_uses_the_naming_convention():
 
 
 def test_baseline_creates_constraints_and_indexes_with_conventional_names():
-    sql = offline_sql("upgrade", "head")
+    sql = offline_sql("upgrade", "0001")
     for expected in (
         "CONSTRAINT pk_users PRIMARY KEY (id)",
         "CONSTRAINT uq_users_email UNIQUE (email)",
@@ -115,3 +115,54 @@ def test_upgrade_check_downgrade_round_trip_on_an_empty_database():
 
     command.downgrade(cfg, "base")
     assert not set(TABLES) & asyncio.run(table_names(TEST_DATABASE_URL))
+
+
+# ---- 0002: a tender is unique per user, not globally (E0.14) ---------------
+
+def test_0002_makes_prozorro_id_unique_per_user():
+    sql = offline_sql("upgrade", "0001:0002")
+    assert "DROP INDEX ix_tenders_prozorro_id" in sql
+    assert "CREATE INDEX ix_tenders_prozorro_id ON tenders (prozorro_id)" in sql  # no longer unique
+    assert "ALTER TABLE tenders ADD CONSTRAINT uq_tenders_user_id_prozorro_id UNIQUE (user_id, prozorro_id)" in sql
+
+
+def test_0002_downgrade_restores_the_global_unique_index():
+    sql = offline_sql("downgrade", "0002:0001")
+    assert "ALTER TABLE tenders DROP CONSTRAINT uq_tenders_user_id_prozorro_id" in sql
+    assert "CREATE UNIQUE INDEX ix_tenders_prozorro_id ON tenders (prozorro_id)" in sql
+
+
+@pytest.mark.skipif(not TEST_DATABASE_URL, reason="set TEST_DATABASE_URL to an empty Postgres database")
+def test_0002_downgrade_refuses_to_lose_copies_of_the_same_tender():
+    cfg = alembic_config(database_url=TEST_DATABASE_URL)
+    command.upgrade(cfg, "head")
+
+    async def seed_two_copies():
+        engine = create_async_engine(TEST_DATABASE_URL)
+        try:
+            async with engine.begin() as conn:
+                await conn.execute(text("INSERT INTO users (id, name, email) VALUES (1, 'A', 'a@x'), (2, 'B', 'b@x')"))
+                await conn.execute(text(
+                    "INSERT INTO tenders (tender_type, prozorro_id, title, user_id) "
+                    "VALUES ('product', 'SAME', 't', 1), ('product', 'SAME', 't', 2)"
+                ))
+        finally:
+            await engine.dispose()
+
+    try:
+        asyncio.run(seed_two_copies())
+        with pytest.raises(RuntimeError, match="more than one user"):
+            command.downgrade(cfg, "0001")
+        assert "tenders" in asyncio.run(table_names(TEST_DATABASE_URL))  # nothing was dropped
+    finally:
+        async def clean():
+            engine = create_async_engine(TEST_DATABASE_URL)
+            try:
+                async with engine.begin() as conn:
+                    await conn.execute(text("DELETE FROM tenders"))
+                    await conn.execute(text("DELETE FROM users"))
+            finally:
+                await engine.dispose()
+
+        asyncio.run(clean())
+        command.downgrade(cfg, "base")

@@ -74,12 +74,12 @@ async def create_tender(
     current_user: User = Depends(get_current_user),
 ):
     """Create a new tender. The schema is validated per tender_type."""
-    # Check for duplicate prozorro_id
+    # Duplicates are checked among the caller's own tenders only (E0.14): another user's copy is not our business
     existing = await db.execute(
-        select(Tender).where(Tender.prozorro_id == data.prozorro_id)
+        select(Tender).where(Tender.prozorro_id == data.prozorro_id, Tender.user_id == current_user.id)
     )
     if existing.scalar_one_or_none():
-        raise HTTPException(status_code=409, detail="Тендер з таким Prozorro ID вже існує")
+        raise HTTPException(status_code=409, detail="Цей тендер уже є у вашому списку")
 
     tender = Tender(
         tender_type=data.tender_type,
@@ -226,12 +226,12 @@ async def import_from_prozorro(
     from app.prozorro_functionality.prozorro import get_contract, get_contract_info
     from app.routers.prozorro_router import convert_ua_to_hex_id
 
-    # Check for duplicate
+    # Duplicates are checked among the caller's own tenders only (E0.14)
     existing = await db.execute(
-        select(Tender).where(Tender.prozorro_id == prozorro_id)
+        select(Tender).where(Tender.prozorro_id == prozorro_id, Tender.user_id == current_user.id)
     )
     if existing.scalar_one_or_none():
-        raise HTTPException(status_code=409, detail="Тендер з таким Prozorro ID вже існує")
+        raise HTTPException(status_code=409, detail="Цей тендер уже є у вашому списку")
 
     # Convert UA-ID if needed
     hex_id = prozorro_id
