@@ -18,7 +18,7 @@ Endpoint inventory (ownership check needed / present after E0.13):
   POST   /analyze-documents/{ua_id}       public Prozorro documents, result not stored       -> login only
   GET    /stores/available, GET /         static, no user data                               -> public
   POST   /auth/register, /auth/login      authentication itself                              -> public
-  POST   /assistant/perform-task          no tender data (chat, time, user_count); no login  -> see the backlog, E6.6
+  POST   /assistant/perform-task          no tender data (chat, time, user_count)            -> login only (removed in E6.6)
 """
 
 import asyncio
@@ -159,6 +159,7 @@ PROTECTED = [
     ("get", f"/tenders/{MISSING}/price-history", {}),
     ("post", f"/assistant/analyze-risks?tender_id={MISSING}", {}),
     ("post", "/excel-page", {"files": {"file": ("a.xlsx", b"x")}}),
+    ("post", "/assistant/perform-task", {"json": {"task": "time"}}),
     ("get", "/search-tender/abc", {}),
     ("post", "/analyze-documents/UA-2026-01-01-000001-a", {}),
 ]
