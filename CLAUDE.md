@@ -182,6 +182,7 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 - **Прибирання після кожної Docker-перевірки:** `docker builder prune -f` і `docker image prune -f`. Після цього перевірити розмір
   `D:\Docker\wsl\disk\docker_data.vhdx` і вказати його у звіті; якщо він більший за 40 ГБ — повідомити власника.
 - Томи compose іменовані: `pyman_postgres_data` (база) і `pyman_redis_data` (кеш Redis); безіменних томів `up` не створює.
+- **`wsl --shutdown` не виконувати, поки працює Docker Desktop:** команда зупиняє всі розподіли WSL, зокрема `docker-desktop`, тож двигун і контейнери падають, а перенаправлення портів після перезапуску може лишитись зламаним (порт 80 слухає, але не відповідає; допомагає `docker compose restart frontend`). Для перевірок у Linux запускати окремий розподіл командою `wsl -d Ubuntu -- ...` і нічого не вимикати.
 - **Ніколи** не виконувати `docker volume prune`, `docker system prune --volumes` чи `docker compose down -v` без прямого дозволу власника
   (знищують дані БД).
 

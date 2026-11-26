@@ -9,7 +9,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     Column, Integer, String, Float, Boolean, DateTime, Text,
-    ForeignKey, JSON,
+    ForeignKey, JSON, UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -21,7 +21,8 @@ class Tender(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tender_type = Column(String(20), nullable=False, index=True)
-    prozorro_id = Column(String(100), unique=True, nullable=False, index=True)
+    # not unique on its own: every user has a copy of a tender with its own analysis (E0.14, variant A)
+    prozorro_id = Column(String(100), nullable=False, index=True)
     title = Column(String(500), nullable=False)
     description = Column(Text, nullable=True)
     expected_cost = Column(Float, nullable=True)
@@ -49,6 +50,9 @@ class Tender(Base):
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+
+    # named explicitly: the naming convention would only use the first column (uq_tenders_user_id)
+    __table_args__ = (UniqueConstraint("user_id", "prozorro_id", name="uq_tenders_user_id_prozorro_id"),)
 
 
 class TenderItem(Base):
