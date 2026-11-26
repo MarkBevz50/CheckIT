@@ -85,6 +85,10 @@ back-end/app/schemas/__pycache__/
 back-end/.env
 scraper/.env
 
+# Staging/production environment of the server (E0.6): never committed
+.env.staging
+.env.production
+
 # Temporary PDF files
 back-end/app/prozorro_functionality/temp_pdf/*.pdf
 
@@ -95,5 +99,10 @@ postgres_data/
 *.log
 .claude/settings.local.json
 
-# Control-tender snapshots (raw API JSON and downloaded documents)
+# Eval pilot: raw store responses (~100 MB) and raw model answers; summary and pairs are committed
+eval/data/raw_store/
+eval/results/pilot/
+
+# Eval snapshots: raw source responses of control tenders and diploma experiments (kept locally, no expiry)
 eval/snapshots/
+coverage.json

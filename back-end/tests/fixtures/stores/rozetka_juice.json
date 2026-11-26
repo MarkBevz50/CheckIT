@@ -1,0 +1,2039 @@
+{
+ "query": "сік садочок",
+ "n": 2,
+ "products_found": 2,
+ "requests": [
+  {
+   "url": "https://search.rozetka.com.ua/ua/search/api/v6/",
+   "params": {
+    "text": "сік садочок",
+    "lang": "ua"
+   },
+   "status": 200,
+   "kind": "json",
+   "body": {
+    "data": {
+     "new_search": false,
+     "is_personalized": false,
+     "is_low_relevant": false,
+     "seller_info": null,
+     "empty_response_type": "",
+     "empty_response_message": "",
+     "quantities": {
+      "goods_quantity_max": 1000,
+      "goods_quantity_found": 123,
+      "goods_quantity_total_found": 123
+     },
+     "pagination": {
+      "page_size": 60,
+      "show_next": 60,
+      "shown_page": 1,
+      "total_pages": 3
+     },
+     "options": [
+      {
+       "hide_block": false,
+       "option_id": 169134,
+       "option_name": "vkus169134",
+       "option_title": "Смак",
+       "option_type": "List",
+       "special_combobox_view": "list",
+       "order": 15,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "1590366",
+         "option_value_name": "ananasoviy",
+         "option_value_title": "Ананасовий",
+         "order": 16777215,
+         "products_quantity": "4",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590374",
+         "option_value_name": "apelsinoviy",
+         "option_value_title": "Апельсиновий",
+         "order": 16777215,
+         "products_quantity": "6",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590390",
+         "option_value_name": "vinogradniy",
+         "option_value_title": "Виноградний",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590406",
+         "option_value_name": "granatoviy",
+         "option_value_title": "Гранатовий",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590430",
+         "option_value_name": "multifrukt",
+         "option_value_title": "Мультифруктовий",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590454",
+         "option_value_name": "tomatniy",
+         "option_value_title": "Томатний",
+         "order": 16777215,
+         "products_quantity": "6",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590486",
+         "option_value_name": "yablochniy",
+         "option_value_title": "Яблучний",
+         "order": 16777215,
+         "products_quantity": "28",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "2635386",
+         "option_value_name": "aroniya",
+         "option_value_title": "Аронія",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591318",
+         "option_value_name": "bananoviy",
+         "option_value_title": "Банановий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1590398",
+         "option_value_name": "vishneviy",
+         "option_value_title": "Вишневий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591326",
+         "option_value_name": "grusheviy",
+         "option_value_title": "Грушевий",
+         "order": 16777215,
+         "products_quantity": "3",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "5196873",
+         "option_value_name": "zemlyanika",
+         "option_value_title": "Суниця",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591334",
+         "option_value_name": "klubnichniy",
+         "option_value_title": "Полуничний",
+         "order": 16777215,
+         "products_quantity": "4",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1893071",
+         "option_value_name": "laym",
+         "option_value_title": "Лайм",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591350",
+         "option_value_name": "limonniy",
+         "option_value_title": "Лимонний",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "2635584",
+         "option_value_name": "malina",
+         "option_value_title": "Малиновий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591358",
+         "option_value_name": "mango",
+         "option_value_title": "Манговий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591366",
+         "option_value_name": "multivitamin",
+         "option_value_title": "Мультивітамінний",
+         "order": 16777215,
+         "products_quantity": "8",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1590446",
+         "option_value_name": "persikoviy",
+         "option_value_title": "Персиковий",
+         "order": 16777215,
+         "products_quantity": "11",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 19,
+       "short_list": [
+        {
+         "option_value_id": "1590366",
+         "option_value_name": "ananasoviy",
+         "option_value_title": "Ананасовий",
+         "order": 16777215,
+         "products_quantity": "4",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590374",
+         "option_value_name": "apelsinoviy",
+         "option_value_title": "Апельсиновий",
+         "order": 16777215,
+         "products_quantity": "6",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590390",
+         "option_value_name": "vinogradniy",
+         "option_value_title": "Виноградний",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590406",
+         "option_value_name": "granatoviy",
+         "option_value_title": "Гранатовий",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590430",
+         "option_value_name": "multifrukt",
+         "option_value_title": "Мультифруктовий",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590454",
+         "option_value_name": "tomatniy",
+         "option_value_title": "Томатний",
+         "order": 16777215,
+         "products_quantity": "6",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1590486",
+         "option_value_name": "yablochniy",
+         "option_value_title": "Яблучний",
+         "order": 16777215,
+         "products_quantity": "28",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "2635386",
+         "option_value_name": "aroniya",
+         "option_value_title": "Аронія",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591318",
+         "option_value_name": "bananoviy",
+         "option_value_title": "Банановий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1590398",
+         "option_value_name": "vishneviy",
+         "option_value_title": "Вишневий",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1591326",
+         "option_value_name": "grusheviy",
+         "option_value_title": "Грушевий",
+         "order": 16777215,
+         "products_quantity": "3",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "5196873",
+         "option_value_name": "zemlyanika",
+         "option_value_title": "Суниця",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 101413,
+       "option_name": "svojstva-101413",
+       "option_title": "Особливості",
+       "option_type": "List",
+       "special_combobox_view": "list",
+       "order": 20,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "579597",
+         "option_value_name": "bez-sakhara",
+         "option_value_title": "Без цукру",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3495331",
+         "option_value_name": "dlya-detey",
+         "option_value_title": "Для дітей",
+         "order": 16777215,
+         "products_quantity": "13",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483938",
+         "option_value_name": "s-myakotyu",
+         "option_value_title": "З м'якоттю",
+         "order": 16777215,
+         "products_quantity": "9",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483941",
+         "option_value_name": "s-saharom",
+         "option_value_title": "З цукром",
+         "order": 16777215,
+         "products_quantity": "5",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483944",
+         "option_value_name": "s-solyu",
+         "option_value_title": "З сіллю",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ],
+       "total_filtered": 5,
+       "short_list": [
+        {
+         "option_value_id": "579597",
+         "option_value_name": "bez-sakhara",
+         "option_value_title": "Без цукру",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3495331",
+         "option_value_name": "dlya-detey",
+         "option_value_title": "Для дітей",
+         "order": 16777215,
+         "products_quantity": "13",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483938",
+         "option_value_name": "s-myakotyu",
+         "option_value_title": "З м'якоттю",
+         "order": 16777215,
+         "products_quantity": "9",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483941",
+         "option_value_name": "s-saharom",
+         "option_value_title": "З цукром",
+         "order": 16777215,
+         "products_quantity": "5",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "4483944",
+         "option_value_name": "s-solyu",
+         "option_value_title": "З сіллю",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 225733,
+       "option_name": "vid-225733",
+       "option_title": "Вид",
+       "option_type": "ComboBox",
+       "special_combobox_view": "list",
+       "order": 25,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "3288823",
+         "option_value_name": "nektar",
+         "option_value_title": "Нектар",
+         "order": 16777215,
+         "products_quantity": "67",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288817",
+         "option_value_name": "sok",
+         "option_value_title": "Сік",
+         "order": 16777215,
+         "products_quantity": "53",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ],
+       "total_filtered": 2,
+       "short_list": [
+        {
+         "option_value_id": "3288823",
+         "option_value_name": "nektar",
+         "option_value_title": "Нектар",
+         "order": 16777215,
+         "products_quantity": "67",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288817",
+         "option_value_name": "sok",
+         "option_value_title": "Сік",
+         "order": 16777215,
+         "products_quantity": "53",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 147152,
+       "option_name": "upakovka147152",
+       "option_title": "Упаковка",
+       "option_type": "ListValues",
+       "special_combobox_view": "list",
+       "order": 30,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "1404384",
+         "option_value_name": "bumagnaya",
+         "option_value_title": "Паперова",
+         "order": 16777215,
+         "products_quantity": "11",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1418888",
+         "option_value_name": "drugaya-upakovka",
+         "option_value_title": "Інша упаковка",
+         "order": 16777215,
+         "products_quantity": "99",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ],
+       "total_filtered": 2,
+       "short_list": [
+        {
+         "option_value_id": "1404384",
+         "option_value_name": "bumagnaya",
+         "option_value_title": "Паперова",
+         "order": 16777215,
+         "products_quantity": "11",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "1418888",
+         "option_value_name": "drugaya-upakovka",
+         "option_value_title": "Інша упаковка",
+         "order": 16777215,
+         "products_quantity": "99",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 71581,
+       "option_name": "objom-71581",
+       "option_title": "Об'єм, л",
+       "option_type": "ComboBox",
+       "special_combobox_view": "list",
+       "order": 35,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "1749690",
+         "option_value_name": "do-0-5-l",
+         "option_value_title": "Менш ніж 0.5",
+         "order": 1,
+         "products_quantity": "43",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1749702",
+         "option_value_name": "0-5-0-99-l",
+         "option_value_title": "0.5 - 0.99",
+         "order": 2,
+         "products_quantity": "51",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1749708",
+         "option_value_name": "1-2-l",
+         "option_value_title": "1 - 2",
+         "order": 3,
+         "products_quantity": "15",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 3,
+       "short_list": [
+        {
+         "option_value_id": "1749690",
+         "option_value_name": "do-0-5-l",
+         "option_value_title": "Менш ніж 0.5",
+         "order": 1,
+         "products_quantity": "43",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1749702",
+         "option_value_name": "0-5-0-99-l",
+         "option_value_title": "0.5 - 0.99",
+         "order": 2,
+         "products_quantity": "51",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "1749708",
+         "option_value_name": "1-2-l",
+         "option_value_title": "1 - 2",
+         "order": 3,
+         "products_quantity": "15",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 98900,
+       "option_name": "strana-proizvoditelj-tovara-90098",
+       "option_title": "Країна-виробник товару",
+       "option_type": "ListValues",
+       "special_combobox_view": "list",
+       "order": 40,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "544338",
+         "option_value_name": "544338",
+         "option_value_title": "Україна",
+         "order": 16777215,
+         "products_quantity": "53",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 1,
+       "short_list": [
+        {
+         "option_value_id": "544338",
+         "option_value_name": "544338",
+         "option_value_title": "Україна",
+         "order": 16777215,
+         "products_quantity": "53",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 92802,
+       "option_name": "kolichestvo-predmetov-92802",
+       "option_title": "Кількість в упаковці, шт",
+       "option_type": "ComboBox",
+       "special_combobox_view": "tile",
+       "order": 45,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "475520",
+         "option_value_name": "475520",
+         "option_value_title": "1",
+         "order": 1,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "475534",
+         "option_value_name": "475534",
+         "option_value_title": "12",
+         "order": 12,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "971652",
+         "option_value_name": "971652",
+         "option_value_title": "15",
+         "order": 15,
+         "products_quantity": "4",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "2490398",
+         "option_value_name": "2490398",
+         "option_value_title": "18",
+         "order": 18,
+         "products_quantity": "3",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "3281299",
+         "option_value_name": "3281299",
+         "option_value_title": "27",
+         "order": 27,
+         "products_quantity": "7",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 5,
+       "short_list": [
+        {
+         "option_value_id": "475520",
+         "option_value_name": "475520",
+         "option_value_title": "1",
+         "order": 1,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "475534",
+         "option_value_name": "475534",
+         "option_value_title": "12",
+         "order": 12,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "971652",
+         "option_value_name": "971652",
+         "option_value_title": "15",
+         "order": 15,
+         "products_quantity": "4",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "2490398",
+         "option_value_name": "2490398",
+         "option_value_title": "18",
+         "order": 18,
+         "products_quantity": "3",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "3281299",
+         "option_value_name": "3281299",
+         "option_value_title": "27",
+         "order": 27,
+         "products_quantity": "7",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 225739,
+       "option_name": "tip-225739",
+       "option_title": "Тип",
+       "option_type": "List",
+       "special_combobox_view": "list",
+       "order": 50,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "3288961",
+         "option_value_name": "vosstanovlenniy",
+         "option_value_title": "Відновлений",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288943",
+         "option_value_name": "neosvetlenniy",
+         "option_value_title": "Неосвітлений",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288949",
+         "option_value_name": "pryamogo-otgima",
+         "option_value_title": "Прямого віджимання",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ],
+       "total_filtered": 3,
+       "short_list": [
+        {
+         "option_value_id": "3288961",
+         "option_value_name": "vosstanovlenniy",
+         "option_value_title": "Відновлений",
+         "order": 16777215,
+         "products_quantity": "12",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288943",
+         "option_value_name": "neosvetlenniy",
+         "option_value_title": "Неосвітлений",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        },
+        {
+         "option_value_id": "3288949",
+         "option_value_name": "pryamogo-otgima",
+         "option_value_title": "Прямого віджимання",
+         "order": 16777215,
+         "products_quantity": "1",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 254406,
+       "option_name": "delivery",
+       "option_title": "Доставка",
+       "option_type": "List",
+       "special_combobox_view": "list",
+       "order": 16777215,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "4401414",
+         "option_value_name": "free-shipping-to-the-store",
+         "option_value_title": "Доставка в магазини ROZETKA",
+         "order": 2,
+         "products_quantity": "26",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ],
+       "total_filtered": 1,
+       "short_list": [
+        {
+         "option_value_id": "4401414",
+         "option_value_name": "free-shipping-to-the-store",
+         "option_value_title": "Доставка в магазини ROZETKA",
+         "order": 2,
+         "products_quantity": "26",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": true,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": 259609,
+       "option_name": "premium",
+       "option_title": "Єдина підписка Smart",
+       "option_type": "List",
+       "special_combobox_view": "list",
+       "order": 16777215,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "5136974",
+         "option_value_name": "tovari-s-besplatnoy-dostavkoy",
+         "option_value_title": "Товари з підпискою Smart",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 1,
+       "short_list": [
+        {
+         "option_value_id": "5136974",
+         "option_value_name": "tovari-s-besplatnoy-dostavkoy",
+         "option_value_title": "Товари з підпискою Smart",
+         "order": 16777215,
+         "products_quantity": "2",
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      },
+      {
+       "hide_block": false,
+       "option_id": "price",
+       "option_name": "price",
+       "option_title": "Ціна",
+       "option_value_unit": "",
+       "special_combobox_view": "slider",
+       "order": 0.4,
+       "comparable": "main",
+       "config": {
+        "unit": ""
+       },
+       "range_values": {
+        "min": 8,
+        "max": 1241
+       },
+       "chosen_values": null
+      },
+      {
+       "hide_block": false,
+       "option_id": "seller",
+       "option_name": "seller",
+       "option_title": "Продавець",
+       "option_type": "ComboBox",
+       "special_combobox_view": "list",
+       "order": 0.1,
+       "comparable": "main",
+       "option_values": [
+        {
+         "option_value_id": "rozetka",
+         "option_value_name": "rozetka",
+         "option_value_title": "Rozetka",
+         "order": 1,
+         "products_quantity": 0,
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "other",
+         "option_value_name": "other",
+         "option_value_title": "Інші продавці",
+         "order": 2,
+         "products_quantity": 0,
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ],
+       "total_filtered": 0,
+       "short_list": [
+        {
+         "option_value_id": "rozetka",
+         "option_value_name": "rozetka",
+         "option_value_title": "Rozetka",
+         "order": 1,
+         "products_quantity": 0,
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        },
+        {
+         "option_value_id": "other",
+         "option_value_name": "other",
+         "option_value_title": "Інші продавці",
+         "order": 2,
+         "products_quantity": 0,
+         "disabled": false,
+         "is_chosen": false,
+         "is_checkbox": false,
+         "not_hidden": false,
+         "children": null
+        }
+       ]
+      }
+     ],
+     "chosen": {
+      "section_id": {
+       "4639928": {
+        "id": 4639928,
+        "name": "4639928",
+        "option_title": "Всі категорії",
+        "option_value_title": "Соки та нектари",
+        "unit": "",
+        "children": null
+       }
+      }
+     },
+     "related_options": [],
+     "meta": {
+      "navigateTo": {
+       "query": {
+        "text": "сік садочок",
+        "section_id": "4639928",
+        "redirected": "1"
+       },
+       "url": "https://rozetka.com.ua/ua/search/?text=%D1%81%D1%96%D0%BA+%D1%81%D0%B0%D0%B4%D0%BE%D1%87%D0%BE%D0%BA&section_id=4639928&redirected=1",
+       "isInternal": true,
+       "url_api": "https://search.rozetka.com.ua/ua/search/api/v6/index/?text=%D1%81%D1%96%D0%BA+%D1%81%D0%B0%D0%B4%D0%BE%D1%87%D0%BE%D0%BA&section_id=4639928&redirected=1",
+       "path": "/ua/search/"
+      },
+      "result_info": {
+       "is_part": false,
+       "wrong_phrase": null,
+       "wrong_keyboard_text": null
+      },
+      "h1": "сік садочок",
+      "title": "ROZETKA — Результати пошуку: \"сік садочок\" | Пошук",
+      "keywords": "Результати пошуку: сік садочок Пошук",
+      "description": "Результати пошуку: &quot;сік садочок&quot;"
+     },
+     "categories": {
+      "current_category": {
+       "id": 4639928,
+       "title": "Соки та нектари",
+       "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/",
+       "rz_mpath": ".4626923.4624997.4633001.4639928."
+      },
+      "option_title": "Всі категорії",
+      "option_name": "section_id",
+      "special_combobox_view": "flat_categories",
+      "goods_quantity": 127,
+      "hidden_categories": [],
+      "list_categories": [
+       {
+        "id": 4639928,
+        "title": "Соки та нектари",
+        "count": 125,
+        "children": [],
+        "icon": "",
+        "hide_cat": false
+       },
+       {
+        "id": 4627017,
+        "title": "Склянки",
+        "count": 2,
+        "children": [],
+        "icon": "",
+        "hide_cat": false
+       }
+      ]
+     },
+     "goods": [
+      {
+       "id": 526375364,
+       "relevance": null
+      },
+      {
+       "id": 608670614,
+       "relevance": null
+      },
+      {
+       "id": 608670629,
+       "relevance": null
+      },
+      {
+       "id": 516923874,
+       "relevance": null
+      },
+      {
+       "id": 20808068,
+       "relevance": null
+      },
+      {
+       "id": 7117964,
+       "relevance": null
+      },
+      {
+       "id": 379657605,
+       "relevance": null
+      },
+      {
+       "id": 608670482,
+       "relevance": null
+      },
+      {
+       "id": 7118659,
+       "relevance": null
+      },
+      {
+       "id": 470841109,
+       "relevance": null
+      },
+      {
+       "id": 20808222,
+       "relevance": null
+      },
+      {
+       "id": 608670488,
+       "relevance": null
+      },
+      {
+       "id": 608670404,
+       "relevance": null
+      },
+      {
+       "id": 543028315,
+       "relevance": null
+      },
+      {
+       "id": 350875245,
+       "relevance": null
+      },
+      {
+       "id": 549128076,
+       "relevance": null
+      },
+      {
+       "id": 543023815,
+       "relevance": null
+      },
+      {
+       "id": 543026815,
+       "relevance": null
+      },
+      {
+       "id": 526372614,
+       "relevance": null
+      },
+      {
+       "id": 516910394,
+       "relevance": null
+      },
+      {
+       "id": 516937044,
+       "relevance": null
+      },
+      {
+       "id": 466783929,
+       "relevance": null
+      },
+      {
+       "id": 401060976,
+       "relevance": null
+      },
+      {
+       "id": 379650453,
+       "relevance": null
+      },
+      {
+       "id": 350875206,
+       "relevance": null
+      },
+      {
+       "id": 350875161,
+       "relevance": null
+      },
+      {
+       "id": 210907045,
+       "relevance": null
+      },
+      {
+       "id": 20808138,
+       "relevance": null
+      },
+      {
+       "id": 7118374,
+       "relevance": null
+      },
+      {
+       "id": 526375099,
+       "relevance": null
+      },
+      {
+       "id": 348184599,
+       "relevance": null
+      },
+      {
+       "id": 7118464,
+       "relevance": null
+      },
+      {
+       "id": 210907033,
+       "relevance": null
+      },
+      {
+       "id": 210907123,
+       "relevance": null
+      },
+      {
+       "id": 210907051,
+       "relevance": null
+      },
+      {
+       "id": 210907015,
+       "relevance": null
+      },
+      {
+       "id": 210907135,
+       "relevance": null
+      },
+      {
+       "id": 210907039,
+       "relevance": null
+      },
+      {
+       "id": 210907129,
+       "relevance": null
+      },
+      {
+       "id": 210907189,
+       "relevance": null
+      },
+      {
+       "id": 210906967,
+       "relevance": null
+      },
+      {
+       "id": 210907027,
+       "relevance": null
+      },
+      {
+       "id": 348185124,
+       "relevance": null
+      },
+      {
+       "id": 348184302,
+       "relevance": null
+      },
+      {
+       "id": 348186072,
+       "relevance": null
+      },
+      {
+       "id": 348185310,
+       "relevance": null
+      },
+      {
+       "id": 350875764,
+       "relevance": null
+      },
+      {
+       "id": 350876484,
+       "relevance": null
+      },
+      {
+       "id": 350874702,
+       "relevance": null
+      },
+      {
+       "id": 350875602,
+       "relevance": null
+      },
+      {
+       "id": 350875632,
+       "relevance": null
+      },
+      {
+       "id": 350876022,
+       "relevance": null
+      },
+      {
+       "id": 350874810,
+       "relevance": null
+      },
+      {
+       "id": 350875350,
+       "relevance": null
+      },
+      {
+       "id": 350875470,
+       "relevance": null
+      },
+      {
+       "id": 356567694,
+       "relevance": null
+      },
+      {
+       "id": 348184119,
+       "relevance": null
+      },
+      {
+       "id": 348185139,
+       "relevance": null
+      },
+      {
+       "id": 348185169,
+       "relevance": null
+      },
+      {
+       "id": 348185229,
+       "relevance": null
+      }
+     ],
+     "ads": []
+    }
+   }
+  },
+  {
+   "url": "https://rozetka.com.ua/api/product-api/v4/goods/get-main",
+   "params": {
+    "goodsId": 526375364,
+    "lang": "ua"
+   },
+   "status": 200,
+   "kind": "json",
+   "body": {
+    "data": {
+     "id": 526375364,
+     "product": {
+      "state": "new"
+     },
+     "title": "Упаковка нектару Садочок Яблучно-виноградний освітлений 0.2 л х 27 шт (4820001449525а)",
+     "price": 513,
+     "old_price": 626,
+     "price_pcs": 11.4,
+     "min_month_price": 0,
+     "href": "https://rozetka.com.ua/ua/sadochok-4820001449525a/p526375364/",
+     "name": "sadochok-4820001449525a",
+     "comments_amount": 0,
+     "sell_status": "unavailable",
+     "status": "active",
+     "status_inherited": "active",
+     "comments_mark": "0",
+     "category_id": 4639928,
+     "seller_id": 5,
+     "merchant_id": 1,
+     "group_id": 60172144,
+     "is_group_primary": true,
+     "producer_id": 118969,
+     "docket": "",
+     "state": "new",
+     "title_short": null,
+     "promo_title_part": "",
+     "mpath": ".4626923.4624997.4633001.4639928.",
+     "is_set": false,
+     "brand": "Садочок",
+     "brand_id": 118969,
+     "brand_name": "sadochok",
+     "brand_logo": null,
+     "breadcrumbs": [
+      {
+       "id": 4626923,
+       "title": "Алкогольні напої та продукти харчування",
+       "href": "https://rozetka.com.ua/ua/alkoholnie-napitki-i-produkty/c4626923/"
+      },
+      {
+       "id": 4624997,
+       "title": "Харчові продукти",
+       "href": "https://rozetka.com.ua/ua/produkty/c4624997/"
+      },
+      {
+       "id": 4633001,
+       "title": "Напої",
+       "href": "https://rozetka.com.ua/ua/napitki-chay-kofe4633001/c4633001/"
+      },
+      {
+       "id": 4639928,
+       "title": "Соки та нектари",
+       "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/"
+      },
+      {
+       "id": 4639928,
+       "title": "Соки та нектари Садочок",
+       "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/producer=sadochok/"
+      }
+     ],
+     "last_category": {
+      "id": 4639928,
+      "title": "Соки та нектари",
+      "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/",
+      "rz_mpath": ".4626923.4624997.4633001.4639928.",
+      "use_group_links": false
+     },
+     "images": [
+      {
+       "id": 26061651892,
+       "original": {
+        "url": "https://content.rozetka.com.ua/goods/images/original/665150918.jpg"
+       },
+       "base_action": {
+        "url": "https://content.rozetka.com.ua/goods/images/base_action/665150918.jpg"
+       },
+       "preview": {
+        "url": "https://content.rozetka.com.ua/goods/images/preview/665150918.jpg"
+       },
+       "small": {
+        "url": "https://content.rozetka.com.ua/goods/images/small/665150918.jpg"
+       },
+       "medium": {
+        "url": "https://content.rozetka.com.ua/goods/images/medium/665150918.jpg"
+       },
+       "large": {
+        "url": "https://content.rozetka.com.ua/goods/images/large/665150918.jpg"
+       },
+       "big_tile": {
+        "url": "https://content.rozetka.com.ua/goods/images/big_tile/665150918.jpg"
+       },
+       "big": {
+        "url": "https://content.rozetka.com.ua/goods/images/big/665150918.jpg"
+       },
+       "mobile_medium": {
+        "url": "https://content.rozetka.com.ua/goods/images/mobile_medium/665150918.jpg"
+       },
+       "mobile_large": {
+        "url": "https://content.rozetka.com.ua/goods/images/mobile_large/665150918.jpg"
+       }
+      },
+      {
+       "id": 26061651895,
+       "original": {
+        "url": "https://content2.rozetka.com.ua/goods/images/original/665150919.jpg"
+       },
+       "base_action": {
+        "url": "https://content2.rozetka.com.ua/goods/images/base_action/665150919.jpg"
+       },
+       "preview": {
+        "url": "https://content2.rozetka.com.ua/goods/images/preview/665150919.jpg"
+       },
+       "small": {
+        "url": "https://content2.rozetka.com.ua/goods/images/small/665150919.jpg"
+       },
+       "medium": {
+        "url": "https://content2.rozetka.com.ua/goods/images/medium/665150919.jpg"
+       },
+       "large": {
+        "url": "https://content2.rozetka.com.ua/goods/images/large/665150919.jpg"
+       },
+       "big_tile": {
+        "url": "https://content2.rozetka.com.ua/goods/images/big_tile/665150919.jpg"
+       },
+       "big": {
+        "url": "https://content2.rozetka.com.ua/goods/images/big/665150919.jpg"
+       },
+       "mobile_medium": {
+        "url": "https://content2.rozetka.com.ua/goods/images/mobile_medium/665150919.jpg"
+       },
+       "mobile_large": {
+        "url": "https://content2.rozetka.com.ua/goods/images/mobile_large/665150919.jpg"
+       }
+      },
+      {
+       "id": 26061651898,
+       "original": {
+        "url": "https://content.rozetka.com.ua/goods/images/original/665150920.jpg"
+       },
+       "base_action": {
+        "url": "https://content.rozetka.com.ua/goods/images/base_action/665150920.jpg"
+       },
+       "preview": {
+        "url": "https://content.rozetka.com.ua/goods/images/preview/665150920.jpg"
+       },
+       "small": {
+        "url": "https://content.rozetka.com.ua/goods/images/small/665150920.jpg"
+       },
+       "medium": {
+        "url": "https://content.rozetka.com.ua/goods/images/medium/665150920.jpg"
+       },
+       "large": {
+        "url": "https://content.rozetka.com.ua/goods/images/large/665150920.jpg"
+       },
+       "big_tile": {
+        "url": "https://content.rozetka.com.ua/goods/images/big_tile/665150920.jpg"
+       },
+       "big": {
+        "url": "https://content.rozetka.com.ua/goods/images/big/665150920.jpg"
+       },
+       "mobile_medium": {
+        "url": "https://content.rozetka.com.ua/goods/images/mobile_medium/665150920.jpg"
+       },
+       "mobile_large": {
+        "url": "https://content.rozetka.com.ua/goods/images/mobile_large/665150920.jpg"
+       }
+      },
+      {
+       "id": 26061651901,
+       "original": {
+        "url": "https://content1.rozetka.com.ua/goods/images/original/665150921.jpg"
+       },
+       "base_action": {
+        "url": "https://content1.rozetka.com.ua/goods/images/base_action/665150921.jpg"
+       },
+       "preview": {
+        "url": "https://content1.rozetka.com.ua/goods/images/preview/665150921.jpg"
+       },
+       "small": {
+        "url": "https://content1.rozetka.com.ua/goods/images/small/665150921.jpg"
+       },
+       "medium": {
+        "url": "https://content1.rozetka.com.ua/goods/images/medium/665150921.jpg"
+       },
+       "large": {
+        "url": "https://content1.rozetka.com.ua/goods/images/large/665150921.jpg"
+       },
+       "big_tile": {
+        "url": "https://content1.rozetka.com.ua/goods/images/big_tile/665150921.jpg"
+       },
+       "big": {
+        "url": "https://content1.rozetka.com.ua/goods/images/big/665150921.jpg"
+       },
+       "mobile_medium": {
+        "url": "https://content1.rozetka.com.ua/goods/images/mobile_medium/665150921.jpg"
+       },
+       "mobile_large": {
+        "url": "https://content1.rozetka.com.ua/goods/images/mobile_large/665150921.jpg"
+       }
+      }
+     ],
+     "sla_id": 8124,
+     "is_markdown": 0,
+     "use_group_links": false,
+     "custom_buttons": [],
+     "article": "4820001449525а",
+     "recount_info": {
+      "goods_value": "27",
+      "goods_unit": "кг",
+      "goods_value_recount": "1",
+      "goods_price_recount": 19
+     },
+     "short_title": "",
+     "cart_quantity": {
+      "min": 0,
+      "max": 0
+     },
+     "has_alternate": false,
+     "canonical": "https://rozetka.com.ua/ua/sadochok-4820001449525a/p526375364/",
+     "isCanonical": false,
+     "discount": 18,
+     "mark_percent": "0%",
+     "adult_alert": null,
+     "warning": [
+      "Під кількістю в упаковці розуміємо кількість пляшок або тетрапаків соку в упаковці."
+     ],
+     "videos": [],
+     "video_presentation": [],
+     "description": {
+      "text": null
+     },
+     "isPreorder": false,
+     "seo": {
+      "BreadcrumbList": {
+       "@context": "https://schema.org",
+       "@type": "BreadcrumbList",
+       "ItemListElement": [
+        {
+         "@type": "ListItem",
+         "position": 1,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/",
+          "name": "Інтернет-магазин Rozetka"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 2,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/alkoholnie-napitki-i-produkty/c4626923/",
+          "name": "Алкогольні напої та продукти харчування"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 3,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/produkty/c4624997/",
+          "name": "Харчові продукти"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 4,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/napitki-chay-kofe4633001/c4633001/",
+          "name": "Напої"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 5,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/",
+          "name": "Соки та нектари"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 6,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/producer=sadochok/",
+          "name": "Соки та нектари Садочок"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 7,
+         "item": {
+          "name": "Упаковка нектару Садочок Яблучно-виноградний освітлений 0.2 л х 27 шт (4820001449525а)"
+         }
+        }
+       ]
+      }
+     },
+     "size_chart_in_modal": false,
+     "size_chart_goods_option": null,
+     "documents": [],
+     "order_counter": null,
+     "category": {
+      "isSuperMarket": false
+     },
+     "forbid_comment": false,
+     "forbid_question": false,
+     "code": 526375364,
+     "premium": {
+      "available": false
+     }
+    },
+    "success": true
+   }
+  },
+  {
+   "url": "https://rozetka.com.ua/api/product-api/v4/goods/get-main",
+   "params": {
+    "goodsId": 608670614,
+    "lang": "ua"
+   },
+   "status": 200,
+   "kind": "json",
+   "body": {
+    "data": {
+     "id": 608670614,
+     "product": {
+      "state": "new"
+     },
+     "title": "Сік Садочок 0,95л мультифруктовий",
+     "price": 68,
+     "old_price": 0,
+     "price_pcs": 1.51,
+     "min_month_price": 0,
+     "href": "https://rozetka.com.ua/ua/608670614/p608670614/",
+     "name": "608670614",
+     "comments_amount": 0,
+     "sell_status": "unavailable",
+     "status": "active",
+     "status_inherited": "active",
+     "comments_mark": "0",
+     "category_id": 4639928,
+     "seller_id": 258279,
+     "merchant_id": 17,
+     "group_id": 0,
+     "is_group_primary": false,
+     "producer_id": 118969,
+     "docket": "",
+     "state": "new",
+     "title_short": null,
+     "promo_title_part": "",
+     "mpath": ".4626923.4624997.4633001.4639928.",
+     "is_set": false,
+     "brand": "Садочок",
+     "brand_id": 118969,
+     "brand_name": "sadochok",
+     "brand_logo": null,
+     "breadcrumbs": [
+      {
+       "id": 4626923,
+       "title": "Алкогольні напої та продукти харчування",
+       "href": "https://rozetka.com.ua/ua/alkoholnie-napitki-i-produkty/c4626923/"
+      },
+      {
+       "id": 4624997,
+       "title": "Харчові продукти",
+       "href": "https://rozetka.com.ua/ua/produkty/c4624997/"
+      },
+      {
+       "id": 4633001,
+       "title": "Напої",
+       "href": "https://rozetka.com.ua/ua/napitki-chay-kofe4633001/c4633001/"
+      },
+      {
+       "id": 4639928,
+       "title": "Соки та нектари",
+       "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/"
+      },
+      {
+       "id": 4639928,
+       "title": "Соки та нектари Садочок",
+       "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/producer=sadochok/"
+      }
+     ],
+     "last_category": {
+      "id": 4639928,
+      "title": "Соки та нектари",
+      "href": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/",
+      "rz_mpath": ".4626923.4624997.4633001.4639928.",
+      "use_group_links": false
+     },
+     "images": [
+      {
+       "id": 26208672230,
+       "original": {
+        "url": "https://content2.rozetka.com.ua/goods/images/original/683156411.jpg"
+       },
+       "base_action": {
+        "url": "https://content2.rozetka.com.ua/goods/images/base_action/683156411.jpg"
+       },
+       "preview": {
+        "url": "https://content2.rozetka.com.ua/goods/images/preview/683156411.jpg"
+       },
+       "small": {
+        "url": "https://content2.rozetka.com.ua/goods/images/small/683156411.jpg"
+       },
+       "medium": {
+        "url": "https://content2.rozetka.com.ua/goods/images/medium/683156411.jpg"
+       },
+       "large": {
+        "url": "https://content2.rozetka.com.ua/goods/images/large/683156411.jpg"
+       },
+       "big_tile": {
+        "url": "https://content2.rozetka.com.ua/goods/images/big_tile/683156411.jpg"
+       },
+       "big": {
+        "url": "https://content2.rozetka.com.ua/goods/images/big/683156411.jpg"
+       },
+       "mobile_medium": {
+        "url": "https://content2.rozetka.com.ua/goods/images/mobile_medium/683156411.jpg"
+       },
+       "mobile_large": {
+        "url": "https://content2.rozetka.com.ua/goods/images/mobile_large/683156411.jpg"
+       }
+      }
+     ],
+     "sla_id": 333105,
+     "is_markdown": 0,
+     "use_group_links": false,
+     "custom_buttons": [],
+     "article": "000001893",
+     "short_title": "",
+     "cart_quantity": {
+      "min": 0,
+      "max": 0
+     },
+     "has_alternate": false,
+     "isCanonical": false,
+     "discount": 0,
+     "mark_percent": "0%",
+     "adult_alert": null,
+     "warning": [
+      "Під кількістю в упаковці розуміємо кількість пляшок або тетрапаків соку в упаковці."
+     ],
+     "videos": [],
+     "video_presentation": [],
+     "description": {
+      "text": null
+     },
+     "isPreorder": false,
+     "seo": {
+      "BreadcrumbList": {
+       "@context": "https://schema.org",
+       "@type": "BreadcrumbList",
+       "ItemListElement": [
+        {
+         "@type": "ListItem",
+         "position": 1,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/",
+          "name": "Інтернет-магазин Rozetka"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 2,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/alkoholnie-napitki-i-produkty/c4626923/",
+          "name": "Алкогольні напої та продукти харчування"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 3,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/produkty/c4624997/",
+          "name": "Харчові продукти"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 4,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/napitki-chay-kofe4633001/c4633001/",
+          "name": "Напої"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 5,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/",
+          "name": "Соки та нектари"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 6,
+         "item": {
+          "@id": "https://rozetka.com.ua/ua/soki-i-nektari/c4639928/producer=sadochok/",
+          "name": "Соки та нектари Садочок"
+         }
+        },
+        {
+         "@type": "ListItem",
+         "position": 7,
+         "item": {
+          "name": "Сік Садочок 0,95л мультифруктовий"
+         }
+        }
+       ]
+      }
+     },
+     "size_chart_in_modal": false,
+     "size_chart_goods_option": null,
+     "documents": [],
+     "order_counter": null,
+     "category": {
+      "isSuperMarket": false
+     },
+     "forbid_comment": false,
+     "forbid_question": false,
+     "code": 608670614,
+     "premium": {
+      "available": false
+     }
+    },
+    "success": true
+   }
+  }
+ ]
+}

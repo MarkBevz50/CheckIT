@@ -15,6 +15,7 @@
 - **Перед зміною коду** показати план: які файли зміню, що додам, які ризики. Чекати «ок».
 - Кожен крок — окрема гілка `feature/eX-Y-назва` від `dev` (наприклад `feature/e0-7-own-api-key`) і окремий pull request у `dev`.
 - Кожен крок закінчується тестами. Запускати **весь** набір, не лише нові.
+- **Крок, що змінює фронтенд,** готовий лише якщо змінений або новий екран працює на ширині 360 px без горизонтальної прокрутки сторінки, кнопки й посилання не менші за 44 px, модальні вікна на мобільних займають весь екран; точки переходу (breakpoints) задаються змінними в `front-project/src/assets/base.css`, а не числами в компонентах.
 - Після кроку: поставити `[x]` у `PLAN/Plan.md` і додати 3–5 речень у `PLAN/DIPLOMA_NOTES.md`
   (що змінилось, чому, цифри до/після, якщо є).
 - Якщо крок неможливо виконати так, як написано, — не імпровізувати мовчки: пояснити проблему
@@ -34,7 +35,8 @@
 - Pull request у `dev` зливаються **squash-ом**, гілку після злиття видаляємо.
 - `dev` → `main` лише після закриття етапу, з тегом версії.
 - Термінові виправлення: `hotfix/назва` від `main`, зливаються в `main` і в `dev`.
-- Прямих комітів у `main` і `dev` немає (виняток: службові правки плану/документації, якщо власник дозволив).
+- **Видалення гілок:** перед видаленням гілки перевірити стан PR через `gh pr view <номер>` (потрібен `state: MERGED`). Гілку відкритого PR не видаляти ніколи: GitHub закриває PR.
+- **Прямі коміти в `main` і `dev` заборонені, без винятків:** навіть дрібні правки документації й плану йдуть через гілку і pull request (`docs/назва` або `feature/…`). Захист гілок із обов'язковими перевірками CI вмикається після першого зеленого прогону окремим рішенням власника (E0.5b).
 
 ## Структура
 
@@ -48,11 +50,10 @@ back-end/
     models/                  model.py (User), tender.py (Tender, TenderItem, PriceHistory)
     schemas/                 Pydantic-схеми
     routers/
-      authorization.py       /auth/register, /auth/login, JWT, get_current_user
+      authorization.py       /auth/register, /auth/login (префікс /auth задано лише в роутері), JWT, get_current_user
       tender_router.py       /tenders: CRUD, /import/{prozorro_id}, /{id}/analyze, /{id}/price-history
       prozorro_router.py     /stores/available, /search-tender/{id}, /analyze-documents/{ua_id}, UA→hex через Clarity Project
       ai_assistant.py        чат-помічник на Hugging Face (/perform-task) і /analyze-risks
-      crud.py                /api/users (службове)
     services/
       llm_validator.py       фасад: Claude → резерв Gemini
       claude_validator.py    Anthropic SDK: валідація збігів, витяг позицій, аналіз документації
@@ -62,60 +63,97 @@ back-end/
       tender_classifier.py   тип тендера: product/service/work/mixed (regex + LLM)
       cache.py               Redis-кеш (без REDIS_URL вимкнений)
     prozorro_functionality/  prozorro.py: Prozorro API, завантаження документів, OCR (ocrmypdf/tesseract), .doc→PDF (LibreOffice)
-  alembic/                   міграції (зараз лише 001_add_price_history)
+  alembic/                   міграції Alembic (versions/0001_baseline.py: users, tenders, tender_items, price_history)
   Dockerfile                 збирається з КОРЕНЯ репо (context: .), бо копіює і scraper/
 scraper/parsers/             RozetkaParser, SilpoParser, EpicentrParser (sync, requests), ProductInfo
 scraper/tests/               unittest-тести парсерів (ходять у живу мережу)
 front-project/               Vue 3 + Vite + Pinia (src/views, components, stores, api/config.js), nginx.conf, Dockerfile
-host_prozorro.py             окремий застарілий скрипт у корені (не частина API)
-docker-compose.yml           db, redis, backend, frontend
+docker-compose.yml           db, redis, backend, frontend (розробка)
+docker-compose.prod.yml      оверлей для staging/продакшну: лише Caddy назовні, healthcheck, ліміти пам'яті, ротація логів
+Caddyfile                    автоматичний HTTPS для $DOMAIN (використовує docker-compose.prod.yml)
+.env.staging.example         перелік змінних сервера без значень (реальний .env.staging лише на сервері, у .gitignore)
+scripts/                     check_env_staging.py (перевірка .env.staging), check_sources.py (доступність магазинів з сервера)
+docs/RUNBOOK.md              підготовка Ubuntu, перший деплой, оновлення, логи, зупинка, бекап
+ruff.toml                    конфіг лінтера (E0.5b)
+.github/workflows/ci.yml     CI: backend, frontend, gitleaks, docker-build
+.gitleaksignore              відбитки історичних знахідок gitleaks (без значень секретів)
+back-end/tools/              службові скрипти (check_coverage.py)
 PLAN/                        план робіт
 ```
 
-Кореневі `package.json`, `babel.config.js`, `vue.config.js`, `jsconfig.json`, `requirements.txt`, `*.log` —
-залишки старого scaffold; реальний фронтенд у `front-project/`, реальні залежності бекенду в `back-end/requirements.txt`.
+Залежності бекенду: `back-end/requirements.in` (прямі, без версій) і згенерований з нього `back-end/requirements.txt` (усе з точними версіями, Python 3.12; Dockerfile ставить лише його). Оновлення: інструкція в шапці `requirements.in`.
 
 ## Запуск
 
 Усе разом (Docker, рекомендовано):
 ```bash
 cp .env.example .env        # заповнити ключі
-docker compose up --build   # фронт :80, API :8000 (/docs), postgres :5432, redis :6379
+docker compose up --build   # фронт :80, API :8000 (/docs), postgres :5433 (хост) → 5432 (контейнер), redis :6379
 ```
 
 Бекенд локально (потрібні Postgres і, за бажання, Redis; `PYTHONPATH` має містити корінь репо і `back-end`):
 ```bash
 cd back-end
-pip install -r requirements.txt     # у Dockerfile частина пакетів ставиться окремо (anthropic, google-generativeai, redis, pandas, openpyxl, PyMuPDF, ocrmypdf, asyncpg)
+pip install -r requirements.txt     # усі залежності, зафіксовані
 PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 ```
-Для OCR та .doc потрібні системні tesseract (ukr, eng) і libreoffice-writer.
+Для OCR та .doc потрібні системні tesseract (ukr, eng), ghostscript і libreoffice-writer (у Docker-образі вони є).
+Локально Postgres із compose слухає порт **5433** на хості (`DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5433/check_it`); порт 5432 на Windows може займати локальна служба PostgreSQL, тому compose його не публікує.
 
 Фронтенд: `cd front-project && npm install && npm run dev` (Vite, :5173; `VITE_API_URL`, за замовчуванням `http://localhost:8000`).
 
-Міграції: `cd back-end && alembic upgrade head` (`DATABASE_URL` береться з `.env`).
-**Увага:** схема зараз створюється через `Base.metadata.create_all` + `ALTER TABLE` у `startup`,
-а єдина міграція створює лише `price_history` — повноцінні міграції це крок E0.3.
+Міграції (схема змінюється лише через Alembic, застосунок її не створює):
+- У Docker бекенд сам виконує `alembic upgrade head` перед стартом (`CMD` у `back-end/Dockerfile`).
+- Нова міграція: змінити модель, далі `alembic revision --autogenerate -m "опис"` у `back-end` (потрібен доступний Postgres, `DATABASE_URL` з `.env`), перевірити згенерований файл, `alembic check` не має знаходити розбіжностей.
+  З хоста Postgres із compose доступний на `localhost:5433` (див. «Запуск»).
+- Назви обмежень і індексів задає `NAMING_CONVENTION` у `app/database.py` (ix, uq, ck, fk, pk).
+- База, створена до E0.3 через `create_all` (без `alembic_version`), позначається один раз: `alembic stamp head` (у Docker: `docker compose run --rm backend alembic stamp head`). Порожню базу достатньо запустити.
+- Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`. Приклад: `docker compose up -d db`, створити базу `check_it_test`, `TEST_DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5433/check_it_test`.
+
+## Staging і продакшн (E0.6)
+
+Окремий оверлей, не змінює режим розробки: `docker compose --env-file .env.staging -f docker-compose.yml -f docker-compose.prod.yml up -d --build`. Назовні опубліковано лише Caddy (80/443), решта сервісів доступні тільки всередині мережі compose (опубліковані порти Docker обходять `ufw`, тому `ports:` до них додавати не можна). Паролі без дефолтів, healthcheck усіх сервісів, ліміти пам'яті (змінні `*_MEM_LIMIT`, типові значення для VPS на 4 ГБ), ротація логів. Потрібен Docker Compose не нижче 2.24 (тег `!reset`). Перед деплоєм: `python3 scripts/check_env_staging.py`; на новому сервері першим ділом `python3 scripts/check_sources.py`. Усі кроки: `docs/RUNBOOK.md`. Репетиція без сервера: окремий проєкт `-p pyman-stagingtest` з `DOMAIN=localhost` (внутрішній сертифікат Caddy), після неї `down` без `-v` і точкове видалення її томів за іменами (дозвіл власника потрібен щоразу).
 
 ## Тести
 
-- Бекенд: `cd back-end && pip install -r requirements-dev.txt && python -m pytest` (зараз лише тести `Settings`; решта — крок E0.2). Без мережі й без БД. `app/db_test.py` — не тест, а перевірка підключення.
-- `scraper/tests/` — unittest, **потребують живої мережі** і можуть падати при зміні розмітки магазинів:
-  `python -m unittest discover -s scraper/tests -t .` (з кореня репо).
-- Фронтенд: `cd front-project && npm run test:unit` (vitest налаштований, тестових файлів немає). Лінт: `npm run lint`.
-- CI відсутній (крок E0.5).
+- Бекенд (у віртуальному середовищі `back-end/.venv`, воно в `.gitignore`; системний Python не чіпати). Windows PowerShell:
+  ```powershell
+  cd back-end
+  python -m venv .venv                      # один раз
+  .\.venv\Scripts\Activate.ps1             # активація (якщо заборонено скрипти: Set-ExecutionPolicy -Scope Process Bypass)
+  pip install -r requirements-dev.txt       # усі залежності + pytest, більше нічого ставити не треба
+  python -m pytest                          # або без активації: .\.venv\Scripts\python.exe -m pytest
+  ```
+  Без мережі й без БД: `conftest.py` ставить фіктивні `DATABASE_URL` і `SECRET_KEY`, вимикає ключі LLM і Redis та забороняє з'єднання з будь-яким хостом, окрім loopback. Записані відповіді Prozorro і магазинів лежать у `tests/fixtures/` (оновлення: `python back-end/tests/fixtures/record_fixtures.py` з кореня, потрібна мережа).
+  Покриття: `python -m pytest --cov=app --cov-report=term`; для модулів, що не переписуються в E1–E2 (див. E0.2 у плані):
+  `python -m pytest --cov=app.core --cov=app.database --cov=app.models --cov=app.schemas --cov=app.routers.authorization --cov=app.services.cache --cov=app.services.llm_validator --cov=app.services.risk_analyzer --cov=app.services.tender_classifier`. `app/db_test.py` — не тест, а перевірка підключення. Тести: налаштування, авторизація, імпорт тендера, ризик-аналіз, класифікатор, кеш, розбір відповідей LLM, скрапери на записаних відповідях.
+- `scraper/tests/` — unittest-класи, **потребують живої мережі**; `scraper/tests/conftest.py` ставить їм маркер `live`.
+  Запуск через pytest з `back-end`: `python -m pytest ../scraper/tests -m live` (живі), `-m "not live"` (їх виключає; так і в CI).
+  9 застарілих тестів (`info_about_product`) пропущені до E2.2, `test_category_search` для Rozetka позначений `xfail(strict=True)` до E2.2.
+  `python -m unittest discover -s scraper/tests -t .` (з кореня репо) запускає все без маркерів і, як і раніше, дає 1 failure + 9 errors.
+- Фронтенд: `cd front-project && npm run test:unit -- --run` (vitest; тести в `src/**/__tests__/`). Лінт: `npm run lint`.
+- **Лінтер:** `ruff check .` з кореня репо (конфіг `ruff.toml`, набір `E4,E7,E9,F`; `ruff` ставиться з `requirements-dev.txt`).
+- **Перевірка покриття** (не нижче базової лінії `back-end/coverage_baseline.json`):
+  ```powershell
+  cd back-end
+  .\.venv\Scripts\python.exe -m pytest tests ../scraper/tests -m "not live" --cov=app --cov-report=json:coverage.json
+  .\.venv\Scripts\python.exe tools/check_coverage.py coverage.json            # --print-baseline показує поточні числа
+  ```
+  Базову лінію підвищують лише окремим комітом з числами з CI.
+- **CI** (GitHub Actions, `.github/workflows/ci.yml`) на кожен pull request у `dev` і `main` та на push у них: `backend` (ruff, pytest з покриттям і перевіркою базової лінії, тест міграцій із Postgres), `frontend` (`eslint .` без `--fix`, vitest), `gitleaks` (нові коміти PR; на push уся історія; історичні знахідки лише відбитками в `.gitleaksignore`), `docker-build` (збірка образів без публікації, кеш buildx, `docker compose config -q`). Червоний CI означає, що PR не зливаємо. Нові знахідки gitleaks в `.gitleaksignore` не додавати без рішення власника.
 
 ## Змінні середовища
 
 Усі змінні читає лише `back-end/app/core/config.py` (`Settings`, pydantic-settings); `os.getenv` в іншому місці
-забороняє тест. Порядок: змінні процесу → `.env` у корені → `back-end/.env`. Шаблон — `.env.example`.
+забороняє тест. Пріоритет: змінні процесу → `.env` у корені. **Єдиний файл конфігурації — кореневий `.env`** (його ж використовує Docker, E0.12). `back-end/.env` не читається: якщо він з'явиться, у лог при старті потрапить попередження з назвами його змінних (без значень), а сам файл треба видалити. Шаблон — `.env.example`.
 Обов'язкові (без дефолтів, застосунок не стартує і називає відсутню змінну): `DATABASE_URL`, `SECRET_KEY`.
-У Docker `DATABASE_URL` збирає `docker-compose.yml`; локально без Docker її треба додати в `.env`.
+**Ключі LLM:** `ANTHROPIC_API_KEY` це власний ключ власника, призначений для застосунку (локально, на staging і в продакшні). `OPENROUTER_API_KEY` лише для скриптів у `eval/` (експерименти), **ніколи** в `Settings`, коді застосунку чи на staging (`.env.staging`).
+У Docker `DATABASE_URL` збирає `docker-compose.yml` (хост `db`, порт 5432) і вона **завжди перекриває** значення з `.env` (перевірено `docker compose config`, тест у `test_env_file.py`). `DATABASE_URL` у кореневому `.env` (`…@localhost:5433/…`) потрібна **лише для локального `uvicorn`/alembic** без Docker; контейнер її не бачить.
 
 | Змінна | Призначення |
 | --- | --- |
 | `DATABASE_URL` (`postgresql+asyncpg://…`) | **обов'язкова**, єдиний async engine в `database.py`, alembic |
-| `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback |
+| `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback; не менше 32 символів і не з опублікованих значень (застосунок не стартує, E0.11); згенерувати: `python -c "import secrets; print(secrets.token_hex(32))"` |
 | `DB_ECHO` | логувати SQL (за замовчуванням `false`) |
 | `ALGORITHM` (HS256), `FRONTEND_URL` | JWT, CORS |
 | `ANTHROPIC_API_KEY` | Claude, ключ з platform.claude.com (завжди `api.anthropic.com`, роутера немає) |
@@ -126,6 +164,24 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 | `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | кеш; без `REDIS_URL` вимкнений |
 | `POSTGRES_USER/PASSWORD/DB` | лише для контейнера `db` у compose, не для коду |
 | `VITE_API_URL` | фронтенд (`front-project/src/api/config.js`, у `.env.production` — `/api`) |
+
+## Пастки середовища
+
+- **PowerShell 5.1 і BOM.** `Set-Content -Encoding utf8` (і `Out-File -Encoding utf8`) пишуть файл з BOM, що ламає TOML, JSON та інші
+  формати (так зламався `pyproject.toml`). Файли створювати й редагувати інструментами для файлів (Write/Edit). Якщо без PowerShell
+  не обійтись: `[System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))` (UTF-8 без BOM).
+- **Heredoc у PowerShell.** `python - <<'EOF'` у PowerShell не працює (парсер падає, і не виконується нічого). Скрипти на Python запускати
+  через Bash-інструмент або зберігати у файл.
+- **Docker Desktop і його диск — на D:** (програма `D:\Docker\app`, віртуальний диск WSL `D:\Docker\wsl`). На C: його повертати не можна:
+  за день він з'їв ~25 ГБ. Обсяг пам'яті WSL обмежує `C:\Users\<користувач>\.wslconfig` (`[wsl2]`, `memory=`).
+- **Docker Desktop** не стартує автоматично після перезавантаження. `docker` має бути в PATH користувача; якщо термінал старий
+  і команди `docker` не знаходить, його треба перезапустити.
+- **`docker compose up --build` — лише для фінальної перевірки кроку.** Проміжні перевірки — `pytest` у `.venv`.
+- **Прибирання після кожної Docker-перевірки:** `docker builder prune -f` і `docker image prune -f`. Після цього перевірити розмір
+  `D:\Docker\wsl\disk\docker_data.vhdx` і вказати його у звіті; якщо він більший за 40 ГБ — повідомити власника.
+- Томи compose іменовані: `pyman_postgres_data` (база) і `pyman_redis_data` (кеш Redis); безіменних томів `up` не створює.
+- **Ніколи** не виконувати `docker volume prune`, `docker system prune --volumes` чи `docker compose down -v` без прямого дозволу власника
+  (знищують дані БД).
 
 ## Конвенції
 

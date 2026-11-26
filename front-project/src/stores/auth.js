@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(email, password) {
-    const response = await apiClient.post('/auth/auth/login', { email, password })
+    const response = await apiClient.post('/auth/login', { email, password })
     if (response.data.access_token) {
       setToken(response.data.access_token)
     } else {
@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register(userData) {
-    const response = await apiClient.post('/auth/auth/register', {
+    const response = await apiClient.post('/auth/register', {
       email: userData.email,
       name: userData.name,
       password: userData.password,

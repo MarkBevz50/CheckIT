@@ -1,0 +1,169 @@
+name: CI
+
+# Every pull request into dev or main, and every push to them (E0.5b).
+# Jobs: backend, frontend, gitleaks, docker-build. The job names are the required status checks
+# of the branch protection, so do not rename them without changing the protection rules.
+# Actions are pinned to commit SHAs (the version is in the comment).
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: check_it_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d check_it_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # opt-in database for the migrations test (upgrade head, alembic check, downgrade base)
+      TEST_DATABASE_URL: postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/check_it_test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            back-end/requirements.txt
+            back-end/requirements-dev.txt
+
+      - name: Install dependencies
+        run: pip install -r back-end/requirements-dev.txt
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Tests with coverage (no network; tests marked live are excluded)
+        working-directory: back-end
+        run: >-
+          python -m pytest tests ../scraper/tests -m "not live"
+          --cov=app --cov-report=term --cov-report=json:coverage.json
+
+      - name: Coverage is not below the baseline
+        working-directory: back-end
+        run: python tools/check_coverage.py coverage.json
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: front-project
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: front-project/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint (without --fix)
+        run: npx eslint .
+
+      - name: Unit tests
+        run: npm run test:unit -- --run
+
+  gitleaks:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks (pinned version, checksum verified)
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/gitleaks.tgz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
+          "$RUNNER_TEMP/gitleaks" version
+
+      # historical findings are accepted in .gitleaksignore (fingerprints only); anything new fails the job
+      - name: Scan the commits of the pull request
+        if: github.event_name == 'pull_request'
+        run: >-
+          "$RUNNER_TEMP/gitleaks" git . --redact --no-banner
+          --log-opts="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+
+      - name: Scan the whole history
+        if: github.event_name == 'push'
+        run: '"$RUNNER_TEMP/gitleaks" git . --redact --no-banner --log-opts="--all"'
+
+  docker-build:
+    name: docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: docker-compose.yml is valid
+        run: SECRET_KEY=ci docker compose config -q
+
+      # the production overlay (E0.6) and the Caddyfile; dummy values, nothing is started
+      - name: Production overlay and Caddyfile are valid
+        env:
+          SECRET_KEY: ci
+          DOMAIN: example.com
+          ACME_EMAIL: ci@example.com
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml config -q
+          CADDY_IMAGE=$(docker compose -f docker-compose.yml -f docker-compose.prod.yml config --images | grep caddy)
+          docker run --rm -e DOMAIN -e ACME_EMAIL \
+            -e ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory \
+            -v "$PWD/Caddyfile:/etc/caddy/Caddyfile:ro" "$CADDY_IMAGE" \
+            caddy validate --config /etc/caddy/Caddyfile
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build the backend image (not pushed)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: back-end/Dockerfile
+          push: false
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
+
+      - name: Build the frontend image (not pushed)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: front-project
+          push: false
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,mode=max,scope=frontend

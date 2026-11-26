@@ -24,14 +24,23 @@ apiClient.interceptors.request.use(
     }
 )
 
-// Add response interceptor
-apiClient.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token')
-            window.location.href = '/signin'
-        }
-        return Promise.reject(error)
+// True for the login request itself, with or without the /api prefix (nginx) or a host,
+// and ignoring a query string: '/auth/login', '/api/auth/login', 'https://x/api/auth/login?a=1'
+export function isLoginRequest(url) {
+    if (!url) return false
+    const path = String(url).split(/[?#]/)[0]
+    return /(^|\/)auth\/login\/?$/.test(path)
+}
+
+// A 401 from /auth/login means wrong email or password: leave the page alone and let the
+// form show the message. A 401 from any other request means the session is gone.
+export async function handleResponseError(error) {
+    if (error.response?.status === 401 && !isLoginRequest(error.config?.url)) {
+        localStorage.removeItem('token')
+        window.location.href = '/signin'
     }
-)
+    return Promise.reject(error)
+}
+
+// Add response interceptor
+apiClient.interceptors.response.use((response) => response, handleResponseError)

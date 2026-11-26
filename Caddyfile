@@ -1,0 +1,23 @@
+# Automatic HTTPS for the staging/production domain (E0.6). Used by docker-compose.prod.yml.
+# DOMAIN, ACME_EMAIL and ACME_CA come from the environment of the caddy container (.env.staging).
+# For DOMAIN=localhost Caddy uses its own local CA, which is how the setup is tested without a server.
+
+{
+	email {$ACME_EMAIL}
+	acme_ca {$ACME_CA}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	header {
+		# one day for now: a long HSTS on an unfinished staging would lock browsers out (raise it in E7.1)
+		Strict-Transport-Security "max-age=86400"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# the frontend container (nginx) serves the SPA and proxies /api/ to the backend
+	reverse_proxy frontend:80
+}

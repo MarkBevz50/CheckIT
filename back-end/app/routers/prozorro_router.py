@@ -1,7 +1,5 @@
-import asyncio
 import logging
 import httpx
-from typing import Optional, List
 
 from fastapi import APIRouter, HTTPException, Depends, Query, BackgroundTasks
 
@@ -9,8 +7,6 @@ from app.prozorro_functionality.prozorro import get_contract_info, get_tender_do
 from app.routers.authorization import get_current_user
 from app.services.llm_validator import analyze_document_text
 from app.services.parser_service import (
-    search_products_async,
-    search_products_for_items,
     search_and_validate_items,
     get_available_stores,
 )

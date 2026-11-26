@@ -10,15 +10,17 @@ from app.core.config import settings
 # Alembic Config object
 config = context.config
 
-# Override sqlalchemy.url from environment
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# The database comes from Settings (DATABASE_URL); tests may pass another one through
+# config.attributes["database_url"]. '%' must be doubled for the ini-style config.
+database_url = config.attributes.get("database_url") or settings.database_url
+config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Import all models so Alembic sees them
 from app.database import Base
-from app.models.model import User, Store, ProductXpath, NavigationXpath, WebsiteConfig
+from app.models.model import User
 from app.models.tender import Tender, TenderItem, PriceHistory
 
 target_metadata = Base.metadata
@@ -31,6 +33,7 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
+        compare_type=True,
         dialect_opts={"paramstyle": "named"},
     )
     with context.begin_transaction():
@@ -38,7 +41,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
     with context.begin_transaction():
         context.run_migrations()
 

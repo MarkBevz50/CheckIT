@@ -1,16 +1,14 @@
 import logging
 from io import BytesIO
-from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Depends, File, UploadFile, Query
 from fastapi.middleware.cors import CORSMiddleware
 from openpyxl import load_workbook
-from pydantic import BaseModel
 
 from app.routers.prozorro_router import prozorro_router
 from app.routers.tender_router import tender_router
 from app.routers.ai_assistant import router as assistant_router
-from app.services.parser_service import search_products_async, get_available_stores
+from app.services.parser_service import search_products_async
 
 # Ensure tender models are registered with Base.metadata
 import app.models.tender  # noqa: F401
@@ -19,10 +17,8 @@ import app.models.tender  # noqa: F401
 
 
 # Local imports
-from .routers import crud
 from .routers.authorization import router as auth_router, get_current_user
 from .core.config import settings
-from .database import Base, engine
 from .db_test import verify_database_connection
 # ... решта коду без змін
 
@@ -57,57 +53,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Database initialization
-async def init_db():
-    try:
-        if not await verify_database_connection():
-            raise Exception("Database connection verification failed")
-
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-            logger.info("Database tables created successfully")
-
-            # Lightweight idempotent migrations for schema changes that
-            # `create_all` cannot perform on existing tables.
-            await conn.exec_driver_sql(
-                "ALTER TABLE tender_items "
-                "ADD COLUMN IF NOT EXISTS price_source VARCHAR(20) "
-                "NOT NULL DEFAULT 'tender'"
-            )
-            await conn.exec_driver_sql(
-                "ALTER TABLE tender_items ALTER COLUMN unit_price DROP NOT NULL"
-            )
-            logger.info("Schema migrations applied")
-
-        return engine
-    except Exception as e:
-        logger.error(f"Database initialization failed: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Database initialization failed: {str(e)}"
-        )
-
 @app.on_event("startup")
 async def startup():
-    try:
-        await init_db()
-        logger.info("Application startup completed successfully")
-    except Exception as e:
-        logger.error(f"Application startup failed: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Application startup failed: {str(e)}"
-        )
+    """The schema is managed by Alembic migrations (`alembic upgrade head`, run before the
+    server starts); here we only make sure the database is reachable."""
+    if not await verify_database_connection():
+        raise RuntimeError("Database is not reachable: check DATABASE_URL and that Postgres is running")
+    logger.info("Application startup completed successfully")
 
 app.include_router(assistant_router)
 # Include routers with authentication
-app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
-app.include_router(
-    crud.router,
-    prefix="/api",
-    tags=["CRUD Operations"],
-    dependencies=[Depends(get_current_user)]
-)
+# The /auth prefix is declared once, on the router itself (authorization.py)
+app.include_router(auth_router, tags=["Authentication"])
 app.include_router(prozorro_router)
 app.include_router(tender_router)
 

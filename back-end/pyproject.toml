@@ -40,5 +40,6 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = [".", ".."]
 asyncio_mode = "auto"
+markers = ["live: calls real external websites (network); excluded from CI"]

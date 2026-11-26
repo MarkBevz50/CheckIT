@@ -1,0 +1,12 @@
+# Linter config for the whole repo (CI: `ruff check .` from the root).
+# Narrow rule set on purpose (E0.5b): syntax errors (E9), pyflakes (F), statement/logic pitfalls (E4, E7).
+# Widen it later (E, W, I, B, UP) in a separate step: it reports hundreds of style findings on the existing code.
+target-version = "py312"
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
+
+[lint.per-file-ignores]
+# alembic/env.py imports the models only to register their tables on Base.metadata (needed by autogenerate),
+# and sets sys.path before the imports.
+"back-end/alembic/env.py" = ["E402", "F401"]

@@ -49,8 +49,9 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_secure_password
 POSTGRES_DB=check_it
 
-# JWT (замініть на випадковий рядок у продакшені)
-SECRET_KEY=your-super-secret-key-change-me
+# JWT: випадковий ключ не коротший за 32 символи; застосунок не стартує з коротким або відомим (опублікованим) значенням.
+# Згенеруйте і вставте: python -c "import secrets; print(secrets.token_hex(32))"
+SECRET_KEY=
 
 # Anthropic Claude — основний LLM (вмикає ШІ-функції)
 ANTHROPIC_API_KEY=sk-ant-...
@@ -100,8 +101,7 @@ python -m venv .venv
 .venv\Scripts\activate          # Windows
 # source .venv/bin/activate     # macOS / Linux
 
-pip install -r requirements.txt
-pip install "sqlalchemy[asyncio]" asyncpg python-dotenv openpyxl pandas anthropic PyMuPDF ocrmypdf
+pip install -r requirements.txt   # усі залежності з точними версіями (Python 3.12)
 
 # Скопіювати та заповнити .env
 cp .env.example .env
@@ -133,7 +133,6 @@ pyman/
 │   │   ├── main.py                  # FastAPI застосунок, CORS, ініціалізація БД
 │   │   ├── routers/
 │   │   │   ├── authorization.py     # Реєстрація / логін (JWT)
-│   │   │   ├── crud.py              # Базові CRUD-операції
 │   │   │   ├── prozorro_router.py   # Аналіз закупівлі по ID Prozorro
 │   │   │   ├── tender_router.py     # Управління збереженими тендерами
 │   │   │   └── ai_assistant.py      # ШІ-асистент
@@ -149,7 +148,8 @@ pyman/
 │   │   └── schemas/                 # Pydantic-схеми
 │   ├── alembic/                     # Міграції БД
 │   ├── Dockerfile
-│   └── requirements.txt
+│   ├── requirements.in              # прямі залежності
+│   └── requirements.txt             # усі залежності з версіями (генерується з .in)
 ├── scraper/
 │   └── parsers/
 │       ├── rozetka_parser.py
@@ -172,7 +172,7 @@ pyman/
 | Змінна | Обов'язкова | За замовчуванням | Опис |
 |--------|:-----------:|-----------------|------|
 | `POSTGRES_PASSWORD` | ✅ | — | Пароль PostgreSQL |
-| `SECRET_KEY` | ✅ | — | Секрет для підпису JWT-токенів |
+| `SECRET_KEY` | ✅ | — | Секрет для підпису JWT-токенів: не менше 32 символів, випадковий (`python -c "import secrets; print(secrets.token_hex(32))"`) |
 | `POSTGRES_USER` | | `postgres` | Користувач PostgreSQL |
 | `POSTGRES_DB` | | `check_it` | Назва бази даних |
 | `ANTHROPIC_API_KEY` | | — | API-ключ Claude (вмикає ШІ-функції) |

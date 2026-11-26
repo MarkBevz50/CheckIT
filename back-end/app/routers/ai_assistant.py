@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from pydantic import BaseModel
@@ -10,7 +10,7 @@ from app.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.models.model import User
-from app.models.tender import Tender, TenderItem
+from app.models.tender import Tender
 
 logger = logging.getLogger(__name__)
 
@@ -153,7 +153,6 @@ async def analyze_risks(
     db: AsyncSession = Depends(get_db),
 ):
     """Analyze corruption risks for a tender: price deviations + discriminatory requirements."""
-    from app.routers.authorization import get_current_user
     from app.services.risk_analyzer import (
         calculate_price_deviation,
         calculate_aggregate_risk,

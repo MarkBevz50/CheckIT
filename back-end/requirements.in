@@ -1,0 +1,41 @@
+# Direct runtime dependencies of the backend (no versions).
+# requirements.txt is generated from this file; to update it run, from the repo root:
+#   docker run --rm -v "<repo>\back-end:/w" python:3.12-slim sh -c \
+#     "pip install -q -r /w/requirements.in && pip freeze" > back-end/requirements.txt
+# then put the header (see requirements.txt) back and commit both files.
+
+# Web framework and server
+fastapi
+uvicorn
+python-multipart            # file uploads (Excel) in FastAPI
+
+# Database
+sqlalchemy[asyncio]
+asyncpg
+alembic
+
+# Validation and configuration
+pydantic[email]
+pydantic-settings
+
+# Auth
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1               # passlib 1.7.4 is incompatible with bcrypt >= 4.1
+
+# HTTP
+httpx
+requests
+
+# Documents and OCR (tesseract, ghostscript and LibreOffice are installed by the Dockerfile)
+openpyxl
+python-docx
+PyMuPDF
+ocrmypdf
+
+# LLM providers
+anthropic
+google-generativeai
+
+# Cache
+redis
