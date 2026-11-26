@@ -70,7 +70,11 @@ def query_huggingface_api(message: str) -> str:
         raise Exception(f"Помилка при використанні Hugging Face API: {str(e)}")
 
 @router.post("/perform-task", response_model=AssistantResponse)
-async def perform_task(request: AssistantRequest, db: AsyncSession = Depends(get_db)):
+async def perform_task(
+    request: AssistantRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """
     Багатофункціональний помічник для виконання завдань.
     """
