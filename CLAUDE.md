@@ -108,7 +108,7 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
   З хоста Postgres із compose доступний на `localhost:5433` (див. «Запуск»).
 - Назви обмежень і індексів задає `NAMING_CONVENTION` у `app/database.py` (ix, uq, ck, fk, pk).
 - База, створена до E0.3 через `create_all` (без `alembic_version`), позначається один раз: `alembic stamp head` (у Docker: `docker compose run --rm backend alembic stamp head`). Порожню базу достатньо запустити.
-- Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`. Приклад: `docker compose up -d db`, створити базу `check_it_test`, `TEST_DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5433/check_it_test`.
+- Тест ізоляції користувачів (`tests/test_user_isolation.py`, E0.13) теж працює на реальному Postgres через `TEST_DATABASE_URL`: локально пропускається без неї, в CI її відсутність є помилкою. Інтеграційний тест міграцій пропускається без `TEST_DATABASE_URL` (порожня БД Postgres): `upgrade head`, `alembic check`, `downgrade base`. Приклад: `docker compose up -d db`, створити базу `check_it_test`, `TEST_DATABASE_URL=postgresql+asyncpg://postgres:postgres@127.0.0.1:5433/check_it_test`.
 
 ## Staging і продакшн (E0.6)
 

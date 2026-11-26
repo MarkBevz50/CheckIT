@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from app.database import get_db
 from app.main import app
+from app.models.model import User
 from app.routers.authorization import get_current_user
 from tests.helpers import FakeResponse, load_json
 
@@ -66,7 +67,7 @@ def client_for():
             yield session or ImportSession()
 
         app.dependency_overrides[get_db] = override_db
-        app.dependency_overrides[get_current_user] = lambda: "user@example.com"
+        app.dependency_overrides[get_current_user] = lambda: User(id=7, name="Test", email="user@example.com")
         return TestClient(app)
 
     yield make

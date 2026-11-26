@@ -4,6 +4,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, Depends, Query, BackgroundTasks
 
 from app.prozorro_functionality.prozorro import get_contract_info, get_tender_documents, extract_text_from_docx, extract_text_from_pdf_extended
+from app.models.model import User
 from app.routers.authorization import get_current_user
 from app.services.llm_validator import analyze_document_text
 from app.services.parser_service import (
@@ -62,7 +63,7 @@ async def list_available_stores():
 async def prozorro_data(
     contract_id: str,
     stores: str = Query(default="rozetka", description="Comma-separated store keys: rozetka,silpo,epicentr"),
-    current_user: str = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Search Prozorro tender by contract ID and compare prices from selected stores.
@@ -152,7 +153,7 @@ async def process_tender_documents_task(contract_id: str):
 async def analyze_documents_endpoint(
     ua_id: str,
     background_tasks: BackgroundTasks,
-    current_user: str = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     Асинхронний запуск аналізу тендерних документів.
