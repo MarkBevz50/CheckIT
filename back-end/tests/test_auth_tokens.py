@@ -74,3 +74,15 @@ def test_protected_endpoint_requires_a_token():
 
     response = TestClient(app).get("/tenders/")
     assert response.status_code == 401
+
+
+def test_assistant_endpoints_require_a_token():
+    """/assistant/perform-task spends the Hugging Face key and reveals the user count: login only."""
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    client = TestClient(app)
+    for task in ("chat", "user_count", "time", "help"):
+        response = client.post("/assistant/perform-task", json={"task": task, "message": "hi"})
+        assert response.status_code == 401, task
