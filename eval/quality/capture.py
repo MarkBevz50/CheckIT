@@ -127,7 +127,12 @@ class Capture:
             if hit is None:
                 raise ReplayMiss(f"{kind} {key} is not in the snapshot {self.snapshot.date}")
             return hit
-        value = await fetch()
+        try:
+            value = await fetch()
+        except Exception:
+            if kind == "ua" and hit is not None:
+                return hit  # the UA-ID -> hex mapping of a tender never changes: a recorded one is as good as a fresh one
+            raise
         self.snapshot.put(kind, key, value)
         self._fresh.add((kind, key))
         return value

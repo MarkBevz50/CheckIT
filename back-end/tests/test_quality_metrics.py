@@ -260,3 +260,15 @@ def test_the_prozorro_tender_api_host_is_recorded_too():
 
     for url in ("https://public.api.openprocurement.org/api/2.5/tenders/abc", "https://public-docs.prozorro.gov.ua/get/x"):
         assert any(host in url for host in PROZORRO_HOSTS), url
+
+
+def test_live_mode_falls_back_to_the_recorded_ua_to_hex_mapping_when_clarity_fails(tmp_path):
+    capture = Capture(Snapshot("t", root=tmp_path), "live", "replay")
+    capture.snapshot.put("ua", "k", {"hex": "abc"})
+
+    async def failing():
+        raise TimeoutError("clarity-project.info did not answer")
+
+    assert asyncio.run(capture._cached_async("ua", "k", failing)) == {"hex": "abc"}
+    with pytest.raises(TimeoutError):                       # other kinds must not hide an outage
+        asyncio.run(capture._cached_async("search", "k", failing))
