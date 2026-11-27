@@ -56,7 +56,7 @@ async def collect(tenders, runs, snapshot, budget):
     with Capture(snapshot, "replay", "live", budget) as capture:
         for tender_id in tenders:
             capture.tender = tender_id
-            hex_id = await prozorro_router.convert_ua_to_hex_id(control[tender_id]["ua_id"])
+            hex_id = await prozorro_router.convert_ua_to_hex_id(control[tender_id]["ua_id"].upper())  # the application sends it upper-cased
             refs = pz.get_document_urls(pz.get_contract(hex_id).get("documents", []))
             text = (await pz.extract_documents_text(refs))[:TEXT_LIMIT]
             print(f"[{tender_id}] {len(refs)} documents, {len(text)} characters analysed")

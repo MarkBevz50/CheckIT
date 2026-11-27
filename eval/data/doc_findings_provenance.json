@@ -1,0 +1,1165 @@
+{
+ "modes": {
+  "A": {
+   "tier": "fast",
+   "thinking": "default",
+   "label": "Haiku 5.5, міркування за замовчуванням"
+  },
+  "B": {
+   "tier": "fast",
+   "thinking": "disabled",
+   "label": "Haiku 5.5, без міркування"
+  },
+  "C": {
+   "tier": "smart",
+   "thinking": "between_tools",
+   "label": "Sonnet 5.5, between_tools"
+  }
+ },
+ "text_limit": 30000,
+ "snapshot": "2026-11-26",
+ "calls": [
+  {
+   "tender": "C05",
+   "mode": "A",
+   "run": 1,
+   "cost_usd": 0.00221,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 1893,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C05",
+   "mode": "A",
+   "run": 2,
+   "cost_usd": 0.00241,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 2401,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C05",
+   "mode": "B",
+   "run": 1,
+   "cost_usd": 0.00176,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 989,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C05",
+   "mode": "B",
+   "run": 2,
+   "cost_usd": 0.00195,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 1489,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C05",
+   "mode": "C",
+   "run": 1,
+   "cost_usd": 0.02567,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 31,
+   "overall_risk": "low",
+   "failed": false
+  },
+  {
+   "tender": "C05",
+   "mode": "C",
+   "run": 2,
+   "cost_usd": 0.02446,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 31,
+   "overall_risk": "low",
+   "failed": false
+  },
+  {
+   "tender": "C09",
+   "mode": "A",
+   "run": 1,
+   "cost_usd": 0.00388,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 5200,
+   "overall_risk": null,
+   "failed": true
+  },
+  {
+   "tender": "C09",
+   "mode": "A",
+   "run": 2,
+   "cost_usd": 0.00363,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 4701,
+   "overall_risk": "high",
+   "failed": false
+  },
+  {
+   "tender": "C09",
+   "mode": "B",
+   "run": 1,
+   "cost_usd": 0.00202,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 1479,
+   "overall_risk": "high",
+   "failed": false
+  },
+  {
+   "tender": "C09",
+   "mode": "B",
+   "run": 2,
+   "cost_usd": 0.00211,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 1666,
+   "overall_risk": "high",
+   "failed": false
+  },
+  {
+   "tender": "C09",
+   "mode": "C",
+   "run": 1,
+   "cost_usd": 0.03449,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 889,
+   "overall_risk": "low",
+   "failed": false
+  },
+  {
+   "tender": "C09",
+   "mode": "C",
+   "run": 2,
+   "cost_usd": 0.04914,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 2354,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "A",
+   "run": 1,
+   "cost_usd": 0.00315,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 3876,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "A",
+   "run": 2,
+   "cost_usd": 0.00251,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 2589,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "B",
+   "run": 1,
+   "cost_usd": 0.00177,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 1100,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "B",
+   "run": 2,
+   "cost_usd": 0.00163,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 823,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "C",
+   "run": 1,
+   "cost_usd": 0.03268,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 838,
+   "overall_risk": "medium",
+   "failed": false
+  },
+  {
+   "tender": "C10",
+   "mode": "C",
+   "run": 2,
+   "cost_usd": 0.03571,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 1141,
+   "overall_risk": "medium",
+   "failed": false
+  }
+ ],
+ "pool": [
+  {
+   "id": "F001",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F002",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 2,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F003",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F004",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F005",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 11,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F006",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 6,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F007",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 9,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F008",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 7,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F009",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F010",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 2,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F011",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F012",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 12,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F013",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F014",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F015",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F016",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F017",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 6,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F018",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 10,
+     "severity": "medium"
+    },
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 1,
+     "severity": "high"
+    },
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 1,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F019",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 6,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F020",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F021",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 7,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F022",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 1,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F023",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 2,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F024",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 3,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F025",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 4,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F026",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 9,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F027",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 5,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F028",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F029",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 13,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F030",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 5,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F031",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 5,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F032",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 6,
+     "severity": "low"
+    },
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 3,
+     "severity": "low"
+    },
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 2,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F033",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 7,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F034",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 2,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F035",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F036",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 2,
+     "severity": "medium"
+    },
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F037",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 1,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F038",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 3,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F039",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F040",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 4,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F041",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 5,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F042",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 8,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F043",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F044",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F045",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 3,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F046",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F047",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 2,
+     "severity": "low"
+    },
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 1,
+     "severity": "medium"
+    },
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F048",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 5,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F049",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 1,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F050",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F051",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 6,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F052",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 8,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F053",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 5,
+     "severity": "low"
+    },
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F054",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 4,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F055",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F056",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 6,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F057",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 3,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F058",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F059",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 3,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F060",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 1,
+     "index": 3,
+     "severity": "low"
+    },
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 4,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F061",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 4,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F062",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F063",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 2,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F064",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 3,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F065",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 9,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F066",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 5,
+     "severity": "medium"
+    },
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 2,
+     "severity": "low"
+    },
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 4,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F067",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 7,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F068",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 3,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F069",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 8,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F070",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 5,
+     "severity": "high"
+    }
+   ]
+  },
+  {
+   "id": "F071",
+   "tender": "C10",
+   "sources": [
+    {
+     "mode": "C",
+     "run": 1,
+     "index": 1,
+     "severity": "medium"
+    },
+    {
+     "mode": "C",
+     "run": 2,
+     "index": 1,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F072",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 2,
+     "index": 5,
+     "severity": "medium"
+    }
+   ]
+  },
+  {
+   "id": "F073",
+   "tender": "C09",
+   "sources": [
+    {
+     "mode": "B",
+     "run": 1,
+     "index": 8,
+     "severity": "low"
+    }
+   ]
+  },
+  {
+   "id": "F074",
+   "tender": "C05",
+   "sources": [
+    {
+     "mode": "A",
+     "run": 2,
+     "index": 3,
+     "severity": "low"
+    }
+   ]
+  }
+ ]
+}
