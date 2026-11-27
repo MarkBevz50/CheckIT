@@ -41,6 +41,14 @@ tender_router = APIRouter(prefix="/tenders", tags=["Tenders"])
 
 # ── Helpers ───────────────────────────────────────────────────────
 
+def _fit(value, limit: int):
+    """Cut text to the length of its database column: a Prozorro title of 610 characters made the import fail with
+    a 500 (control tender C03). The cut ends with an ellipsis so that it is visible."""
+    if isinstance(value, str) and len(value) > limit:
+        return value[: limit - 1].rstrip() + "…"
+    return value
+
+
 def _build_items(tender_type: str, items_data: list) -> list[TenderItem]:
     """Convert Pydantic item list to ORM TenderItem objects."""
     result = []
@@ -324,12 +332,12 @@ async def import_from_prozorro(
     tender = Tender(
         tender_type=tender_type.value,
         prozorro_id=prozorro_id,
-        title=contract.get("title", contract.get("description", f"Тендер {prozorro_id}")),
+        title=_fit(contract.get("title", contract.get("description", f"Тендер {prozorro_id}")), 500),
         description=contract.get("description"),
         expected_cost=contract.get("value", {}).get("amount"),
         currency=contract.get("value", {}).get("currency", "UAH"),
         status="active",
-        customer_name=contract.get("procuringEntity", {}).get("name"),
+        customer_name=_fit(contract.get("procuringEntity", {}).get("name"), 300),
         total_amount=total_amount,
         user_id=user_id,
     )
@@ -355,9 +363,9 @@ async def import_from_prozorro(
         fallback_stats[source] += 1
 
         item = TenderItem(
-            name=name,
+            name=_fit(name, 500),
             quantity=_safe_float(raw.get("quantity"), default=1.0),
-            unit_name=raw.get("unit_name") or "од.",
+            unit_name=_fit(raw.get("unit_name") or "од.", 50),
             unit_price=price,
             price_source=source,
         )

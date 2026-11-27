@@ -75,6 +75,10 @@ def main(argv=None) -> int:
         print(f"STOPPED: {exc}", file=sys.stderr)
         return 3
 
+    if args.mode == "replay":
+        for run in runs:
+            run["seconds"] = None  # a replay answers from files: its timings say nothing about the application
+
     rows = label_store.all_pair_rows()
     labeled = label_store.labeled_pairs(label_store.load_labels(), rows)
     expected = {t["id"]: t.get("expected_behavior") for t in runner.load_control_tenders(selected)}
