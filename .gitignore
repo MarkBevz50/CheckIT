@@ -106,3 +106,4 @@ eval/results/pilot/
 # Eval snapshots: raw source responses of control tenders and diploma experiments (kept locally, no expiry)
 eval/snapshots/
 coverage.json
+eval/results/judge_b/
