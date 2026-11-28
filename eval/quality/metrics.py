@@ -121,6 +121,32 @@ def llm_errors(usage: List[dict], parse_failures: int) -> dict:
             "error_share": ratio(parse_failures + truncated, calls)}
 
 
+def expected_behavior(items: List[dict], labeled: Dict[Tuple[str, str], str], rules: dict) -> dict:
+    """Per-item expectations: {"C10-01": {"max_accepted": 0}, "C10-03": {"allowed_labels": ["same", "analog"]}}.
+    met is True / False, or None when nothing was violated but some accepted match carries no label (cannot be verified)."""
+    violated, unverified = set(), 0
+    for item in items:
+        rule = rules.get(item["item_id"])
+        if not rule:
+            continue
+        accepted = set(item.get("relevant_urls") or [])
+        if "max_accepted" in rule and len(accepted) > rule["max_accepted"]:
+            violated.add(item["item_id"])
+        if "allowed_labels" in rule:
+            for url in accepted:
+                label = labeled.get((item["item_id"], url))
+                if label is None:
+                    unverified += 1
+                elif label not in rule["allowed_labels"]:
+                    violated.add(item["item_id"])
+    return {"met": None if (not violated and unverified) else not violated, "violated_items": sorted(violated), "unverified": unverified}
+
+
+def quality_by_set(items: List[dict], sets: Dict[str, Dict[Tuple[str, str], str]]) -> dict:
+    """match_quality of the same items for each label set (the unlabeled list is dropped)."""
+    return {name: {k: v for k, v in match_quality(items, index).items() if k != "unlabeled"} for name, index in sets.items()}
+
+
 def tender_metrics(run: dict, labeled: Dict[Tuple[str, str], str], expected: Optional[dict] = None) -> dict:
     items = run["items"]
     quality = match_quality(items, labeled)
@@ -140,7 +166,13 @@ def tender_metrics(run: dict, labeled: Dict[Tuple[str, str], str], expected: Opt
         "gemini_calls": run.get("gemini_calls", 0),
         "errors": run.get("errors", []),
     }
-    if expected is not None:
+    if expected is not None and "items" in expected:
+        verdict = expected_behavior(items, labeled, expected["items"])
+        metrics["expected_behavior_met"] = verdict["met"]
+        metrics["expected_violated_items"] = verdict["violated_items"]
+        metrics["expected_unverified"] = verdict["unverified"]
+        metrics["accepted_matches"] = sum(len(set(item.get("relevant_urls") or [])) for item in items)
+    elif expected is not None:
         accepted_pairs = [(item["item_id"], url) for item in items for url in set(item.get("relevant_urls") or [])]
         metrics["expected_behavior_met"] = len(accepted_pairs) == expected.get("relevant_matches", 0)
         metrics["expected_relevant_matches"] = expected.get("relevant_matches", 0)

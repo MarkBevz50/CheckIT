@@ -45,6 +45,7 @@ def normalize(quote: str) -> str:
 
 
 async def collect(tenders, runs, snapshot, budget):
+    from quality.snapshot import Snapshot
     from app.core.config import settings
     from app.prozorro_functionality import prozorro as pz
     from app.routers import prozorro_router
@@ -53,6 +54,15 @@ async def collect(tenders, runs, snapshot, budget):
 
     control = {t["id"]: t for t in json.loads((ROOT / "eval" / "control_tenders.json").read_text(encoding="utf-8"))["tenders"]}
     calls, findings = [], []
+    class ReadOnlyLlm(Snapshot):
+        """The control run replays the Claude answers of its snapshot by the hash of the request, and mode B of this collection sends
+        the very same request as the application does: writing the new answers would silently change the baseline."""
+
+        def put(self, kind, key, value):
+            if kind != "llm":
+                super().put(kind, key, value)
+
+    snapshot = ReadOnlyLlm(snapshot.date)
     with Capture(snapshot, "replay", "live", budget) as capture:
         for tender_id in tenders:
             capture.tender = tender_id

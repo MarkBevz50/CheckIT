@@ -1,0 +1,19 @@
+{
+ "notes": {
+  "claude_consulted": "консультація з асистентом Claude щодо критеріїв (без підказки міток): розмітник радився з асистентом про критерії й про те, як їх застосувати до пункту",
+  "ai_market_check": "ринок перевірено через режим ШІ в Google (імовірно Gemini, та сама сім'я, що суддя Б)"
+ },
+ "pairs": {
+  "Q018": ["claude_consulted"],
+  "Q021": ["claude_consulted"]
+ },
+ "findings": {
+  "F005": ["claude_consulted"],
+  "F006": ["claude_consulted", "ai_market_check"],
+  "F030": ["claude_consulted"],
+  "F035": ["claude_consulted"],
+  "F068": ["claude_consulted", "ai_market_check"],
+  "F074": ["claude_consulted"]
+ },
+ "comment": "Q018 and Q021 are the two rows of the pair 'Курятина <-> М'ясо курки Миронівський гомілка охолоджена' (Епіцентр): the same product listed for two tender items. A metric 'without notes' leaves out every item listed here; a metric 'with notes' keeps them."
+}

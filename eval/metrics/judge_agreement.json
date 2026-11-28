@@ -1,0 +1,225 @@
+{
+ "pairs": {
+  "n_blind": 20,
+  "consensus_coverage": 0.6,
+  "judge A": {
+   "all": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.45,
+     "kappa": -0.095
+    },
+    "binary": {
+     "n": 20,
+     "agree": 0.95,
+     "kappa": 0.0
+    }
+   },
+   "without notes": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.45,
+     "kappa": -0.095
+    },
+    "binary": {
+     "n": 20,
+     "agree": 0.95,
+     "kappa": 0.0
+    }
+   }
+  },
+  "judge B": {
+   "all": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.65,
+     "kappa": 0.209
+    },
+    "binary": {
+     "n": 20,
+     "agree": 0.95,
+     "kappa": 0.0
+    }
+   },
+   "without notes": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.65,
+     "kappa": 0.209
+    },
+    "binary": {
+     "n": 20,
+     "agree": 0.95,
+     "kappa": 0.0
+    }
+   }
+  },
+  "consensus A=B": {
+   "all": {
+    "3 classes": {
+     "n": 12,
+     "agree": 0.583,
+     "kappa": -0.053
+    },
+    "binary": {
+     "n": 12,
+     "agree": 0.917,
+     "kappa": 0.0
+    }
+   },
+   "without notes": {
+    "3 classes": {
+     "n": 12,
+     "agree": 0.583,
+     "kappa": -0.053
+    },
+    "binary": {
+     "n": 12,
+     "agree": 0.917,
+     "kappa": 0.0
+    }
+   }
+  },
+  "A vs B (the same items)": {
+   "all": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.6,
+     "kappa": 0.208
+    },
+    "binary": {
+     "n": 20,
+     "agree": 1.0,
+     "kappa": 1.0
+    }
+   },
+   "without notes": {
+    "3 classes": {
+     "n": 20,
+     "agree": 0.6,
+     "kappa": 0.208
+    },
+    "binary": {
+     "n": 20,
+     "agree": 1.0,
+     "kappa": 1.0
+    }
+   }
+  }
+ },
+ "findings": {
+  "n_blind": 10,
+  "consensus_coverage": 0.8,
+  "contaminated_in_blind": [
+   "F006",
+   "F030",
+   "F035",
+   "F068"
+  ],
+  "judge A": {
+   "all": {
+    "true vs rest": {
+     "n": 6,
+     "agree": 1.0,
+     "kappa": null
+    },
+    "3 classes": {
+     "n": 6,
+     "agree": 0.667,
+     "kappa": 0.333
+    }
+   },
+   "without notes": {
+    "true vs rest": {
+     "n": 6,
+     "agree": 1.0,
+     "kappa": null
+    },
+    "3 classes": {
+     "n": 6,
+     "agree": 0.667,
+     "kappa": 0.333
+    }
+   }
+  },
+  "judge B": {
+   "all": {
+    "true vs rest": {
+     "n": 10,
+     "agree": 0.8,
+     "kappa": 0.0
+    },
+    "3 classes": {
+     "n": 10,
+     "agree": 0.4,
+     "kappa": 0.032
+    }
+   },
+   "without notes": {
+    "true vs rest": {
+     "n": 6,
+     "agree": 1.0,
+     "kappa": null
+    },
+    "3 classes": {
+     "n": 6,
+     "agree": 0.5,
+     "kappa": 0.0
+    }
+   }
+  },
+  "consensus A=B": {
+   "all": {
+    "true vs rest": {
+     "n": 5,
+     "agree": 1.0,
+     "kappa": null
+    },
+    "3 classes": {
+     "n": 5,
+     "agree": 0.6,
+     "kappa": 0.167
+    }
+   },
+   "without notes": {
+    "true vs rest": {
+     "n": 5,
+     "agree": 1.0,
+     "kappa": null
+    },
+    "3 classes": {
+     "n": 5,
+     "agree": 0.6,
+     "kappa": 0.167
+    }
+   }
+  }
+ },
+ "calibration_b": {
+  "all": {
+   "3 classes": {
+    "n": 60,
+    "agree": 0.633,
+    "kappa": 0.438
+   },
+   "binary": {
+    "n": 60,
+    "agree": 0.883,
+    "kappa": 0.727
+   }
+  },
+  "without notes": {
+   "3 classes": {
+    "n": 60,
+    "agree": 0.633,
+    "kappa": 0.438
+   },
+   "binary": {
+    "n": 60,
+    "agree": 0.883,
+    "kappa": 0.727
+   }
+  },
+  "n": 60
+ }
+}

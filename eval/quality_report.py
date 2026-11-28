@@ -80,11 +80,14 @@ def main(argv=None) -> int:
             run["seconds"] = None  # a replay answers from files: its timings say nothing about the application
 
     rows = label_store.all_pair_rows()
-    labeled = label_store.labeled_pairs(label_store.load_labels(), rows)
+    all_labels = label_store.load_labels()
+    sets = label_store.label_sets(all_labels, rows)
+    labeled = sets["all"]
     expected = {t["id"]: t.get("expected_behavior") for t in runner.load_control_tenders(selected)}
     per_tender = {run["id"]: metrics.tender_metrics(run, labeled, expected.get(run["id"]) if run["id"] == "C10" else None)
                   for run in runs}
     summary = metrics.summarize(runs, per_tender, labeled)
+    quality_sets = metrics.quality_by_set([i for r in runs for i in r["items"]], sets)
     unlabeled = metrics.match_quality([i for r in runs for i in r["items"]], labeled)["unlabeled"]
     queued = label_store.append_to_queue(unlabeled, runs) if not args.no_history else 0
 
@@ -95,7 +98,7 @@ def main(argv=None) -> int:
 
     row = {"date": datetime.date.today().isoformat(), "sha": report.git_sha(), "stage": args.stage, "mode": args.mode,
            "llm": args.llm, "snapshot": date, "budget_usd": args.budget, "spent_real_usd": round(capture.spent_real, 5),
-           "summary": summary, "tenders": per_tender, "stability": stability_result}
+           "summary": summary, "quality_sets": quality_sets, "tenders": per_tender, "stability": stability_result}
     if not args.no_history:
         report.append_history(row)
         chart = report.write_report(report.read_history())
@@ -109,6 +112,9 @@ def main(argv=None) -> int:
     print(f"cost ${s['cost_usd']:.4f} (${s['cost_real_usd']:.4f} real) | LLM calls {s['llm']['calls']}, parse failures "
           f"{s['llm']['parse_failures']}, max_tokens {s['llm']['max_tokens']} | unlabeled accepted {s['unlabeled_accepted']}, "
           f"new in the queue {queued} | snapshot {snapshot.counts()}")
+    for name, q in quality_sets.items():
+        print(f"labels {name:12}: precision {report.pct(q['precision_all'])} (same only {report.pct(q['precision_same'])}) on "
+              f"{q['labeled']} of {q['accepted']} accepted, recall {report.pct(q['recall_labeled'])} (n {q['recall_n']})")
     if "C10" in per_tender and "expected_behavior_met" in per_tender["C10"]:
         print(f"C10 expected behavior met: {per_tender['C10']['expected_behavior_met']}")
     errors = [(r["id"], e) for r in runs for e in r["errors"]]

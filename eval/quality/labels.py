@@ -59,6 +59,24 @@ def append_to_queue(unlabeled: List[Tuple[str, str]], runs: List[dict]) -> int:
     return len(added)
 
 
+def load_notes() -> dict:
+    path = DATA / "label_notes.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"pairs": {}, "findings": {}}
+
+
+def label_sets(labels: dict, rows: List[dict], notes: dict = None) -> Dict[str, Dict[Tuple[str, str], str]]:
+    """The label index in three ways: "all" (every label, model labels of the judges included), "human" (human and human_blind;
+    a label without a recorded source is an older human label) and "human_clean" (human without the items that carry a label_note)."""
+    from .metrics import label_index
+
+    notes = notes if notes is not None else load_notes()
+    sources = labels.get("label_sources", {}).get("pairs", {})
+    human = {"human", "human_blind"}
+    human_labels = {"pairs": {pid: label for pid, label in labels.get("pairs", {}).items() if sources.get(pid, "human") in human}}
+    clean_labels = {"pairs": {pid: label for pid, label in human_labels["pairs"].items() if pid not in notes.get("pairs", {})}}
+    return {"all": label_index(labels, rows), "human": label_index(human_labels, rows), "human_clean": label_index(clean_labels, rows)}
+
+
 def labeled_pairs(labels: dict, rows: List[dict]) -> Dict[Tuple[str, str], str]:
     from .metrics import label_index
 

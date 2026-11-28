@@ -48,7 +48,7 @@ def _row_cells(row: dict) -> List[str]:
     return [
         row["stage"], f"{row['mode']}" + (f"/{row['llm']}" if row["mode"] == "replay" else ""), row["date"], row["sha"],
         pct(s["coverage_ge1"]), pct(s["coverage_ge3"]),
-        f"{pct(s['precision_all'])} ({pct(s['precision_same'])})", pct(s["labeled_share"]), pct(s["recall_labeled"]),
+        f"{pct(s['precision_all'])} ({pct(s['precision_same'])})", _human_precision(row), pct(s["labeled_share"]), pct(s["recall_labeled"]),
         f"{s['unsupported_alarms']}/{s['alarms']}", pct(s["false_alarm_rate"]), str(s["doc_findings"]),
         f"${s['cost_per_tender_usd']:.4f}" if s["cost_per_tender_usd"] is not None else "н/д",
         "н/д" if s["seconds_per_tender"] is None else f"{s['seconds_per_tender']} с",
@@ -56,7 +56,15 @@ def _row_cells(row: dict) -> List[str]:
     ]
 
 
-HEADER = ["Етап", "Режим", "Дата", "SHA", "Покриття ≥1", "Покриття ≥3", "Точність (лише same)", "Розмічено",
+def _human_precision(row: dict) -> str:
+    """Precision on the owner's own labels: all human / human without the labels that carry a note (older rows have none)."""
+    sets = row.get("quality_sets")
+    if not sets:
+        return "н/д"
+    return f"{pct(sets['human']['precision_all'])} / {pct(sets['human_clean']['precision_all'])}"
+
+
+HEADER = ["Етап", "Режим", "Дата", "SHA", "Покриття ≥1", "Покриття ≥3", "Точність (лише same)", "Точність лише людські / без позначок", "Розмічено",
           "Recall (розмічені)", "Хибні тривоги", "Частка", "Знахідки док.", "Вартість/тендер", "Час/тендер",
           "Помилки LLM", "Нестабільність"]
 
@@ -84,10 +92,16 @@ def build_report(history: List[dict]) -> str:
                 f"${m['cost_usd']:.4f} | {'н/д' if seconds is None else f'{seconds} с'} | {len(m['errors'])} |")
         c10 = latest["tenders"].get("C10")
         if c10 and "expected_behavior_met" in c10:
-            lines += ["", f"C10, очікувана поведінка (немає релевантних збігів): "
-                          f"**{'виконано' if c10['expected_behavior_met'] else 'не виконано'}** "
-                          f"(прийнято збігів: {c10['accepted_matches']}, з них хибних за розміткою: "
-                          f"{c10.get('accepted_false', 'н/д')}, без розмітки: {c10.get('accepted_unlabeled', 'н/д')})."]
+            met = c10["expected_behavior_met"]
+            verdict = "не перевірено (є прийняті збіги без розмітки)" if met is None else ("виконано" if met else "не виконано")
+            if "expected_violated_items" in c10:
+                lines += ["", f"C10, очікувана поведінка (бланки підприємства без збігів, для «Посвідчення про перевірку знань» аналоги допускаються): "
+                              f"**{verdict}** (порушені позиції: {', '.join(c10['expected_violated_items']) or 'немає'}; "
+                              f"прийнятих збігів без розмітки: {c10['expected_unverified']})."]
+            else:
+                lines += ["", f"C10, очікувана поведінка (немає релевантних збігів): **{verdict}** "
+                              f"(прийнято збігів: {c10['accepted_matches']}, з них хибних за розміткою: "
+                              f"{c10.get('accepted_false', 'н/д')}, без розмітки: {c10.get('accepted_unlabeled', 'н/д')})."]
         if latest.get("stability"):
             st = latest["stability"]
             lines += ["", f"Стабільність валідації: {st['pairs']} розмічених пар, {st['runs']} запуски, рішення змінилось у "

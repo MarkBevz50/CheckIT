@@ -12,6 +12,9 @@
   "F004": {
    "label": "false"
   },
+  "F005": {
+   "label": "true"
+  },
   "F006": {
    "label": "true"
   },
@@ -23,6 +26,12 @@
   },
   "F009": {
    "label": "false"
+  },
+  "F010": {
+   "label": "true"
+  },
+  "F011": {
+   "label": "duplicate"
   },
   "F012": {
    "label": "false"
@@ -45,8 +54,17 @@
   "F018": {
    "label": "false"
   },
+  "F019": {
+   "label": "true"
+  },
   "F020": {
    "label": "false"
+  },
+  "F021": {
+   "label": "true"
+  },
+  "F022": {
+   "label": "duplicate"
   },
   "F023": {
    "label": "false"
@@ -57,8 +75,14 @@
   "F025": {
    "label": "false"
   },
+  "F026": {
+   "label": "false"
+  },
   "F027": {
    "label": "false"
+  },
+  "F028": {
+   "label": "duplicate"
   },
   "F029": {
    "label": "false"
@@ -66,17 +90,50 @@
   "F030": {
    "label": "false"
   },
+  "F031": {
+   "label": "duplicate"
+  },
+  "F032": {
+   "label": "false"
+  },
+  "F033": {
+   "label": "duplicate"
+  },
+  "F034": {
+   "label": "duplicate"
+  },
   "F035": {
    "label": "false"
+  },
+  "F036": {
+   "label": "duplicate"
+  },
+  "F037": {
+   "label": "duplicate"
   },
   "F038": {
    "label": "false"
   },
+  "F039": {
+   "label": "duplicate"
+  },
   "F040": {
    "label": "false"
   },
+  "F041": {
+   "label": "false"
+  },
+  "F042": {
+   "label": "duplicate"
+  },
+  "F043": {
+   "label": "duplicate"
+  },
   "F044": {
    "label": "false"
+  },
+  "F045": {
+   "label": "duplicate"
   },
   "F046": {
    "label": "false"
@@ -86,6 +143,15 @@
   },
   "F048": {
    "label": "false"
+  },
+  "F049": {
+   "label": "duplicate"
+  },
+  "F050": {
+   "label": "false"
+  },
+  "F051": {
+   "label": "duplicate"
   },
   "F052": {
    "label": "false"
@@ -97,11 +163,23 @@
    "label": "duplicate",
    "of": "F006"
   },
+  "F055": {
+   "label": "duplicate"
+  },
   "F056": {
    "label": "false"
   },
   "F057": {
    "label": "false"
+  },
+  "F058": {
+   "label": "duplicate"
+  },
+  "F059": {
+   "label": "duplicate"
+  },
+  "F060": {
+   "label": "true"
   },
   "F061": {
    "label": "false"
@@ -109,6 +187,9 @@
   "F062": {
    "label": "duplicate",
    "of": "F047"
+  },
+  "F063": {
+   "label": "duplicate"
   },
   "F064": {
    "label": "false"
@@ -120,10 +201,28 @@
    "label": "duplicate",
    "of": "F006"
   },
+  "F067": {
+   "label": "duplicate"
+  },
   "F068": {
    "label": "true"
   },
+  "F069": {
+   "label": "duplicate"
+  },
   "F070": {
+   "label": "false"
+  },
+  "F071": {
+   "label": "duplicate"
+  },
+  "F072": {
+   "label": "false"
+  },
+  "F073": {
+   "label": "duplicate"
+  },
+  "F074": {
    "label": "false"
   }
  },
@@ -201,10 +300,13 @@
    "F002": "llm_consensus",
    "F003": "llm_consensus",
    "F004": "llm_consensus",
+   "F005": "human",
    "F006": "human_blind",
    "F007": "llm_consensus",
    "F008": "llm_consensus",
    "F009": "llm_consensus",
+   "F010": "human",
+   "F011": "human",
    "F012": "llm_consensus",
    "F013": "llm_consensus",
    "F014": "llm_consensus",
@@ -212,37 +314,68 @@
    "F016": "human_blind",
    "F017": "llm_consensus",
    "F018": "llm_consensus",
+   "F019": "human",
    "F020": "llm_consensus",
+   "F021": "human",
+   "F022": "human",
    "F023": "llm_consensus",
    "F024": "llm_consensus",
    "F025": "llm_consensus",
+   "F026": "human",
    "F027": "llm_consensus",
+   "F028": "human",
    "F029": "llm_consensus",
    "F030": "human_blind",
+   "F031": "human",
+   "F032": "human",
+   "F033": "human",
+   "F034": "human",
    "F035": "human_blind",
+   "F036": "human",
+   "F037": "human",
    "F038": "llm_consensus",
+   "F039": "human",
    "F040": "llm_consensus",
+   "F041": "human",
+   "F042": "human",
+   "F043": "human",
    "F044": "llm_consensus",
+   "F045": "human",
    "F046": "llm_consensus",
    "F047": "human_blind",
    "F048": "llm_consensus",
+   "F049": "human",
+   "F050": "human",
+   "F051": "human",
    "F052": "llm_consensus",
    "F053": "human_blind",
    "F054": "human_blind",
+   "F055": "human",
    "F056": "llm_consensus",
    "F057": "llm_consensus",
+   "F058": "human",
+   "F059": "human",
+   "F060": "human",
    "F061": "llm_consensus",
    "F062": "human_blind",
+   "F063": "human",
    "F064": "llm_consensus",
    "F065": "llm_consensus",
    "F066": "human_blind",
+   "F067": "human",
    "F068": "human_blind",
-   "F070": "llm_consensus"
+   "F069": "human",
+   "F070": "llm_consensus",
+   "F071": "human",
+   "F072": "human",
+   "F073": "human",
+   "F074": "human"
   },
   "pairs": {
    "Q001": "llm_consensus",
    "Q002": "human_blind",
    "Q003": "llm_consensus",
+   "Q004": "human",
    "Q005": "llm_consensus",
    "Q006": "llm_consensus",
    "Q007": "llm_consensus",
@@ -250,9 +383,19 @@
    "Q009": "llm_consensus",
    "Q010": "llm_consensus",
    "Q011": "llm_consensus",
+   "Q012": "human",
    "Q013": "human_blind",
+   "Q014": "human",
    "Q015": "human_blind",
    "Q016": "llm_consensus",
+   "Q017": "human",
+   "Q018": "human",
+   "Q019": "human",
+   "Q020": "human",
+   "Q021": "human",
+   "Q022": "human",
+   "Q023": "human",
+   "Q024": "human",
    "Q025": "human_blind",
    "Q026": "llm_consensus",
    "Q027": "llm_consensus",
@@ -260,12 +403,15 @@
    "Q029": "llm_consensus",
    "Q030": "human_blind",
    "Q031": "llm_consensus",
+   "Q032": "human",
    "Q033": "llm_consensus",
    "Q034": "llm_consensus",
    "Q035": "llm_consensus",
+   "Q036": "human",
    "Q037": "llm_consensus",
    "Q038": "llm_consensus",
    "Q039": "llm_consensus",
+   "Q040": "human",
    "Q041": "llm_consensus",
    "Q042": "llm_consensus",
    "Q043": "llm_consensus",
@@ -286,29 +432,54 @@
    "Q058": "llm_consensus",
    "Q059": "human_blind",
    "Q060": "llm_consensus",
+   "Q061": "human",
    "Q062": "llm_consensus",
+   "Q063": "human",
    "Q064": "human_blind",
    "Q065": "llm_consensus",
+   "Q066": "human",
    "Q067": "llm_consensus",
    "Q068": "llm_consensus",
    "Q069": "llm_consensus",
    "Q070": "llm_consensus",
    "Q071": "human_blind",
+   "Q072": "human",
+   "Q073": "human",
+   "Q074": "human",
+   "Q075": "human",
+   "Q076": "human",
+   "Q077": "human",
+   "Q078": "human",
    "Q079": "llm_consensus",
+   "Q080": "human",
+   "Q081": "human",
    "Q082": "human_blind",
    "Q083": "human_blind",
+   "Q084": "human",
+   "Q085": "human",
+   "Q086": "human",
+   "Q087": "human",
+   "Q088": "human",
+   "Q089": "human",
    "Q090": "human_blind",
+   "Q091": "human",
    "Q092": "llm_consensus",
+   "Q093": "human",
    "Q094": "human_blind",
+   "Q095": "human",
    "Q096": "human_blind",
    "Q097": "llm_consensus",
    "Q098": "llm_consensus",
    "Q099": "llm_consensus",
    "Q100": "human_blind",
+   "Q101": "human",
    "Q102": "llm_consensus",
+   "Q103": "human",
    "Q104": "llm_consensus",
    "Q105": "llm_consensus",
+   "Q106": "human",
    "Q107": "llm_consensus",
+   "Q108": "human",
    "Q109": "llm_consensus",
    "Q110": "llm_consensus",
    "Q111": "human_blind",
@@ -380,6 +551,7 @@
   "Q001": "same",
   "Q002": "same",
   "Q003": "same",
+  "Q004": "same",
   "Q005": "same",
   "Q006": "same",
   "Q007": "same",
@@ -387,9 +559,19 @@
   "Q009": "same",
   "Q010": "same",
   "Q011": "analog",
+  "Q012": "same",
   "Q013": "analog",
+  "Q014": "same",
   "Q015": "analog",
   "Q016": "same",
+  "Q017": "same",
+  "Q018": "analog",
+  "Q019": "analog",
+  "Q020": "analog",
+  "Q021": "analog",
+  "Q022": "analog",
+  "Q023": "analog",
+  "Q024": "same",
   "Q025": "same",
   "Q026": "same",
   "Q027": "same",
@@ -397,12 +579,15 @@
   "Q029": "same",
   "Q030": "same",
   "Q031": "same",
+  "Q032": "analog",
   "Q033": "same",
   "Q034": "same",
   "Q035": "same",
+  "Q036": "same",
   "Q037": "same",
   "Q038": "same",
   "Q039": "same",
+  "Q040": "same",
   "Q041": "same",
   "Q042": "same",
   "Q043": "same",
@@ -423,29 +608,54 @@
   "Q058": "same",
   "Q059": "same",
   "Q060": "same",
+  "Q061": "analog",
   "Q062": "same",
+  "Q063": "analog",
   "Q064": "analog",
   "Q065": "same",
+  "Q066": "analog",
   "Q067": "same",
   "Q068": "same",
   "Q069": "same",
   "Q070": "analog",
   "Q071": "same",
+  "Q072": "analog",
+  "Q073": "analog",
+  "Q074": "analog",
+  "Q075": "analog",
+  "Q076": "analog",
+  "Q077": "analog",
+  "Q078": "analog",
   "Q079": "analog",
+  "Q080": "analog",
+  "Q081": "analog",
   "Q082": "same",
   "Q083": "same",
+  "Q084": "analog",
+  "Q085": "analog",
+  "Q086": "analog",
+  "Q087": "analog",
+  "Q088": "analog",
+  "Q089": "analog",
   "Q090": "analog",
+  "Q091": "analog",
   "Q092": "same",
+  "Q093": "no",
   "Q094": "analog",
+  "Q095": "analog",
   "Q096": "same",
   "Q097": "same",
   "Q098": "same",
   "Q099": "analog",
   "Q100": "same",
+  "Q101": "no",
   "Q102": "same",
+  "Q103": "analog",
   "Q104": "same",
   "Q105": "analog",
+  "Q106": "analog",
   "Q107": "same",
+  "Q108": "analog",
   "Q109": "analog",
   "Q110": "analog",
   "Q111": "same",
