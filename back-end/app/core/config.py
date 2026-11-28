@@ -9,7 +9,7 @@ Required variables have no defaults: the app refuses to start without them.
 import logging
 import re
 from pathlib import Path
-from typing import List
+from typing import List, Literal
 
 from pydantic import ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -30,6 +30,9 @@ LEGACY_ENV_FILE = _ROOT / "back-end" / ".env"
 logger = logging.getLogger(__name__)
 
 # SECRET_KEY strength (E0.11): the policy and the SHA-256 list of published values live in secret_policy.py
+
+
+ThinkingMode = Literal["disabled", "between_tools", "default"]
 
 
 class Settings(BaseSettings):
@@ -55,11 +58,21 @@ class Settings(BaseSettings):
 
     # --- LLM providers ------------------------------------------------
     anthropic_api_key: str = ""
-    anthropic_base_url: str = ""
-    anthropic_model: str = "claude-haiku-4.5"
-    anthropic_model_smart: str = "claude-sonnet-4.6"
+    llm_fast_model: str = "claude-haiku-5-5"
+    llm_smart_model: str = "claude-sonnet-5-5"
+    # Which model analyses documents (item extraction, discriminatory requirements):
+    # "fast" (Haiku) or "smart" (Sonnet). Final choice is made on the E5.2 benchmark.
+    llm_document_tier: Literal["fast", "smart"] = "fast"
+    # Reasoning ("thinking") parameter of each kind of request, set per task and never guessed from the model name.
+    # "disabled": Haiku 5.5 (Sonnet 5.5 rejects it with 400); "between_tools": the switch-off value Sonnet 5.5 accepts;
+    # "default": send no parameter (Haiku 5.5 then reasons: slower, 3-10x more output tokens for the same answer).
+    # With LLM_DOCUMENT_TIER=smart set the extract and documents values to "between_tools".
+    llm_thinking_classify: ThinkingMode = "disabled"
+    llm_thinking_validate: ThinkingMode = "disabled"
+    llm_thinking_extract: ThinkingMode = "disabled"
+    llm_thinking_documents: ThinkingMode = "disabled"
     gemini_api_key: str = ""
-    gemini_models: str = "gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite"
+    gemini_models: str = "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-flash-lite"
     huggingface_api_key: str = ""
 
     # --- Cache --------------------------------------------------------

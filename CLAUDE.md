@@ -15,6 +15,7 @@
 - **Перед зміною коду** показати план: які файли зміню, що додам, які ризики. Чекати «ок».
 - Кожен крок — окрема гілка `feature/eX-Y-назва` від `dev` (наприклад `feature/e0-7-own-api-key`) і окремий pull request у `dev`.
 - Кожен крок закінчується тестами. Запускати **весь** набір, не лише нові.
+- **Після кожного етапу E1–E6 (і окремо після E1.10/E1.11):** `python eval/quality_report.py --stage "<мітка>" --mode replay` (`back-end\.venv\Scripts\python.exe`, з кореня репо, потрібні Postgres на :5433 і знімок `eval/snapshots/control/<дата>/`) і новий рядок у `eval/metrics/history.jsonl`; це частина критерію «готово» етапу. Порівняння між етапами лише в `--mode replay`, `--mode live` показує поточний ринок. Прапорці: `--stability` (3 прогони валідації 20 розмічених пар, коштує грошей), `--llm live` (усі запити до Claude справжні), `--budget` (стоп-кран, $1 за замовчуванням). Знімки не в git, історія метрик у git. У CI не запускаємо.
 - **Крок, що змінює фронтенд,** готовий лише якщо змінений або новий екран працює на ширині 360 px без горизонтальної прокрутки сторінки, кнопки й посилання не менші за 44 px, модальні вікна на мобільних займають весь екран; точки переходу (breakpoints) задаються змінними в `front-project/src/assets/base.css`, а не числами в компонентах.
 - Після кроку: поставити `[x]` у `PLAN/Plan.md` і додати 3–5 речень у `PLAN/DIPLOMA_NOTES.md`
   (що змінилось, чому, цифри до/після, якщо є).
@@ -22,7 +23,7 @@
   і запропонувати правку кроку в плані.
 - **Ніколи не комітити секрети.** Ключі лише в `.env` (він у `.gitignore`), у репо лише `.env.example`.
 - Нові залежності — лише з поясненням, навіщо, і після підтвердження власника.
-- Комміти й пуш — лише коли власник попросить (у межах узгодженого flow нижче).
+- Комміти й пуш — лише коли власник попросить (у межах узгодженого flow нижче). **Коміт і пуш лише після того, як повний набір тестів пройшов, окремою командою, не в одному ланцюжку з тестами** (ланцюжок через `;` комітить і при червоних тестах). Перед тестами з PostgreSQL перевірити, що Docker Desktop і база запущені (`docker compose ps`, `db` у стані healthy): із встановленою `TEST_DATABASE_URL` і вимкненою базою тести БД не пропускаються, а падають помилкою з'єднання.
 
 ## Git і гілки
 
@@ -157,8 +158,11 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 | `SECRET_KEY` | **обов'язкова**, підпис JWT, без fallback; не менше 32 символів і не з опублікованих значень (застосунок не стартує, E0.11); згенерувати: `python -c "import secrets; print(secrets.token_hex(32))"` |
 | `DB_ECHO` | логувати SQL (за замовчуванням `false`) |
 | `ALGORITHM` (HS256), `FRONTEND_URL` | JWT, CORS |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL`, `ANTHROPIC_MODEL`, `ANTHROPIC_MODEL_SMART` | Claude (дефолти моделей застарілі, оновить E0.7) |
-| `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв) |
+| `ANTHROPIC_API_KEY` | Claude, ключ з platform.claude.com (завжди `api.anthropic.com`, роутера немає) |
+| `LLM_FAST_MODEL` (claude-haiku-5-5), `LLM_SMART_MODEL` (claude-sonnet-5-5) | моделі Claude |
+| `LLM_DOCUMENT_TIER` (`fast`/`smart`) | модель для аналізу документації; за замовчуванням fast |
+| `LLM_THINKING_CLASSIFY/VALIDATE/EXTRACT/DOCUMENTS` (`disabled`/`between_tools`/`default`) | міркування Claude для кожної задачі окремо, не за назвою моделі: `disabled` для Haiku 5.5, `between_tools` для Sonnet 5.5 (він відхиляє `disabled`), `default` не надсилає параметр; за замовчуванням `disabled`; при `LLM_DOCUMENT_TIER=smart` для EXTRACT і DOCUMENTS ставити `between_tools` |
+| `GEMINI_API_KEY`, `GEMINI_MODELS` | Gemini (резерв), ланцюжок моделей через кому |
 | `HUGGINGFACE_API_KEY` | чат-помічник (буде видалено в E6.6) |
 | `REDIS_URL`, `CACHE_TTL_SECONDS` (7200) | кеш; без `REDIS_URL` вимкнений |
 | `POSTGRES_USER/PASSWORD/DB` | лише для контейнера `db` у compose, не для коду |
@@ -179,6 +183,8 @@ PYTHONPATH=..:. uvicorn app.main:app --reload --port 8000
 - **Прибирання після кожної Docker-перевірки:** `docker builder prune -f` і `docker image prune -f`. Після цього перевірити розмір
   `D:\Docker\wsl\disk\docker_data.vhdx` і вказати його у звіті; якщо він більший за 40 ГБ — повідомити власника.
 - Томи compose іменовані: `pyman_postgres_data` (база) і `pyman_redis_data` (кеш Redis); безіменних томів `up` не створює.
+- **Не передавати весь `.env` у `docker run --env-file`:** SDK Anthropic сам читає `ANTHROPIC_BASE_URL` зі середовища (старий URL роутера з `.env` перенаправив усі запити, «Connection error»). `docker compose` не використовує `env_file` і передає лише перелічені змінні (тест `test_env_file.py`); для запусків у контейнері поза compose (`eval/quality_report.py`) робити відфільтрований файл лише з потрібними змінними.
+- **`wsl --shutdown` не виконувати, поки працює Docker Desktop:** команда зупиняє всі розподіли WSL, зокрема `docker-desktop`, тож двигун і контейнери падають, а перенаправлення портів після перезапуску може лишитись зламаним (порт 80 слухає, але не відповідає; допомагає `docker compose restart frontend`). Для перевірок у Linux запускати окремий розподіл командою `wsl -d Ubuntu -- ...` і нічого не вимикати.
 - **Ніколи** не виконувати `docker volume prune`, `docker system prune --volumes` чи `docker compose down -v` без прямого дозволу власника
   (знищують дані БД).
 

@@ -86,6 +86,10 @@ def test_defaults_and_derived_values(monkeypatch):
     assert s.algorithm == "HS256"
     assert s.cache_ttl_seconds == 7200
     assert s.anthropic_api_key == ""
+    assert s.llm_fast_model == "claude-haiku-5-5"
+    assert s.llm_smart_model == "claude-sonnet-5-5"
+    assert s.llm_document_tier == "fast"
+    assert "gemini-2.0-flash-lite" not in s.gemini_model_list
     assert s.gemini_model_list == ["a", "b", "c"]
 
 
@@ -165,3 +169,18 @@ def test_the_repository_documents_no_known_or_short_secret_key():
             value = match.group(1)
             assert value == "" or len(value) >= 32, f"{name}: SECRET_KEY example is shorter than 32 characters"
             assert hashlib.sha256(value.encode()).hexdigest() not in config.KNOWN_PUBLIC_SECRET_KEY_SHA256, name
+
+
+def test_document_tier_accepts_only_fast_or_smart(monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", DB_URL)
+    monkeypatch.setenv("SECRET_KEY", OK_KEY)
+    monkeypatch.setenv("LLM_DOCUMENT_TIER", "smart")
+    assert load_settings().llm_document_tier == "smart"
+    monkeypatch.setenv("LLM_DOCUMENT_TIER", "huge")
+    with pytest.raises(RuntimeError) as exc:
+        load_settings()
+    assert "LLM_DOCUMENT_TIER" in str(exc.value)
+
+
+def test_no_custom_anthropic_base_url_setting():
+    assert "anthropic_base_url" not in Settings.model_fields

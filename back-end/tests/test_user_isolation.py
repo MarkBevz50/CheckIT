@@ -303,3 +303,18 @@ def test_manual_tenders_with_the_same_prozorro_id_for_two_users(client, world):
     repeated = client.post("/tenders/", json=payload, headers=auth(world["token_a"]))
     assert repeated.status_code == 409
     assert repeated.json()["detail"] == "Цей тендер уже є у вашому списку"
+
+
+def test_a_tender_with_a_title_longer_than_the_column_is_imported_not_a_500(client, world, monkeypatch):
+    """Control tender C03 has a 610-character title; the column holds 500 (a real PostgreSQL refuses, SQLite does not)."""
+    hex_id = "9999aaaabbbb1111cccc2222dddd4444"
+    body = synthetic_tender(hex_id, "Товар " * 130)  # 780 characters, used for the title and the item name
+    monkeypatch.setattr(
+        requests, "get",
+        lambda url, *a, **k: FakeResponse(200, body) if url.endswith(f"/tenders/{hex_id}") else FakeResponse(404, {"errors": []}),
+    )
+    response = client.post(f"/tenders/import/{hex_id}", headers=auth(world["token_a"]))
+    assert response.status_code == 201, response.text
+    tender = response.json()
+    assert len(tender["title"]) <= 500 and tender["title"].endswith("…")
+    assert all(len(item["name"]) <= 500 for item in tender["items"])

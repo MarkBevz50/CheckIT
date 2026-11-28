@@ -75,3 +75,12 @@ def test_redis_has_a_named_volume_so_that_up_does_not_create_anonymous_ones():
     redis = compose.split("  redis:", 1)[1].split("\n  backend:", 1)[0]
     assert re.search(r"^\s*-\s*redis_data:/data\s*$", redis, re.M)
     assert re.search(r"^volumes:\n(?:\s+\w+:\n)*\s+redis_data:", compose, re.M)
+
+
+def test_compose_never_hands_the_whole_env_file_to_a_container():
+    """`env_file: .env` would put every variable of the file into the container, including a leftover ANTHROPIC_BASE_URL, which the
+    Anthropic SDK reads by itself (E0.7: an old router URL sent every request to the wrong host). Compose lists the variables it passes."""
+    for name in ("docker-compose.yml", "docker-compose.prod.yml"):
+        text = (ROOT / name).read_text(encoding="utf-8")
+        assert not re.search(r"^\s*env_file\s*:", text, re.MULTILINE), name
+        assert "ANTHROPIC_BASE_URL" not in text, name

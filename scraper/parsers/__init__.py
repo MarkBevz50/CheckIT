@@ -1,15 +1,7 @@
 import logging
 
-
-logging.basicConfig(
-    level=logging.ERROR,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler()
-    ],
-    encoding='utf-8'
-)
-
+# Logging is configured once, by the application (back-end/app/core/logging_config.py). A library package must
+# not call logging.basicConfig: it used to set the root logger to ERROR for the whole process.
 logger = logging.getLogger(__name__)
 
 

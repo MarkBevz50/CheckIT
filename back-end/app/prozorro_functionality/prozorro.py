@@ -178,10 +178,11 @@ async def _extract_text_all_pages(pdf_content: bytes) -> str:
         shutil.rmtree(work_dir, ignore_errors=True)
 
 
-async def parse_documents(document_refs: List[tuple]) -> List[Dict[str, Any]]:
-    """Download PDFs/DOCX/DOC, extract text, and use LLM to extract items.
+async def extract_documents_text(document_refs: List[tuple]) -> str:
+    """Download PDFs/DOCX/DOC and return their combined text (OCR only where a page is a scan).
 
     document_refs: list of (url, doc_type) where doc_type is 'pdf', 'docx', or 'doc'.
+    Raises if no document yielded any text.
     """
     all_text = []
     for url, doc_type in document_refs:
@@ -205,7 +206,12 @@ async def parse_documents(document_refs: List[tuple]) -> List[Dict[str, Any]]:
     if not all_text:
         raise Exception("Could not extract text from any document!")
 
-    combined_text = "\n\n".join(all_text)
+    return "\n\n".join(all_text)
+
+
+async def parse_documents(document_refs: List[tuple]) -> List[Dict[str, Any]]:
+    """Extract the text of the documents and use the LLM to extract items from it."""
+    combined_text = await extract_documents_text(document_refs)
     items = await extract_items_from_text(combined_text)
 
     if items is None:

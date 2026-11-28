@@ -166,7 +166,7 @@ async def analyze_risks(
         calculate_overall_risk_score,
     )
     from app.services.parser_service import search_and_validate_items
-    from app.prozorro_functionality.prozorro import get_contract, get_document_urls, parse_documents
+    from app.prozorro_functionality.prozorro import extract_documents_text, get_contract, get_document_urls
 
     # Fetch tender
     result = await db.execute(
@@ -220,14 +220,11 @@ async def analyze_risks(
             documents = contract.get("documents", []) if contract else []
             if documents:
                 doc_refs = get_document_urls(documents)
-                items_from_docs = await parse_documents(doc_refs)
-                # Combine all text from items for analysis
-                spec_text = " ".join(
-                    str(item.get("name", "")) + " " + str(item.get("specifications", ""))
-                    for item in items_from_docs
-                )
-                if spec_text.strip():
-                    discrim_analysis = await analyze_discriminatory_requirements(spec_text)
+                # The analysis works on the text of the documents. It used to run on items extracted from that
+                # text, and the extraction returns [] for tender conditions and contracts (E0.7 diagnosis), so
+                # the analysis never started.
+                spec_text = await extract_documents_text(doc_refs)
+                discrim_analysis = await analyze_discriminatory_requirements(spec_text)
         except Exception as e:
             logger.warning(f"Discriminatory analysis failed for tender #{tender_id}: {e}")
 
