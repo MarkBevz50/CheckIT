@@ -5,6 +5,8 @@
     python eval/label_pairs.py --items     item types only
     python eval/label_pairs.py --queue     pairs the validator accepted in a control run (eval/data/pairs_queue.jsonl)
     python eval/label_pairs.py --findings  documentation findings (eval/data/doc_findings_pool.json): blind, no model mark
+    python eval/label_pairs.py --blind     the blind control sample (eval/data/blind_sample.json): 20 pairs and 10 findings,
+                                           shown WITHOUT any answer of the judges, label_source = human_blind
     python eval/label_pairs.py --stats     progress and label distribution
 
 Pairs (eval/data/pairs_pilot.jsonl): 1 = same, 2 = analog, 3 = no, s = skip (shown again at
@@ -25,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "eval" / "data"
 PAIRS = DATA / "pairs_pilot.jsonl"
 FINDINGS = DATA / "doc_findings_pool.json"  # made by eval/collect_doc_findings.py
+BLIND = DATA / "blind_sample.json"  # made by eval/make_blind_sample.py
 QUEUE = DATA / "pairs_queue.jsonl"  # filled by eval/quality_report.py with accepted matches nobody has labeled
 LABELS = DATA / "labels.json"
 TENDERS = ROOT / "eval" / "control_tenders.json"
@@ -69,7 +72,18 @@ def ask(prompt: str, keys: dict) -> str:
             return answer
 
 
-def run(entries, labels_section, show, keys, title):
+_source = {"value": "human"}  # label_source of the labels given in this session: human, or human_blind for --blind
+
+
+def set_source(kind, item_id):
+    _labels_ref["labels"].setdefault("label_sources", {}).setdefault(kind, {})[item_id] = _source["value"]
+
+
+def drop_source(kind, item_id):
+    _labels_ref["labels"].setdefault("label_sources", {}).setdefault(kind, {}).pop(item_id, None)
+
+
+def run(entries, labels_section, show, keys, title, kind=None):
     pending = [e for e in entries if e["id"] not in labels_section]
     print(f"\n=== {title}: {len(entries) - len(pending)} of {len(entries)} done, {len(pending)} left ===")
     queue, skipped, history = list(pending), [], []
@@ -90,6 +104,8 @@ def run(entries, labels_section, show, keys, title):
             if history:
                 previous = history.pop()
                 labels_section.pop(previous["id"], None)
+                if kind:
+                    drop_source(kind, previous["id"])
                 queue.insert(0, entry)
                 queue.insert(0, previous)
                 yield_save()
@@ -97,6 +113,8 @@ def run(entries, labels_section, show, keys, title):
                 queue.insert(0, entry)
         else:
             labels_section[entry["id"]] = keys[answer]
+            if kind:
+                set_source(kind, entry["id"])
             history.append(entry)
             yield_save()
     return True
@@ -126,23 +144,33 @@ def show_finding(finding):
     print(f'  Пояснення  : {finding.get("explanation")}')
 
 
-def run_findings(labels):
+def show_finding_blind(finding):
+    """Exactly what a judge sees: the tender and the quote. No type, severity or explanation of the application's model."""
+    titles = {t["id"]: t["title"] for t in json.loads(TENDERS.read_text(encoding="utf-8"))["tenders"]}
+    print(f'  Тендер     : {finding["tender"]}: {titles.get(finding["tender"], "")[:120]}')
+    print(f'  Цитата     : {finding.get("quote")}')
+
+
+def run_findings(labels, only_ids=None, blind=False):
     """1 = a real discriminatory requirement, 2 = not one, 3 = a duplicate of another finding (asks which)."""
     if not FINDINGS.exists():
         sys.exit(f"No {FINDINGS.relative_to(ROOT)} yet: run eval/collect_doc_findings.py first.")
     pool = json.loads(FINDINGS.read_text(encoding="utf-8"))
+    if only_ids is not None:
+        pool = [f for f in pool if f["id"] in only_ids]
+    show = show_finding_blind if blind else show_finding
     section = labels.setdefault("findings", {})
     queue = [f for f in pool if f["id"] not in section]
     skipped, history = [], []
-    print(f"\n=== Знахідки документації: {len(pool) - len(queue)} of {len(pool)} done, {len(queue)} left ===")
+    print(f"\n=== Знахідки документації{' (сліпа вибірка)' if blind else ''}: {len(pool) - len(queue)} of {len(pool)} done, {len(queue)} left ===")
     print("1 = справжня дискримінаційна вимога, 2 = ні, 3 = дубль іншої знахідки")
     while queue or skipped:
         if not queue:
             print("-- skipped entries again --")
             queue, skipped = skipped, []
         finding = queue.pop(0)
-        print(f"\n[{len(section) + 1}/{len(pool)}] {finding['id']}")
-        show_finding(finding)
+        print(f"\n[{sum(1 for f in pool if f['id'] in section) + 1}/{len(pool)}] {finding['id']}")
+        show(finding)
         answer = ask("label", FINDING_KEYS)
         if answer == "q":
             return False
@@ -152,6 +180,7 @@ def run_findings(labels):
             if history:
                 previous = history.pop()
                 section.pop(previous["id"], None)
+                drop_source("findings", previous["id"])
                 queue.insert(0, finding)
                 queue.insert(0, previous)
                 save_labels(labels)
@@ -167,6 +196,7 @@ def run_findings(labels):
                 if original:
                     record["of"] = original
             section[finding["id"]] = record
+            set_source("findings", finding["id"])
             history.append(finding)
             save_labels(labels)
     return True
@@ -187,6 +217,28 @@ def stats():
     print(f"pairs : {len(labels['pairs'])}/{len(pairs) + len(queue)}", dict(Counter(labels["pairs"].values())))
     print(f"queue : {labeled_queue}/{len(queue)} labeled")
     print(f"items : {len(labels['item_types'])}/{len(items)}", dict(Counter(labels["item_types"].values())))
+    sources = labels.get("label_sources", {})
+    for kind in ("pairs", "findings"):
+        labeled = labels.get(kind, {})
+        counts = Counter(sources.get(kind, {}).get(item_id, "human") for item_id in labeled)  # no record = human (older labels)
+        print(f"sources {kind}: {dict(counts)}")
+
+
+def run_blind(labels):
+    """The blind control sample: pairs first, then findings. Nothing of the judges' work is shown or even read here."""
+    if not BLIND.exists():
+        sys.exit(f"No {BLIND.relative_to(ROOT)} yet: run eval/make_blind_sample.py first.")
+    sample = json.loads(BLIND.read_text(encoding="utf-8"))
+    _source["value"] = "human_blind"
+    rows = {row["pair_id"]: row for row in load_pairs(QUEUE)}
+    pairs = [{**rows[pid], "id": pid} for pid in sample["pairs"]]
+    print("Сліпа вибірка: відповідей суддів тут немає. Критерії: same = закриває позицію (фасовка може відрізнятися); "
+          "analog = той самий тип товару, ціну можна порівнювати, одна неключова вимога інша; no = інший товар, аксесуар, набір, непорівнянна ціна.")
+    if not run(pairs, labels["pairs"], show_pair, PAIR_KEYS, "Сліпа вибірка: пари", kind="pairs"):
+        return print("Збережено. До наступного разу.")
+    if not run_findings(labels, only_ids=set(sample["findings"]), blind=True):
+        return print("Збережено. До наступного разу.")
+    print("\nСліпу вибірку розмічено.")
 
 
 def main():
@@ -197,6 +249,8 @@ def main():
         return stats()
     labels = load_labels()
     _labels_ref["labels"] = labels
+    if "--blind" in args:
+        return run_blind(labels)
     if "--findings" in args:
         return print("Готово.") if run_findings(labels) else print("Збережено. До наступного разу.")
     from_queue = "--queue" in args
@@ -206,7 +260,7 @@ def main():
         return print("Збережено. До наступного разу.")
     if do_pairs:
         pairs = [{**p, "id": p["pair_id"]} for p in load_pairs(QUEUE if from_queue else PAIRS)]
-        if not run(pairs, labels["pairs"], show_pair, PAIR_KEYS, "Черга пар" if from_queue else "Пари"):
+        if not run(pairs, labels["pairs"], show_pair, PAIR_KEYS, "Черга пар" if from_queue else "Пари", kind="pairs"):
             return print("Збережено. До наступного разу.")
     print("\nГотово.")
     stats()

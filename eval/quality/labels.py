@@ -47,7 +47,8 @@ def append_to_queue(unlabeled: List[Tuple[str, str]], runs: List[dict]) -> int:
         number += 1
         tender_id, item, candidate = details[pair]
         added.append({
-            "pair_id": f"Q{number:03d}", "tender": tender_id, "item_id": pair[0], "item": item["name"], "unit": "",
+            "pair_id": f"Q{number:03d}", "tender": tender_id, "item_id": pair[0], "item": item["name"],
+            "unit": item.get("unit_name") or "",
             "store": candidate.get("store"), "store_name": candidate.get("store_name"), "title": candidate.get("title"),
             "price": candidate.get("price_on_sale") or candidate.get("price"), "url": pair[1], "bucket_hint": "queue",
         })

@@ -166,6 +166,7 @@ def run_control(capture, tender_ids: Optional[List[str]] = None, stores: str = S
                     run["items"].append({
                         "item_id": item_id, "name": item["name"], "unit_price": item.get("unit_price"),
                         "price_source": item.get("price_source"), "quantity": item.get("quantity"),
+                        "unit_name": item.get("unit_name"),
                         "candidates": record.get("candidates", []), "relevant_urls": record.get("relevant_urls", []),
                     })
             run["seconds"]["total"] = round(sum(run["seconds"].values()), 1)
