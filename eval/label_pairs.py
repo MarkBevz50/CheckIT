@@ -7,6 +7,8 @@
     python eval/label_pairs.py --findings  documentation findings (eval/data/doc_findings_pool.json): blind, no model mark
     python eval/label_pairs.py --blind     the blind control sample (eval/data/blind_sample.json): 20 pairs and 10 findings,
                                            shown WITHOUT any answer of the judges, label_source = human_blind
+    python eval/label_pairs.py --review    what the two judges could not settle (eval/judge_merge.py): the item, the labels
+                                           and short reasons of both judges, label_source = human
     python eval/label_pairs.py --stats     progress and label distribution
 
 Pairs (eval/data/pairs_pilot.jsonl): 1 = same, 2 = analog, 3 = no, s = skip (shown again at
@@ -23,6 +25,7 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # eval/judge_merge.py for --review
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "eval" / "data"
 PAIRS = DATA / "pairs_pilot.jsonl"
@@ -151,14 +154,14 @@ def show_finding_blind(finding):
     print(f'  Цитата     : {finding.get("quote")}')
 
 
-def run_findings(labels, only_ids=None, blind=False):
+def run_findings(labels, only_ids=None, blind=False, show_fn=None):
     """1 = a real discriminatory requirement, 2 = not one, 3 = a duplicate of another finding (asks which)."""
     if not FINDINGS.exists():
         sys.exit(f"No {FINDINGS.relative_to(ROOT)} yet: run eval/collect_doc_findings.py first.")
     pool = json.loads(FINDINGS.read_text(encoding="utf-8"))
     if only_ids is not None:
         pool = [f for f in pool if f["id"] in only_ids]
-    show = show_finding_blind if blind else show_finding
+    show = show_fn or (show_finding_blind if blind else show_finding)
     section = labels.setdefault("findings", {})
     queue = [f for f in pool if f["id"] not in section]
     skipped, history = [], []
@@ -224,6 +227,42 @@ def stats():
         print(f"sources {kind}: {dict(counts)}")
 
 
+def show_judges(kind, item_id):
+    """The labels and short reasons of both judges (only the review shows them, never the blind sample)."""
+    for name, path in (("A", DATA / "judge_a_labels.json"), ("B", DATA / "judge_b_labels.json")):
+        entry = json.loads(path.read_text(encoding="utf-8"))[kind].get(item_id) or {}
+        extra = f' (дубль {entry["of"]})' if entry.get("of") else ""
+        print(f'  Суддя {name}: {entry.get("label", "—")}{extra}: {entry.get("reason", "")}')
+
+
+def run_review(labels):
+    """Pairs on which the judges disagree, then findings that need a human. Reads the plan from eval/judge_merge.py."""
+    import judge_merge
+
+    merged = judge_merge.plan(labels, judge_merge.load_json(judge_merge.JUDGE_A), judge_merge.load_json(judge_merge.JUDGE_B),
+                              [r["pair_id"] for r in load_pairs(QUEUE)],
+                              [f["id"] for f in json.loads(FINDINGS.read_text(encoding="utf-8"))])
+    _source["value"] = "human"
+    rows = {row["pair_id"]: row for row in load_pairs(QUEUE)}
+    pairs = [{**rows[pid], "id": pid} for pid in merged["review_pairs"]]
+
+    def show_pair_review(pair):
+        show_pair(pair)
+        show_judges("pairs", pair["id"])
+
+    if not run(pairs, labels["pairs"], show_pair_review, PAIR_KEYS, "Перегляд: пари, де судді не збіглись", kind="pairs"):
+        return print("Збережено. До наступного разу.")
+
+    def show_finding_review(finding):
+        show_finding_blind(finding)
+        print(f'  Причина в черзі: {merged["review_findings"].get(finding["id"], "")}')
+        show_judges("findings", finding["id"])
+
+    if not run_findings(labels, only_ids=set(merged["review_findings"]), show_fn=show_finding_review):
+        return print("Збережено. До наступного разу.")
+    print("\nПерегляд завершено.")
+
+
 def run_blind(labels):
     """The blind control sample: pairs first, then findings. Nothing of the judges' work is shown or even read here."""
     if not BLIND.exists():
@@ -251,6 +290,8 @@ def main():
     _labels_ref["labels"] = labels
     if "--blind" in args:
         return run_blind(labels)
+    if "--review" in args:
+        return run_review(labels)
     if "--findings" in args:
         return print("Готово.") if run_findings(labels) else print("Збережено. До наступного разу.")
     from_queue = "--queue" in args

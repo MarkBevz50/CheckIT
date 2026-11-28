@@ -1,4 +1,132 @@
 {
+ "findings": {
+  "F001": {
+   "label": "false"
+  },
+  "F002": {
+   "label": "false"
+  },
+  "F003": {
+   "label": "false"
+  },
+  "F004": {
+   "label": "false"
+  },
+  "F006": {
+   "label": "true"
+  },
+  "F007": {
+   "label": "false"
+  },
+  "F008": {
+   "label": "false"
+  },
+  "F009": {
+   "label": "false"
+  },
+  "F012": {
+   "label": "false"
+  },
+  "F013": {
+   "label": "false"
+  },
+  "F014": {
+   "label": "false"
+  },
+  "F015": {
+   "label": "false"
+  },
+  "F016": {
+   "label": "false"
+  },
+  "F017": {
+   "label": "false"
+  },
+  "F018": {
+   "label": "false"
+  },
+  "F020": {
+   "label": "false"
+  },
+  "F023": {
+   "label": "false"
+  },
+  "F024": {
+   "label": "false"
+  },
+  "F025": {
+   "label": "false"
+  },
+  "F027": {
+   "label": "false"
+  },
+  "F029": {
+   "label": "false"
+  },
+  "F030": {
+   "label": "false"
+  },
+  "F035": {
+   "label": "false"
+  },
+  "F038": {
+   "label": "false"
+  },
+  "F040": {
+   "label": "false"
+  },
+  "F044": {
+   "label": "false"
+  },
+  "F046": {
+   "label": "false"
+  },
+  "F047": {
+   "label": "false"
+  },
+  "F048": {
+   "label": "false"
+  },
+  "F052": {
+   "label": "false"
+  },
+  "F053": {
+   "label": "false"
+  },
+  "F054": {
+   "label": "duplicate",
+   "of": "F006"
+  },
+  "F056": {
+   "label": "false"
+  },
+  "F057": {
+   "label": "false"
+  },
+  "F061": {
+   "label": "false"
+  },
+  "F062": {
+   "label": "duplicate",
+   "of": "F047"
+  },
+  "F064": {
+   "label": "false"
+  },
+  "F065": {
+   "label": "false"
+  },
+  "F066": {
+   "label": "duplicate",
+   "of": "F006"
+  },
+  "F068": {
+   "label": "true"
+  },
+  "F070": {
+   "label": "false"
+  }
+ },
  "item_types": {
   "C01-01": "product",
   "C01-02": "product",
@@ -67,6 +195,127 @@
   "C10-02": "product",
   "C10-03": "product"
  },
+ "label_sources": {
+  "findings": {
+   "F001": "llm_consensus",
+   "F002": "llm_consensus",
+   "F003": "llm_consensus",
+   "F004": "llm_consensus",
+   "F006": "human_blind",
+   "F007": "llm_consensus",
+   "F008": "llm_consensus",
+   "F009": "llm_consensus",
+   "F012": "llm_consensus",
+   "F013": "llm_consensus",
+   "F014": "llm_consensus",
+   "F015": "llm_consensus",
+   "F016": "human_blind",
+   "F017": "llm_consensus",
+   "F018": "llm_consensus",
+   "F020": "llm_consensus",
+   "F023": "llm_consensus",
+   "F024": "llm_consensus",
+   "F025": "llm_consensus",
+   "F027": "llm_consensus",
+   "F029": "llm_consensus",
+   "F030": "human_blind",
+   "F035": "human_blind",
+   "F038": "llm_consensus",
+   "F040": "llm_consensus",
+   "F044": "llm_consensus",
+   "F046": "llm_consensus",
+   "F047": "human_blind",
+   "F048": "llm_consensus",
+   "F052": "llm_consensus",
+   "F053": "human_blind",
+   "F054": "human_blind",
+   "F056": "llm_consensus",
+   "F057": "llm_consensus",
+   "F061": "llm_consensus",
+   "F062": "human_blind",
+   "F064": "llm_consensus",
+   "F065": "llm_consensus",
+   "F066": "human_blind",
+   "F068": "human_blind",
+   "F070": "llm_consensus"
+  },
+  "pairs": {
+   "Q001": "llm_consensus",
+   "Q002": "human_blind",
+   "Q003": "llm_consensus",
+   "Q005": "llm_consensus",
+   "Q006": "llm_consensus",
+   "Q007": "llm_consensus",
+   "Q008": "human_blind",
+   "Q009": "llm_consensus",
+   "Q010": "llm_consensus",
+   "Q011": "llm_consensus",
+   "Q013": "human_blind",
+   "Q015": "human_blind",
+   "Q016": "llm_consensus",
+   "Q025": "human_blind",
+   "Q026": "llm_consensus",
+   "Q027": "llm_consensus",
+   "Q028": "llm_consensus",
+   "Q029": "llm_consensus",
+   "Q030": "human_blind",
+   "Q031": "llm_consensus",
+   "Q033": "llm_consensus",
+   "Q034": "llm_consensus",
+   "Q035": "llm_consensus",
+   "Q037": "llm_consensus",
+   "Q038": "llm_consensus",
+   "Q039": "llm_consensus",
+   "Q041": "llm_consensus",
+   "Q042": "llm_consensus",
+   "Q043": "llm_consensus",
+   "Q044": "llm_consensus",
+   "Q045": "llm_consensus",
+   "Q046": "human_blind",
+   "Q047": "human_blind",
+   "Q048": "llm_consensus",
+   "Q049": "llm_consensus",
+   "Q050": "human_blind",
+   "Q051": "human_blind",
+   "Q052": "llm_consensus",
+   "Q053": "llm_consensus",
+   "Q054": "llm_consensus",
+   "Q055": "llm_consensus",
+   "Q056": "llm_consensus",
+   "Q057": "llm_consensus",
+   "Q058": "llm_consensus",
+   "Q059": "human_blind",
+   "Q060": "llm_consensus",
+   "Q062": "llm_consensus",
+   "Q064": "human_blind",
+   "Q065": "llm_consensus",
+   "Q067": "llm_consensus",
+   "Q068": "llm_consensus",
+   "Q069": "llm_consensus",
+   "Q070": "llm_consensus",
+   "Q071": "human_blind",
+   "Q079": "llm_consensus",
+   "Q082": "human_blind",
+   "Q083": "human_blind",
+   "Q090": "human_blind",
+   "Q092": "llm_consensus",
+   "Q094": "human_blind",
+   "Q096": "human_blind",
+   "Q097": "llm_consensus",
+   "Q098": "llm_consensus",
+   "Q099": "llm_consensus",
+   "Q100": "human_blind",
+   "Q102": "llm_consensus",
+   "Q104": "llm_consensus",
+   "Q105": "llm_consensus",
+   "Q107": "llm_consensus",
+   "Q109": "llm_consensus",
+   "Q110": "llm_consensus",
+   "Q111": "human_blind",
+   "Q112": "llm_consensus",
+   "Q113": "llm_consensus"
+  }
+ },
  "pairs": {
   "P001": "same",
   "P002": "no",
@@ -127,6 +376,80 @@
   "P057": "no",
   "P058": "same",
   "P059": "same",
-  "P060": "same"
+  "P060": "same",
+  "Q001": "same",
+  "Q002": "same",
+  "Q003": "same",
+  "Q005": "same",
+  "Q006": "same",
+  "Q007": "same",
+  "Q008": "same",
+  "Q009": "same",
+  "Q010": "same",
+  "Q011": "analog",
+  "Q013": "analog",
+  "Q015": "analog",
+  "Q016": "same",
+  "Q025": "same",
+  "Q026": "same",
+  "Q027": "same",
+  "Q028": "same",
+  "Q029": "same",
+  "Q030": "same",
+  "Q031": "same",
+  "Q033": "same",
+  "Q034": "same",
+  "Q035": "same",
+  "Q037": "same",
+  "Q038": "same",
+  "Q039": "same",
+  "Q041": "same",
+  "Q042": "same",
+  "Q043": "same",
+  "Q044": "same",
+  "Q045": "same",
+  "Q046": "same",
+  "Q047": "same",
+  "Q048": "analog",
+  "Q049": "analog",
+  "Q050": "analog",
+  "Q051": "analog",
+  "Q052": "same",
+  "Q053": "same",
+  "Q054": "same",
+  "Q055": "analog",
+  "Q056": "same",
+  "Q057": "same",
+  "Q058": "same",
+  "Q059": "same",
+  "Q060": "same",
+  "Q062": "same",
+  "Q064": "analog",
+  "Q065": "same",
+  "Q067": "same",
+  "Q068": "same",
+  "Q069": "same",
+  "Q070": "analog",
+  "Q071": "same",
+  "Q079": "analog",
+  "Q082": "same",
+  "Q083": "same",
+  "Q090": "analog",
+  "Q092": "same",
+  "Q094": "analog",
+  "Q096": "same",
+  "Q097": "same",
+  "Q098": "same",
+  "Q099": "analog",
+  "Q100": "same",
+  "Q102": "same",
+  "Q104": "same",
+  "Q105": "analog",
+  "Q107": "same",
+  "Q109": "analog",
+  "Q110": "analog",
+  "Q111": "same",
+  "Q112": "analog",
+  "Q113": "analog"
  }
 }
